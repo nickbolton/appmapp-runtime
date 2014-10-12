@@ -1,9 +1,9 @@
 Pod::Spec.new do |s|
-  s.name      = 'AppMap Runtime'
+  s.name      = 'AppMap'
   s.version   = '0.0.1'
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = '10.10'
-  s.summary   = 'AppMap Runtime.'
+  s.summary   = 'AppMap.'
   s.homepage  = 'https://github.com/nickbolton/appmapp-runtime'
   s.requires_arc = true 
   s.author    = { 'nickbolton' => 'nick@deucent.com' }             
