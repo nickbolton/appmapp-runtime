@@ -20,19 +20,28 @@ static NSString * const kAMBaseTextDescriptorTextColorKey = @"textColor";
     self = [super initWithCoder:decoder];
     if (self) {
         
-        UIFont *font;
         NSString *fontFamily = [decoder decodeObjectForKey:kAMTextDescriptorFontFamilyKey];
         CGFloat fontSize = [decoder decodeFloatForKey:kAMTextDescriptorFontSizeKey];
 
         if (fontSize <= 0.0f) {
             fontSize = 16.0f;
         }
-        
+
+#if TARGET_OS_IPHONE
+        UIFont *font;
+        if ([fontFamily isEqualToString:@"system-family"]) {
+            font = [UIFont systemFontOfSize:fontSize];
+        } else {
+            font = [UIFont fontWithName:fontFamily size:fontSize];
+        }
+#else
+        NSFont *font;
         if ([fontFamily isEqualToString:@"system-family"]) {
             font = [NSFont systemFontOfSize:fontSize];
         } else {
             font = [NSFont fontWithName:fontFamily size:fontSize];
         }
+#endif
 
         self.font = font;
         self.textColor = [decoder decodeObjectForKey:kAMBaseTextDescriptorTextColorKey];
@@ -60,7 +69,6 @@ static NSString * const kAMBaseTextDescriptorTextColorKey = @"textColor";
     
     if (self != nil) {
         
-        UIFont *font;
         NSString *fontFamily = dict[kAMTextDescriptorFontFamilyKey];
         CGFloat fontSize = [dict[kAMTextDescriptorFontSizeKey] floatValue];
         NSString *textColorString = dict[kAMBaseTextDescriptorTextColorKey];
@@ -69,11 +77,21 @@ static NSString * const kAMBaseTextDescriptorTextColorKey = @"textColor";
             fontSize = 16.0f;
         }
         
+#if TARGET_OS_IPHONE
+        UIFont *font;
+        if ([fontFamily isEqualToString:@"system-family"]) {
+            font = [UIFont systemFontOfSize:fontSize];
+        } else {
+            font = [UIFont fontWithName:fontFamily size:fontSize];
+        }
+#else
+        NSFont *font;
         if ([fontFamily isEqualToString:@"system-family"]) {
             font = [NSFont systemFontOfSize:fontSize];
         } else {
             font = [NSFont fontWithName:fontFamily size:fontSize];
         }
+#endif
         
         self.font = font;
         self.textColor = [NSColor colorWithHexcodePlusAlpha:textColorString];

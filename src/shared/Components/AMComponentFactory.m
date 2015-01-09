@@ -46,10 +46,6 @@
     Class clazz = NSClassFromString(classString);
     
     AMComponent *component = [clazz buildComponent];
-    
-    component.backgroundColor = [[AMDesign sharedInstance] componentBackgroundColor];
-    component.borderColor = [[AMDesign sharedInstance] componentBorderColor];
-
     return component;
 }
 

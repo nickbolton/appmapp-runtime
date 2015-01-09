@@ -15,6 +15,8 @@ typedef NS_ENUM(NSInteger, AMComponentType) {
     AMComponentButton,
 };
 
+@class AMComponent;
+
 @interface AMComponentFactory : NSObject
 
 + (instancetype)sharedInstance;

@@ -8,7 +8,6 @@
 
 #import "AMTextComponent.h"
 #import "AMCompositeTextDescriptor.h"
-#import "AMLabel.h"
 
 static NSString * kAMTextComponentTextDescriptorKey = @"textDescriptor";
 

@@ -40,7 +40,6 @@ static NSString * kAMComponentChildComponentsKey = @"childComponents";
     [coder encodeObject:self.name forKey:kAMComponentNameKey];
     [coder encodeInt32:self.layoutType forKey:kAMComponentLayoutTypeKey];
     [coder encodeObject:self.identifier forKey:kAMComponentIdentifierKey];
-    [coder encodeObject:NSStringFromCGRect(self.frame) forKey:kAMComponentFrameKey];
     [coder encodeBool:self.isClipped forKey:kAMComponentClippedKey];
     [coder encodeObject:self.backgroundColor forKey:kAMComponentBackgroundColorKey];
     [coder encodeObject:self.borderColor forKey:kAMComponentBorderColorWidthKey];
@@ -48,6 +47,12 @@ static NSString * kAMComponentChildComponentsKey = @"childComponents";
     [coder encodeFloat:self.cornerRadius forKey:kAMComponentCornerRadiusKey];
     [coder encodeFloat:self.borderWidth forKey:kAMComponentBorderWidthKey];
     [coder encodeObject:self.childComponents forKey:kAMComponentChildComponentsKey];
+    
+#if TARGET_OS_IPHONE
+    [coder encodeObject:NSStringFromCGRect(self.frame) forKey:kAMComponentFrameKey];
+#else
+    [coder encodeObject:NSStringFromRect(self.frame) forKey:kAMComponentFrameKey];
+#endif
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -59,13 +64,18 @@ static NSString * kAMComponentChildComponentsKey = @"childComponents";
         self.name = [decoder decodeObjectForKey:kAMComponentNameKey];
         self.layoutType = [decoder decodeInt32ForKey:kAMComponentLayoutTypeKey];
         self.identifier = [decoder decodeObjectForKey:kAMComponentIdentifierKey];
-        self.frame = CGRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
         self.clipped = [decoder decodeBoolForKey:kAMComponentClippedKey];
         self.backgroundColor = [decoder decodeObjectForKey:kAMComponentBackgroundColorKey];
         self.alpha = [decoder decodeFloatForKey:kAMComponentAlphaKey];
         self.cornerRadius = [decoder decodeFloatForKey:kAMComponentCornerRadiusKey];
         self.borderWidth = [decoder decodeFloatForKey:kAMComponentBorderWidthKey];
         self.borderColor = [decoder decodeObjectForKey:kAMComponentBorderColorWidthKey];
+        
+#if TARGET_OS_IPHONE
+        self.frame = CGRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
+#else
+        self.frame = NSRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
+#endif
         
         NSArray *childComponents =
         [decoder decodeObjectForKey:kAMComponentChildComponentsKey];
@@ -88,13 +98,20 @@ static NSString * kAMComponentChildComponentsKey = @"childComponents";
         self.name = dict[kAMComponentNameKey];
         self.layoutType = [dict[kAMComponentLayoutTypeKey] integerValue];
         self.identifier = dict[kAMComponentIdentifierKey];
-        self.frame = CGRectFromString(dict[kAMComponentFrameKey]);
         self.clipped = [dict[kAMComponentClippedKey] boolValue];
-        self.backgroundColor = [NSColor colorWithHexcodePlusAlpha:backgroundColorString];
         self.alpha = [dict[kAMComponentAlphaKey] floatValue];
         self.cornerRadius = [dict[kAMComponentCornerRadiusKey] floatValue];
         self.borderWidth = [dict[kAMComponentBorderWidthKey] floatValue];
+        
+#if TARGET_OS_IPHONE
+        self.frame = CGRectFromString(dict[kAMComponentFrameKey]);
+        self.borderColor = [UIColor colorWithHexcodePlusAlpha:borderColorString];
+        self.backgroundColor = [UIColor colorWithHexcodePlusAlpha:backgroundColorString];
+#else
+        self.frame = NSRectFromString(dict[kAMComponentFrameKey]);
         self.borderColor = [NSColor colorWithHexcodePlusAlpha:borderColorString];
+        self.backgroundColor = [NSColor colorWithHexcodePlusAlpha:backgroundColorString];
+#endif
         
         NSMutableArray *childComponents = [NSMutableArray array];
         NSDictionary *children = dict[kAMComponentChildComponentsKey];
@@ -145,9 +162,7 @@ static NSString * kAMComponentChildComponentsKey = @"childComponents";
 + (AMComponent *)buildComponent {
     
     AMComponent *component = [[self.class alloc] init];
-    component.identifier = [NSString uuidString];
-    component.backgroundColor = [[AMDesign sharedInstance] componentBackgroundColor];
-    component.borderColor = [[AMDesign sharedInstance] componentBorderColor];
+    component.identifier = [[NSUUID new] UUIDString];
     component.cornerRadius = 2.0f;
     component.borderWidth = 1.0f;
     component.alpha = 1.0f;
@@ -163,13 +178,18 @@ static NSString * kAMComponentChildComponentsKey = @"childComponents";
     dict[kAMComponentNameKey] = self.name;
     dict[kAMComponentLayoutTypeKey] = @(self.layoutType);
     dict[kAMComponentIdentifierKey] = self.identifier;
-    dict[kAMComponentFrameKey] = NSStringFromCGRect(self.frame);
     dict[kAMComponentClippedKey] = @(self.isClipped);
     dict[kAMComponentBackgroundColorKey] = [self.backgroundColor hexcodePlusAlpha];
     dict[kAMComponentBorderColorWidthKey] = [self.borderColor hexcodePlusAlpha];
     dict[kAMComponentAlphaKey] = @(self.alpha);
     dict[kAMComponentCornerRadiusKey] = @(self.cornerRadius);
     dict[kAMComponentBorderWidthKey] = @(self.borderWidth);
+    
+#if TARGET_OS_IPHONE
+    dict[kAMComponentFrameKey] = NSStringFromCGRect(self.frame);
+#else
+    dict[kAMComponentFrameKey] = NSStringFromRect(self.frame);
+#endif
     
     NSMutableDictionary *children = [NSMutableDictionary dictionary];
     

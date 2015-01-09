@@ -7,9 +7,7 @@
 //
 
 #import "AMAppMap.h"
-#import "AMDataSource.h"
 #import "AMComponent.h"
-#import "AMView.h"
 #import "AMAppMapContainerFactory.h"
 #import "AMAppMapLabelFactory.h"
 

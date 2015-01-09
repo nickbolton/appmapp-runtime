@@ -26,13 +26,19 @@ extern NSString * const kAMComponentClassNameKey;
 @property (nonatomic, weak) AMComponent *lastParentComponent;
 @property (nonatomic) CGFloat cornerRadius;
 @property (nonatomic) CGFloat borderWidth;
-@property (nonatomic, strong) UIColor *borderColor;
 
 @property (nonatomic, getter=isClipped) BOOL clipped;
 @property (nonatomic) CGFloat alpha;
-@property (nonatomic) UIColor *backgroundColor;
 @property (nonatomic) CGRect frame;
 @property (nonatomic, readonly) BOOL isContainer;
+
+#if TARGET_OS_IPHONE
+@property (nonatomic, strong) UIColor *borderColor;
+@property (nonatomic, strong) UIColor *backgroundColor;
+#else
+@property (nonatomic, strong) NSColor *borderColor;
+@property (nonatomic, strong) NSColor *backgroundColor;
+#endif
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)componentWithDictionary:(NSDictionary *)dict;
