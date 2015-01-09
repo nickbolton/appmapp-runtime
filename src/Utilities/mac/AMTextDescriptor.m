@@ -7,11 +7,11 @@
 //
 
 #import "AMTextDescriptor.h"
+#import "NSColor+AppMap.h"
 
-static NSString * kAMTextDescriptorSystemFamily = @"system-family";
-
-static NSString * kAMTextDescriptorFontFamilyKey = @"fontFamily";
-static NSString * kAMTextDescriptorFontSizeKey = @"fontSize";
+static NSString * const kAMTextDescriptorSystemFamily = @"system-family";
+static NSString * const kAMTextDescriptorFontFamilyKey = @"fontFamily";
+static NSString * const kAMTextDescriptorFontSizeKey = @"fontSize";
 static NSString * const kAMBaseTextDescriptorTextColorKey = @"textColor";
 
 @implementation AMTextDescriptor
@@ -54,6 +54,34 @@ static NSString * const kAMBaseTextDescriptorTextColorKey = @"textColor";
     [coder encodeObject:self.textColor forKey:kAMBaseTextDescriptorTextColorKey];
 }
 
+- (instancetype)initWithDictionary:(NSDictionary *)dict {
+    
+    self = [super initWithDictionary:dict];
+    
+    if (self != nil) {
+        
+        UIFont *font;
+        NSString *fontFamily = dict[kAMTextDescriptorFontFamilyKey];
+        CGFloat fontSize = [dict[kAMTextDescriptorFontSizeKey] floatValue];
+        NSString *textColorString = dict[kAMBaseTextDescriptorTextColorKey];
+        
+        if (fontSize <= 0.0f) {
+            fontSize = 16.0f;
+        }
+        
+        if ([fontFamily isEqualToString:@"system-family"]) {
+            font = [NSFont systemFontOfSize:fontSize];
+        } else {
+            font = [NSFont fontWithName:fontFamily size:fontSize];
+        }
+        
+        self.font = font;
+        self.textColor = [NSColor colorWithHexcodePlusAlpha:textColorString];
+    }
+    
+    return self;
+}
+
 + (AMTextDescriptor *)newlineDescriptor:(CGFloat)lineHeight {
     
     AMTextDescriptor *textDescriptor =
@@ -78,6 +106,21 @@ static NSString * const kAMBaseTextDescriptorTextColorKey = @"textColor";
     wrapperCopy.systemFont = self.systemFont;
 
     return wrapperCopy;
+}
+
+- (NSDictionary *)exportTextDescriptor {
+    
+    NSMutableDictionary *dict = [[super exportTextDescriptor] mutableCopy];
+    
+    if (self.systemFont) {
+        dict[kAMTextDescriptorFontFamilyKey] = kAMTextDescriptorSystemFamily;
+    } else {
+        dict[kAMTextDescriptorFontFamilyKey] = self.font.familyName;
+    }
+    dict[kAMTextDescriptorFontSizeKey] = @(self.font.pointSize);
+    dict[kAMBaseTextDescriptorTextColorKey] = [self.textColor hexcodePlusAlpha];
+
+    return dict;
 }
 
 #pragma mark - Getters and Setters

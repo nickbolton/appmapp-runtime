@@ -11,10 +11,13 @@
 
 @class AMComponent;
 
+extern NSString * const kAMComponentClassNameKey;
+
 @interface AMComponent : NSObject <NSCoding, NSCopying>
 
 @property (nonatomic, strong) NSString *identifier;
 @property (nonatomic, strong) NSString *name;
+@property (nonatomic, readonly) NSString *exportedName;
 @property (nonatomic, readonly) NSString *defaultName;
 @property (nonatomic, readonly) AMComponentType componentType;
 @property (nonatomic) AMLayoutType layoutType;
@@ -31,6 +34,9 @@
 @property (nonatomic) CGRect frame;
 @property (nonatomic, readonly) BOOL isContainer;
 
+- (instancetype)initWithDictionary:(NSDictionary *)dict;
++ (instancetype)componentWithDictionary:(NSDictionary *)dict;
+
 - (BOOL)isEqualToComponent:(AMComponent *)object;
 
 - (void)addChildComponent:(AMComponent *)component;
@@ -39,6 +45,8 @@
 - (void)removeChildComponents:(NSArray *)components;
 - (void)insertChildComponent:(AMComponent *)insertedComponent
              beforeComponent:(AMComponent *)siblingComponent;
+
+- (NSDictionary *)exportComponent;
 
 + (instancetype)buildComponent;
 

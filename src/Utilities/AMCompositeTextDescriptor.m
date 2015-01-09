@@ -27,6 +27,30 @@ static NSString * const kAMBaseTextDescriptorTextDescriptorsKey = @"textDescript
     return self;
 }
 
+- (instancetype)initWithDictionary:(NSDictionary *)dict {
+    
+    self = [super initWithDictionary:dict];
+    
+    if (self != nil) {
+
+        NSMutableArray *textDescriptors = [NSMutableArray array];
+        NSArray *descriptors = dict[kAMBaseTextDescriptorTextDescriptorsKey];
+        [descriptors enumerateObjectsUsingBlock:^(NSDictionary *descriptorDict, NSUInteger idx, BOOL *stop) {
+            
+            NSString *className = descriptorDict[kAMBaseTextDescriptorClassNameKey];
+            
+            AMTextDescriptor *textDescriptor =
+            [[NSClassFromString(className) alloc] initWithDictionary:descriptorDict];
+            
+            [textDescriptors addObject:textDescriptor];
+        }];
+        
+        self.textDescriptors = textDescriptors;
+    }
+    
+    return self;
+}
+
 - (void)encodeWithCoder:(NSCoder *)coder {
     [super encodeWithCoder:coder];
     [coder encodeObject:self.textDescriptors forKey:kAMBaseTextDescriptorTextDescriptorsKey];
@@ -38,6 +62,18 @@ static NSString * const kAMBaseTextDescriptorTextDescriptorsKey = @"textDescript
     result.textDescriptors = self.textDescriptors.mutableCopy;
     
     return result;
+}
+
+- (NSDictionary *)exportTextDescriptor {
+    
+    NSMutableDictionary *dict = [[super exportTextDescriptor] mutableCopy];
+    NSMutableArray *descriptors = [NSMutableArray array];
+    
+    [self.textDescriptors enumerateObjectsUsingBlock:^(AMTextDescriptor *descriptor, NSUInteger idx, BOOL *stop) {
+        [descriptors addObject:[descriptor exportTextDescriptor]];
+    }];
+    
+    return dict;
 }
 
 #pragma mark - Getters and Setters
@@ -155,11 +191,18 @@ static NSString * const kAMBaseTextDescriptorTextDescriptorsKey = @"textDescript
 
 #pragma mark - Public
 
+- (void)clearCache {
+    [super clearCache];
+    self.compositeAttributedString = nil;
+}
+
 - (void)addTextDescriptor:(AMTextDescriptor *)textDescriptor {
-    
+    [self.textDescriptors addObject:textDescriptor];
+    [self clearCache];
 }
 - (void)removeTextDescriptor:(AMTextDescriptor *)textDescriptor {
-    
+    [self.textDescriptors removeObject:textDescriptor];
+    [self clearCache];
 }
 
 @end

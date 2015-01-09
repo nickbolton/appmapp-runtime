@@ -37,19 +37,59 @@
     [super createConstraintsIfNecessary];
     
     if (self.leftSpace == nil && self.view.superview != nil) {
-        self.leftSpace = [NSLayoutConstraint alignToLeft:self.view withPadding:0.0f];
+       
+        self.leftSpace =
+        [NSLayoutConstraint
+         constraintWithItem:self.view
+         attribute:NSLayoutAttributeLeft
+         relatedBy:NSLayoutRelationEqual
+         toItem:self.view.superview
+         attribute:NSLayoutAttributeLeft
+         multiplier:1.0f
+         constant:0.0f];
+        [self.view.superview addConstraint:self.leftSpace];
     }
     
     if (self.topSpace == nil && self.view.superview != nil) {
-        self.topSpace = [NSLayoutConstraint alignToTop:self.view withPadding:0.0f];
+        
+        self.topSpace =
+        [NSLayoutConstraint
+         constraintWithItem:self.view
+         attribute:NSLayoutAttributeTop
+         relatedBy:NSLayoutRelationEqual
+         toItem:self.view.superview
+         attribute:NSLayoutAttributeTop
+         multiplier:1.0f
+         constant:0.0f];
+        [self.view.superview addConstraint:self.topSpace];
     }
     
     if (self.width == nil) {
-        self.width = [NSLayoutConstraint addWidthConstraint:0.0f toView:self.view];
+        
+        self.width =
+        [NSLayoutConstraint
+         constraintWithItem:self.view
+         attribute:NSLayoutAttributeWidth
+         relatedBy:NSLayoutRelationEqual
+         toItem:nil
+         attribute:NSLayoutAttributeNotAnAttribute
+         multiplier:1.0f
+         constant:0.0f];
+        [self.view.superview addConstraint:self.width];
     }
     
     if (self.height == nil) {
-        self.height = [NSLayoutConstraint addHeightConstraint:0.0f toView:self.view];
+        
+        self.height =
+        [NSLayoutConstraint
+         constraintWithItem:self.view
+         attribute:NSLayoutAttributeHeight
+         relatedBy:NSLayoutRelationEqual
+         toItem:nil
+         attribute:NSLayoutAttributeNotAnAttribute
+         multiplier:1.0f
+         constant:0.0f];
+        [self.view.superview addConstraint:self.height];
     }
 }
 

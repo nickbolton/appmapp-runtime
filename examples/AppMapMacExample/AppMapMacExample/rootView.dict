@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>components</key>
+	<dict>
+		<key>container0</key>
+		<dict>
+			<key>alpha</key>
+			<real>1</real>
+			<key>backgroundColor</key>
+			<string>3741647895-0.700000</string>
+			<key>borderColor</key>
+			<string>1728974205-1.000000</string>
+			<key>borderWidth</key>
+			<real>1</real>
+			<key>childComponents</key>
+			<dict>
+				<key>container1</key>
+				<dict>
+					<key>alpha</key>
+					<real>1</real>
+					<key>backgroundColor</key>
+					<string>3741647895-0.700000</string>
+					<key>borderColor</key>
+					<string>1728974205-1.000000</string>
+					<key>borderWidth</key>
+					<real>1</real>
+					<key>childComponents</key>
+					<dict/>
+					<key>class-name</key>
+					<string>AMComponent</string>
+					<key>clipped</key>
+					<false/>
+					<key>cornerRadius</key>
+					<real>2</real>
+					<key>frame</key>
+					<string>{{0, 0}, {113, 145}}</string>
+					<key>identifier</key>
+					<string>27F95D66-E146-4CBC-BEEA-28C1480A5E44</string>
+					<key>layoutType</key>
+					<integer>0</integer>
+					<key>name</key>
+					<string>Container-1</string>
+				</dict>
+			</dict>
+			<key>class-name</key>
+			<string>AMComponent</string>
+			<key>clipped</key>
+			<false/>
+			<key>cornerRadius</key>
+			<real>2</real>
+			<key>frame</key>
+			<string>{{180, 91}, {311, 275}}</string>
+			<key>identifier</key>
+			<string>2DBA9135-3DFD-43D5-A3E9-B120169D9CCD</string>
+			<key>layoutType</key>
+			<integer>0</integer>
+			<key>name</key>
+			<string>Container-0</string>
+		</dict>
+		<key>container2</key>
+		<dict>
+			<key>alpha</key>
+			<real>1</real>
+			<key>backgroundColor</key>
+			<string>3741647895-0.700000</string>
+			<key>borderColor</key>
+			<string>1728974205-1.000000</string>
+			<key>borderWidth</key>
+			<real>1</real>
+			<key>childComponents</key>
+			<dict/>
+			<key>class-name</key>
+			<string>AMTextComponent</string>
+			<key>clipped</key>
+			<false/>
+			<key>cornerRadius</key>
+			<real>2</real>
+			<key>frame</key>
+			<string>{{144.72265625, 436.02734375}, {226, 178}}</string>
+			<key>identifier</key>
+			<string>CEACBF4C-947E-44D4-B937-8B1E854C9C43</string>
+			<key>layoutType</key>
+			<integer>0</integer>
+			<key>name</key>
+			<string>Container-2</string>
+			<key>textDescriptor</key>
+			<dict>
+				<key>baselineAdjustment</key>
+				<real>0.0</real>
+				<key>class-name</key>
+				<string>AMCompositeTextDescriptor</string>
+				<key>fontFamily</key>
+				<string>.Helvetica Neue DeskInterface</string>
+				<key>fontSize</key>
+				<real>16</real>
+				<key>kerning</key>
+				<real>0.0</real>
+				<key>leading</key>
+				<real>0.0</real>
+				<key>text</key>
+				<string>Hello there!</string>
+				<key>textAlignment</key>
+				<integer>0</integer>
+				<key>textColor</key>
+				<string>0-1.000000</string>
+				<key>underline</key>
+				<false/>
+			</dict>
+		</dict>
+	</dict>
+</dict>
+</plist>

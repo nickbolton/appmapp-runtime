@@ -8,15 +8,11 @@
 
 #import "AMAppMapContainerFactory.h"
 #import "AMAppMap.h"
-#import "AMLayout.h"
-#import "AMLayoutFactory.h"
-#import "AMComponent.h"
-#import "AMRuntimeView.h"
 
 @implementation AMAppMapContainerFactory
 
-- (NSView *)buildViewFromComponent:(AMComponent *)component
-                       inContainer:(NSView *)container {
+- (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
+                              inContainer:(NSView *)container {
     
     NSAssert(component != nil, @"no component given");
     NSAssert(container != nil, @"no container given");

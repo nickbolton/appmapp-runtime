@@ -28,8 +28,26 @@
     
     if (self.constraints == nil && self.view.superview != nil) {
         
-        self.constraints =
-        [NSLayoutConstraint expandToSuperview:self.view];
+        NSArray *hConstraints =
+        [NSLayoutConstraint
+         constraintsWithVisualFormat:@"H:|-(0)-[v]-(0)-|"
+         options:NSLayoutFormatAlignAllCenterX
+         metrics:nil
+         views:@{@"v" : self.view}];
+        [self.view.superview addConstraints:hConstraints];
+
+        NSArray *vConstraints =
+        [NSLayoutConstraint
+         constraintsWithVisualFormat:@"V:|-(0)-[v]-(0)-|"
+         options:NSLayoutFormatAlignAllCenterY
+         metrics:nil
+         views:@{@"v" : self.view}];
+        [self.view.superview addConstraints:vConstraints];
+
+        NSMutableArray *constraints = [NSMutableArray arrayWithArray:hConstraints];
+        [constraints addObjectsFromArray:vConstraints];
+        
+        self.constraints = constraints;
     }
 }
 

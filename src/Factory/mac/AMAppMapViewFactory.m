@@ -10,8 +10,8 @@
 
 @implementation AMAppMapViewFactory
 
-- (NSView *)buildViewFromComponent:(AMComponent *)component
-                       inContainer:(NSView *)container {
+- (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
+                              inContainer:(NSView *)container {
     return nil;
 }
 

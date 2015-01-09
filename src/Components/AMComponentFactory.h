@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Pixelbleed. All rights reserved.
 //
 
-#import "AMTool.h"
 
 typedef NS_ENUM(NSInteger, AMComponentType) {
     

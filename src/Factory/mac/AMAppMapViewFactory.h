@@ -9,10 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @class AMComponent;
+@class AMRuntimeView;
 
 @interface AMAppMapViewFactory : NSObject
 
-- (NSView *)buildViewFromComponent:(AMComponent *)component
-                       inContainer:(NSView *)container;
+- (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
+                              inContainer:(NSView *)container;
 
 @end

@@ -6,22 +6,20 @@
 //  Copyright (c) 2014 Pixelbleed. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
-@class AMDataSource;
-@class AMView;
-@class AMComponent;
+#import "AMRuntimeView.h"
+#import "AMComponent.h"
+#import "AMLayoutFactory.h"
 
 @interface AMAppMap : NSObject
 
 + (instancetype)sharedInstance;
 
-#if TARGET_OS_IPHONE
-- (UIView *)buildViewFromComponent:(AMComponent *)component
-                       inContainer:(UIView *)container;
-#else
-- (NSView *)buildViewFromComponent:(AMComponent *)component
-                       inContainer:(NSView *)container;
+- (AMRuntimeView *)buildViewFromResourceName:(NSString *)resourceName
+                               componentName:(NSString *)componentName
+                              inContainer:(NSView *)container;
+
+- (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
+                              inContainer:(NSView *)container;
 #endif
 
 @end

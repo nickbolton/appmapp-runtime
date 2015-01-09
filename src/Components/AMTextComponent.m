@@ -30,12 +30,35 @@ static NSString * kAMTextComponentTextDescriptorKey = @"textDescriptor";
     return self;
 }
 
+- (instancetype)initWithDictionary:(NSDictionary *)dict {
+    
+    self = [super initWithDictionary:dict];
+    
+    if (self != nil) {
+        
+        NSDictionary *descriptorDict = dict[kAMTextComponentTextDescriptorKey];
+        
+        self.textDescriptor =
+        [[AMCompositeTextDescriptor alloc] initWithDictionary:descriptorDict];
+    }
+    
+    return self;
+}
+
 - (id)copy {
     
     AMTextComponent *component = super.copy;
     component.textDescriptor = self.textDescriptor.copy;
     
     return component;
+}
+
+- (NSDictionary *)exportComponent {
+    
+    NSMutableDictionary *dict = [[super exportComponent] mutableCopy];
+    dict[kAMTextComponentTextDescriptorKey] = [self.textDescriptor exportTextDescriptor];
+    
+    return dict;
 }
 
 #pragma mark - Getters and Setters

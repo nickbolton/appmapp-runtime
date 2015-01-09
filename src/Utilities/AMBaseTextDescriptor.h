@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
 
+extern NSString * const kAMBaseTextDescriptorClassNameKey;
+
 @interface AMBaseTextDescriptor : NSObject <NSCopying, NSCoding>
 
 @property (nonatomic) CGFloat kerning;
@@ -18,7 +20,8 @@
 @property (nonatomic, readonly) NSAttributedString *attributedString;
 
 - (instancetype)initWithText:(NSString *)text;
-
+- (instancetype)initWithDictionary:(NSDictionary *)dict;
+- (NSDictionary *)exportTextDescriptor;
 - (void)clearCache;
 
 @end

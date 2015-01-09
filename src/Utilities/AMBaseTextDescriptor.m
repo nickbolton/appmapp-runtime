@@ -8,6 +8,8 @@
 
 #import "AMBaseTextDescriptor.h"
 
+NSString * const kAMBaseTextDescriptorClassNameKey = @"class-name";
+
 static NSString * const kAMBaseTextDescriptorKerningKey = @"kerning";
 static NSString * const kAMBaseTextDescriptorLeadingKey = @"leading";
 static NSString * const kAMBaseTextDescriptorTextAlignmentKey = @"textAlignment";
@@ -58,6 +60,22 @@ static NSString * const kAMBaseTextDescriptorUnderlineKey = @"underline";
     return self;
 }
 
+- (instancetype)initWithDictionary:(NSDictionary *)dict {
+    
+    self = [super init];
+    
+    if (self != nil) {
+        self.kerning = [dict[kAMBaseTextDescriptorKerningKey] floatValue];
+        self.leading = [dict[kAMBaseTextDescriptorLeadingKey] floatValue];
+        self.textAlignment = [dict[kAMBaseTextDescriptorTextAlignmentKey] integerValue];
+        self.text = dict[kAMBaseTextDescriptorTextKey];
+        self.baselineAdjustment = [dict[kAMBaseTextDescriptorBaselineAdjustmentKey] floatValue];
+        self.underline = [dict[kAMBaseTextDescriptorUnderlineKey] boolValue];
+  }
+    
+    return self;
+}
+
 - (instancetype)copy {
     
     AMBaseTextDescriptor *wrapperCopy = [AMBaseTextDescriptor new];
@@ -72,6 +90,22 @@ static NSString * const kAMBaseTextDescriptorUnderlineKey = @"underline";
 
 - (instancetype)copyWithZone:(NSZone *)zone {
     return self.copy;
+}
+
+- (NSDictionary *)exportTextDescriptor {
+    
+    NSDictionary *dict =
+    @{
+      kAMBaseTextDescriptorClassNameKey : NSStringFromClass(self.class),
+      kAMBaseTextDescriptorKerningKey : @(self.kerning),
+      kAMBaseTextDescriptorLeadingKey : @(self.leading),
+      kAMBaseTextDescriptorTextAlignmentKey : @(self.textAlignment),
+      kAMBaseTextDescriptorTextKey : (self.text != nil ? self.text : @""),
+      kAMBaseTextDescriptorBaselineAdjustmentKey : @(self.baselineAdjustment),
+      kAMBaseTextDescriptorUnderlineKey : @(self.underline),
+      };
+    
+    return dict;
 }
 
 #pragma mark - Getters and Setters

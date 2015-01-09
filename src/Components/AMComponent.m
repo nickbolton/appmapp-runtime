@@ -7,12 +7,9 @@
 //
 
 #import "AMComponent.h"
+#import "NSColor+AppMap.h"
 
-#if TARGET_OS_IPHONE
-#import "AMIBuilderView.h"
-#else
-#import "AMMBuilderView.h"
-#endif
+NSString * const kAMComponentClassNameKey = @"class-name";
 
 static NSString * kAMComponentNameKey = @"name";
 static NSString * kAMComponentLayoutTypeKey = @"layoutType";
@@ -30,10 +27,13 @@ static NSString * kAMComponentChildComponentsKey = @"childComponents";
 
 @property (nonatomic, strong) NSMutableArray *primChildComponents;
 @property (nonatomic, readwrite) NSString *defaultName;
+@property (nonatomic, readwrite) NSString *exportedName;
 
 @end
 
 @implementation AMComponent
+
+@synthesize name = _name;
 
 - (void)encodeWithCoder:(NSCoder *)coder {
     
@@ -76,6 +76,52 @@ static NSString * kAMComponentChildComponentsKey = @"childComponents";
     return self;
 }
 
+- (instancetype)initWithDictionary:(NSDictionary *)dict {
+    
+    self = [super init];
+    
+    if (self != nil) {
+        
+        NSString *backgroundColorString = dict[kAMComponentBackgroundColorKey];
+        NSString *borderColorString = dict[kAMComponentBorderColorWidthKey];
+
+        self.name = dict[kAMComponentNameKey];
+        self.layoutType = [dict[kAMComponentLayoutTypeKey] integerValue];
+        self.identifier = dict[kAMComponentIdentifierKey];
+        self.frame = CGRectFromString(dict[kAMComponentFrameKey]);
+        self.clipped = [dict[kAMComponentClippedKey] boolValue];
+        self.backgroundColor = [NSColor colorWithHexcodePlusAlpha:backgroundColorString];
+        self.alpha = [dict[kAMComponentAlphaKey] floatValue];
+        self.cornerRadius = [dict[kAMComponentCornerRadiusKey] floatValue];
+        self.borderWidth = [dict[kAMComponentBorderWidthKey] floatValue];
+        self.borderColor = [NSColor colorWithHexcodePlusAlpha:borderColorString];
+        
+        NSMutableArray *childComponents = [NSMutableArray array];
+        NSDictionary *children = dict[kAMComponentChildComponentsKey];
+        [children enumerateKeysAndObjectsUsingBlock:^(id key, NSDictionary *childDict, BOOL *stop) {
+            
+            NSString *className = childDict[kAMComponentClassNameKey];
+            AMComponent *childComponent =
+            [[NSClassFromString(className) alloc] initWithDictionary:childDict];
+            
+            [childComponents addObject:childComponent];
+        }];
+        
+        [self addChildComponents:childComponents];
+    }
+    
+    return self;
+}
+
++ (instancetype)componentWithDictionary:(NSDictionary *)dict {
+    
+    NSString *className = dict[kAMComponentClassNameKey];
+    AMComponent *component =
+    [[NSClassFromString(className) alloc] initWithDictionary:dict];
+    
+    return component;
+}
+
 - (id)copyWithZone:(NSZone *)zone {
     return [self copy];
 }
@@ -109,6 +155,34 @@ static NSString * kAMComponentChildComponentsKey = @"childComponents";
     return component;
 }
 
+- (NSDictionary *)exportComponent {
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    
+    dict[kAMComponentClassNameKey] = NSStringFromClass(self.class);
+    dict[kAMComponentNameKey] = self.name;
+    dict[kAMComponentLayoutTypeKey] = @(self.layoutType);
+    dict[kAMComponentIdentifierKey] = self.identifier;
+    dict[kAMComponentFrameKey] = NSStringFromCGRect(self.frame);
+    dict[kAMComponentClippedKey] = @(self.isClipped);
+    dict[kAMComponentBackgroundColorKey] = [self.backgroundColor hexcodePlusAlpha];
+    dict[kAMComponentBorderColorWidthKey] = [self.borderColor hexcodePlusAlpha];
+    dict[kAMComponentAlphaKey] = @(self.alpha);
+    dict[kAMComponentCornerRadiusKey] = @(self.cornerRadius);
+    dict[kAMComponentBorderWidthKey] = @(self.borderWidth);
+    
+    NSMutableDictionary *children = [NSMutableDictionary dictionary];
+    
+    [self.childComponents enumerateObjectsUsingBlock:^(AMComponent *childComponent, NSUInteger idx, BOOL *stop) {
+    
+        children[childComponent.exportedName] = [childComponent exportComponent];
+    }];
+
+    dict[kAMComponentChildComponentsKey] = children;
+    
+    return dict;
+}
+
 - (NSString *)description {
     return [NSString stringWithFormat:@"Component: %@, %@, %d", self.name, self.identifier, (int)self.componentType];
 }
@@ -128,6 +202,49 @@ static NSString * kAMComponentChildComponentsKey = @"childComponents";
         return _name;
     }
     return self.defaultName;
+}
+
+- (void)setName:(NSString *)name {
+    _name = name;
+    _exportedName = nil;
+}
+
+- (NSString *)exportedName {
+    
+    if (_exportedName == nil) {
+        
+        NSMutableString *exportedName = [NSMutableString string];
+        
+        NSString *name = [self.name stringByReplacingOccurrencesOfString:@"_" withString:@" "];
+        
+        // string components
+        NSArray *components = [name componentsSeparatedByString:@" "];
+        [components enumerateObjectsUsingBlock:^(NSString *component, NSUInteger idx, BOOL *stop) {
+            
+            if (component.length > 0) {
+            
+                NSString *firstCharacter;
+                
+                if (exportedName.length == 0) {
+
+                    firstCharacter = [[component substringToIndex:1] lowercaseString];
+                } else {
+                    firstCharacter = [[component substringToIndex:1] uppercaseString];
+                }
+                
+                [exportedName appendString:firstCharacter];
+
+                if (component.length > 1) {
+                    [exportedName appendString:[component substringFromIndex:1]];
+                }
+            }
+        }];
+        
+        NSCharacterSet *charactersToRemove = [[NSCharacterSet alphanumericCharacterSet] invertedSet];
+        _exportedName = [[exportedName componentsSeparatedByCharactersInSet:charactersToRemove] componentsJoinedByString:@""];
+    }
+    
+    return _exportedName;
 }
 
 - (NSString *)defaultName {
