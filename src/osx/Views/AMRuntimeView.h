@@ -11,14 +11,22 @@
 @class AMLayout;
 @class AMComponent;
 
-NSString * const kAMRuntimeViewLayoutDidChangeNotification;
+@protocol AMRuntimeView <NSObject>
 
-@interface AMRuntimeView : NSView
+- (AMLayout *)layoutObject;
+- (void)setLayoutObject:(AMLayout *)layoutObject;
 
-@property (nonatomic, strong) AMLayout *layoutObject;
-@property (nonatomic, strong) AMComponent *component;
+- (AMComponent *)component;
+- (void)setComponent:(AMComponent *)component;
 
 - (void)clearLayout;
 - (void)layoutDidChange;
+- (void)setBaseAttributes;
+
+@end
+
+extern NSString * const kAMRuntimeViewLayoutDidChangeNotification;
+
+@interface AMRuntimeView : NSView<AMRuntimeView>
 
 @end

@@ -9,61 +9,70 @@
 #import "AMRuntimeView.h"
 #import "AMComponent.h"
 #import "AMLayoutFactory.h"
+#import "AMRuntimeViewHelper.h"
 
 NSString * const kAMRuntimeViewLayoutDidChangeNotification = @"kAMRuntimeViewLayoutDidChangeNotification";
+
+@interface AMRuntimeView()
+
+@property (nonatomic, strong) AMLayout *layoutObject;
+@property (nonatomic, strong) AMComponent *component;
+@property (nonatomic, strong) AMRuntimeViewHelper *helper;
+
+@end
 
 @implementation AMRuntimeView
 
 #pragma mark - Getters and Setters
 
-- (void)setComponent:(AMComponent *)component {
-    _component = component;
+- (AMRuntimeViewHelper *)helper {
     
-    self.layoutObject =
-    [[AMLayoutFactory sharedInstance] buildLayoutOfType:component.layoutType];
+    if (_helper == nil) {
+        _helper = [AMRuntimeViewHelper new];
+    }
     
-    [self setBaseAttributes];
-    [self setNeedsUpdateConstraints:YES];
+    return _helper;
 }
 
 #pragma mark - Private
 
 - (void)setBaseAttributes {
+    [self.helper setBaseAttributes:self];
+    [self doit];
+}
+
+- (void)doit {
     
-    self.wantsLayer = YES;
-//    self.layer. = self.component.isClipped;
-    self.alphaValue = self.component.alpha;
-    self.layer.borderWidth = self.component.borderWidth;
-    self.layer.borderColor = self.component.borderColor.CGColor;
-    self.layer.cornerRadius = self.component.cornerRadius;
-    self.layer.backgroundColor = self.component.backgroundColor.CGColor;
+    NSLog(@"view: %@ - %@", self, NSStringFromRect(self.frame));
+    
+    [self setNeedsUpdateConstraints:YES];
+    
+    double delayInSeconds = 1.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [self doit];
+    });
 }
 
 #pragma mark - Layout
 
+- (void)layout {
+    [self.helper layoutView:self];
+}
+
 - (void)clearLayout {
-    [self.layoutObject clearLayout];
+    [self.helper clearLayout:self];
 }
 
 - (void)layoutDidChange {
-    
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kAMRuntimeViewLayoutDidChangeNotification
-     object:self
-     userInfo:nil];
+    [self.helper layoutDidChange:self];
 }
 
 #pragma mark - Constraints
 
 - (void)updateConstraints {
     [super updateConstraints];
-    [self updateConstraintsFromComponent];
-}
-
-- (void)updateConstraintsFromComponent {
-    
-    CGRect frame = self.component.frame;    
-    [self.layoutObject updateLayoutWithFrame:frame];
+    [self.helper updateConstraintsFromComponent:self];
 }
 
 @end

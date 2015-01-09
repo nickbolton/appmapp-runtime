@@ -18,9 +18,14 @@
 
 - (void)loadRootView {
     
+//    [[AMAppMap sharedInstance]
+//     buildViewFromResourceName:@"rootView"
+//     componentName:@"container0"
+//     inContainer:self.contentView];
+
     [[AMAppMap sharedInstance]
      buildViewFromResourceName:@"rootView"
-     componentName:@"container0"
+     componentName:@"container2"
      inContainer:self.contentView];
 }
 

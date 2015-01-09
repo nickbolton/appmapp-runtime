@@ -85,7 +85,7 @@
         if (resourceDict == nil) {
             
             NSBundle *bundle = [NSBundle mainBundle];
-            NSURL *resourceURL = [bundle pathForResource:resourceName ofType:@"dict"];
+            NSURL *resourceURL = [bundle URLForResource:resourceDict withExtension:@"dict"];
             if (resourceURL != nil) {
                 
                 resourceDict =
@@ -122,7 +122,9 @@
     NSMutableDictionary *componentCache =
     [self componentCacheForResourceName:resourceName];
     
-    [resourceDict enumerateKeysAndObjectsUsingBlock:^(NSString *name, NSDictionary *componentDict, BOOL *stop) {
+    NSDictionary *componentDict = resourceDict[@"components"];
+    
+    [componentDict enumerateKeysAndObjectsUsingBlock:^(NSString *name, NSDictionary *componentDict, BOOL *stop) {
         
         NSString *className = componentDict[kAMComponentClassNameKey];
         AMComponent *component =

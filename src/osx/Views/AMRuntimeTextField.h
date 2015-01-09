@@ -7,11 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "AMRuntimeView.h"
 
-@class AMLayout;
-
-@interface AMRuntimeTextField : NSTextField
-
-@property (nonatomic, strong) AMLayout *layoutObject;
+@interface AMRuntimeTextField : NSTextField<AMRuntimeView>
 
 @end
