@@ -45,7 +45,12 @@
     
     Class clazz = NSClassFromString(classString);
     
-    return [clazz buildComponent];
+    AMComponent *component = [clazz buildComponent];
+    
+    component.backgroundColor = [[AMDesign sharedInstance] componentBackgroundColor];
+    component.borderColor = [[AMDesign sharedInstance] componentBorderColor];
+
+    return component;
 }
 
 #pragma mark - Singleton Methods
