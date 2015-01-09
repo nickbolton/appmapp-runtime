@@ -7,12 +7,12 @@
 //
 
 #import "AMAppMapLabelFactory.h"
+#import "AMRuntimeTextField.h"
 
 @implementation AMAppMapLabelFactory
 
-- (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
-                              inContainer:(NSView *)container {
-    return nil;
+- (NSString *)viewClass {
+    return NSStringFromClass([AMRuntimeTextField class]);
 }
 
 @end

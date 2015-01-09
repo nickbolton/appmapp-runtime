@@ -7,13 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AMRuntimeView.h"
 
 @class AMComponent;
-@class AMRuntimeView;
 
 @interface AMAppMapViewFactory : NSObject
 
-- (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
-                              inContainer:(NSView *)container;
+@property (nonatomic, readonly) NSString *viewClass;
+
+- (NSView <AMRuntimeView> *)buildViewFromComponent:(AMComponent *)component
+                                       inContainer:(NSView *)container;
 
 @end

@@ -25,6 +25,11 @@
 
 #pragma mark - Getters and Setters
 
+- (void)setComponent:(AMComponent *)component {
+    _component = component;
+    [self.helper setComponent:component forView:self];
+}
+
 - (AMTextComponent *)textComponent {
     NSAssert([self.component isKindOfClass:[AMTextComponent class]],
              @"component not an AMTextComponent");

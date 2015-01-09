@@ -7,23 +7,11 @@
 //
 
 #import "AMAppMapContainerFactory.h"
-#import "AMAppMap.h"
 
 @implementation AMAppMapContainerFactory
 
-- (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
-                              inContainer:(NSView *)container {
-    
-    NSAssert(component != nil, @"no component given");
-    NSAssert(container != nil, @"no container given");
-    
-    AMRuntimeView *view = [AMRuntimeView new];
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    [container addSubview:view];
-    
-    view.component = component;
-    return view;
+- (NSString *)viewClass {
+    return NSStringFromClass([AMRuntimeView class]);
 }
 
 @end

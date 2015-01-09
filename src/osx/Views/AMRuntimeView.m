@@ -34,6 +34,11 @@ NSString * const kAMRuntimeViewLayoutDidChangeNotification = @"kAMRuntimeViewLay
     return _helper;
 }
 
+- (void)setComponent:(AMComponent *)component {
+    _component = component;
+    [self.helper setComponent:component forView:self];
+}
+
 #pragma mark - Private
 
 - (void)setBaseAttributes {

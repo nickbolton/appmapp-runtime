@@ -7,12 +7,30 @@
 //
 
 #import "AMAppMapViewFactory.h"
+#import "AMComponent.h"
 
 @implementation AMAppMapViewFactory
 
-- (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
-                              inContainer:(NSView *)container {
+- (NSString *)viewClass {
+    [self doesNotRecognizeSelector:_cmd];
     return nil;
+}
+
+- (NSView <AMRuntimeView> *)buildViewFromComponent:(AMComponent *)component
+                                       inContainer:(NSView *)container {
+
+    NSAssert(component != nil, @"no component given");
+    NSAssert(container != nil, @"no container given");
+    
+    Class clazz = NSClassFromString(self.viewClass);
+    
+    NSView <AMRuntimeView> *view = [clazz new];
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [container addSubview:view];
+    
+    view.component = component;
+    return view;
 }
 
 @end

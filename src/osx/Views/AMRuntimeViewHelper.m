@@ -17,17 +17,16 @@
     
     view.wantsLayer = YES;
     //    view.layer. = self.component.isClipped;
-    view.alphaValue = self.component.alpha;
-    view.layer.borderWidth = self.component.borderWidth;
-    view.layer.borderColor = self.component.borderColor.CGColor;
-    view.layer.cornerRadius = self.component.cornerRadius;
-    view.layer.backgroundColor = self.component.backgroundColor.CGColor;
+    view.alphaValue = view.component.alpha;
+    view.layer.borderWidth = view.component.borderWidth;
+    view.layer.borderColor = view.component.borderColor.CGColor;
+    view.layer.cornerRadius = view.component.cornerRadius;
+    view.layer.backgroundColor = view.component.backgroundColor.CGColor;
 }
 
 #pragma mark - Getters and Setters
 
 - (void)setComponent:(AMComponent *)component forView:(NSView<AMRuntimeView> *)view {
-    view.component = component;
     
     view.layoutObject =
     [[AMLayoutFactory sharedInstance] buildLayoutOfType:component.layoutType];
