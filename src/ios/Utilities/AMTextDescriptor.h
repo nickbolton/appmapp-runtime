@@ -9,8 +9,8 @@
 
 @interface AMTextDescriptor : AMBaseTextDescriptor
 
-@property (nonatomic, strong) UIFont *font;
-@property (nonatomic, strong) UIColor *textColor;
+@property (nonatomic, strong) NSFont *font;
+@property (nonatomic, strong) NSColor *textColor;
 @property (nonatomic) BOOL systemFont;
 
 + (AMTextDescriptor *)newlineDescriptor:(CGFloat)lineHeight;
