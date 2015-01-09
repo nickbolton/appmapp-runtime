@@ -20,6 +20,5 @@
 
 - (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
                               inContainer:(NSView *)container;
-#endif
 
 @end
