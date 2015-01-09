@@ -9,9 +9,16 @@
 #import <Cocoa/Cocoa.h>
 
 @class AMLayout;
+@class AMComponent;
+
+NSString * const kAMRuntimeViewLayoutDidChangeNotification;
 
 @interface AMRuntimeView : NSView
 
 @property (nonatomic, strong) AMLayout *layoutObject;
+@property (nonatomic, strong) AMComponent *component;
+
+- (void)clearLayout;
+- (void)layoutDidChange;
 
 @end

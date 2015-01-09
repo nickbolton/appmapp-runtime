@@ -22,14 +22,7 @@
     
     [container addSubview:view];
     
-    AMLayout *layout =
-    [[AMLayoutFactory sharedInstance] buildLayoutOfType:component.layoutType];
-    
-    layout.view = view;
-    view.layoutObject = layout;
-    
-    [layout updateLayoutWithFrame:component.frame];
-    
+    view.component = component;
     return view;
 }
 
