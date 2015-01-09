@@ -10,6 +10,6 @@ Pod::Spec.new do |s|
   s.source    = { :git => 'https://github.com/nickbolton/appmapp-runtime.git',
                   :branch => 'master'}
   s.license = 'MIT'
-  s.ios.source_files  = 'src/shared/**/*.{h,m}, src/ios/**/*.{h,m}'
-  s.osx.source_files  = 'src/shared/**/*.{h,m}, src/osx/**/*.{h,m}'
+  s.ios.source_files  = 'src/shared/**/*.{h,m}', 'src/ios/**/*.{h,m}'
+  s.osx.source_files  = 'src/shared/**/*.{h,m}', 'src/osx/**/*.{h,m}'
 end
