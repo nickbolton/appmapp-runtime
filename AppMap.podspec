@@ -9,7 +9,6 @@ Pod::Spec.new do |s|
   s.author    = { 'nickbolton' => 'nick@deucent.com' }             
   s.source    = { :git => 'https://github.com/nickbolton/appmapp-runtime.git',
                   :branch => 'master'}
-  s.prefix_header_file = 'Source/AppMap.h'
   s.license = 'MIT'
-  s.source_files  = 'Source/**/*.{h,m}'
+  s.source_files  = 'src/**/*.{h,m}'
 end
