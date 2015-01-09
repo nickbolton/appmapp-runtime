@@ -5,12 +5,10 @@
 //  Created by Nick Bolton on 1/8/15.
 //  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
-
-#import <Cocoa/Cocoa.h>
+#import "AppMap.h"
 
 @interface NSColor (AppMap)
 
 - (NSString *)hexcodePlusAlpha;
-+ (NSColor *)colorWithHexcodePlusAlpha:(NSString *)colorString;
 
 @end

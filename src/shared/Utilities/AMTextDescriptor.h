@@ -1,14 +1,15 @@
 //
-//  AMBaseTextDescriptor.h
+//  AMTextDescriptor.h
 //  AppMap
 //
 //  Created by Nick Bolton on 1/3/15.
 //  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
+#import "AppMap.h"
 
-extern NSString * const kAMBaseTextDescriptorClassNameKey;
+extern NSString * const kAMTextDescriptorClassNameKey;
 
-@interface AMBaseTextDescriptor : NSObject <NSCopying, NSCoding>
+@interface AMTextDescriptor : NSObject <NSCopying, NSCoding>
 
 @property (nonatomic) CGFloat kerning;
 @property (nonatomic) CGFloat leading;
@@ -18,6 +19,11 @@ extern NSString * const kAMBaseTextDescriptorClassNameKey;
 @property (nonatomic) BOOL underline;
 @property (nonatomic, strong) NSDictionary *attributes;
 @property (nonatomic, readonly) NSAttributedString *attributedString;
+@property (nonatomic, strong) AMFont *font;
+@property (nonatomic, strong) AMColor *textColor;
+@property (nonatomic) BOOL systemFont;
+
++ (AMTextDescriptor *)newlineDescriptor:(CGFloat)lineHeight;
 
 - (instancetype)initWithText:(NSString *)text;
 - (instancetype)initWithDictionary:(NSDictionary *)dict;

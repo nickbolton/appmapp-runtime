@@ -6,10 +6,8 @@
 //  Copyright (c) 2014 Nick Bolton. All rights reserved.
 //
 
-#import "AMComponentFactory.h"
-#import "AMLayout.h"
-
-@class AMComponent;
+#import "AppMap.h"
+#import "AppMapTypes.h"
 
 extern NSString * const kAMComponentClassNameKey;
 
@@ -32,13 +30,8 @@ extern NSString * const kAMComponentClassNameKey;
 @property (nonatomic) CGRect frame;
 @property (nonatomic, readonly) BOOL isContainer;
 
-#if TARGET_OS_IPHONE
-@property (nonatomic, strong) UIColor *borderColor;
-@property (nonatomic, strong) UIColor *backgroundColor;
-#else
-@property (nonatomic, strong) NSColor *borderColor;
-@property (nonatomic, strong) NSColor *backgroundColor;
-#endif
+@property (nonatomic, strong) AMColor *borderColor;
+@property (nonatomic, strong) AMColor *backgroundColor;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)componentWithDictionary:(NSDictionary *)dict;

@@ -42,7 +42,7 @@
 }
 
 - (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
-                              inContainer:(NSView *)container {
+                              inContainer:(AMView *)container {
 
     NSString *classString = self.factoryClasses[@(component.componentType)];
     
@@ -56,7 +56,7 @@
 
 - (AMRuntimeView *)buildViewFromResourceName:(NSString *)resourceName
                                componentName:(NSString *)componentName
-                                 inContainer:(NSView *)container {
+                                 inContainer:(AMView *)container {
     
     if (resourceName == nil) {
         NSLog(@"no resourceName!");
@@ -85,7 +85,7 @@
         if (resourceDict == nil) {
             
             NSBundle *bundle = [NSBundle mainBundle];
-            NSURL *resourceURL = [bundle URLForResource:resourceDict withExtension:@"dict"];
+            NSURL *resourceURL = [bundle URLForResource:resourceName withExtension:@"dict"];
             if (resourceURL != nil) {
                 
                 resourceDict =
@@ -107,7 +107,7 @@
         }
         
         if (component == nil) {
-            NSLog(@"No component found named: %@ in resource: ", componentName, resourceName);
+            NSLog(@"No component found named: %@ in resource: %@", componentName, resourceName);
             return nil;
         }
     }

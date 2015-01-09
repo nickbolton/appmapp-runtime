@@ -7,7 +7,8 @@
 //
 
 #import "AMComponent.h"
-#import "NSColor+AppMap.h"
+#import "AppMap.h"
+#import "AMColor+AMColor.h"
 
 NSString * const kAMComponentClassNameKey = @"class-name";
 
@@ -102,15 +103,13 @@ static NSString * kAMComponentChildComponentsKey = @"childComponents";
         self.alpha = [dict[kAMComponentAlphaKey] floatValue];
         self.cornerRadius = [dict[kAMComponentCornerRadiusKey] floatValue];
         self.borderWidth = [dict[kAMComponentBorderWidthKey] floatValue];
-        
+        self.borderColor = [AMColor colorWithHexcodePlusAlpha:borderColorString];
+        self.backgroundColor = [AMColor colorWithHexcodePlusAlpha:backgroundColorString];
+
 #if TARGET_OS_IPHONE
         self.frame = CGRectFromString(dict[kAMComponentFrameKey]);
-        self.borderColor = [UIColor colorWithHexcodePlusAlpha:borderColorString];
-        self.backgroundColor = [UIColor colorWithHexcodePlusAlpha:backgroundColorString];
 #else
         self.frame = NSRectFromString(dict[kAMComponentFrameKey]);
-        self.borderColor = [NSColor colorWithHexcodePlusAlpha:borderColorString];
-        self.backgroundColor = [NSColor colorWithHexcodePlusAlpha:backgroundColorString];
 #endif
         
         NSMutableArray *childComponents = [NSMutableArray array];

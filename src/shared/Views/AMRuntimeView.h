@@ -6,7 +6,8 @@
 //  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import "AppMap.h"
+#import "AppMapTypes.h"
 
 @class AMLayout;
 @class AMComponent;
@@ -19,14 +20,13 @@
 - (AMComponent *)component;
 - (void)setComponent:(AMComponent *)component;
 
-- (void)clearLayout;
-- (void)layoutDidChange;
+- (void)clearConstraints;
 - (void)setBaseAttributes;
 
 @end
 
-extern NSString * const kAMRuntimeViewLayoutDidChangeNotification;
+extern NSString * const kAMRuntimeViewConstraintsDidChangeNotification;
 
-@interface AMRuntimeView : NSView<AMRuntimeView>
+@interface AMRuntimeView : AMView<AMRuntimeView>
 
 @end

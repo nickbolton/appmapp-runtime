@@ -5,15 +5,8 @@
 //  Created by Nick Bolton on 8/13/14.
 //  Copyright (c) 2014 Pixelbleed. All rights reserved.
 //
-
-
-typedef NS_ENUM(NSInteger, AMComponentType) {
-    
-    AMComponentContainer = 0,
-    AMComponentText,
-    AMComponentTextField,
-    AMComponentButton,
-};
+#import "AppMap.h"
+#import "AppMapTypes.h"
 
 @class AMComponent;
 

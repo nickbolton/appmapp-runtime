@@ -1,18 +1,18 @@
 //
-//  AMRuntimeTextField.m
+//  AMRuntimeLabel.m
 //  AppMap
 //
 //  Created by Nick Bolton on 1/8/15.
 //  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
 
-#import "AMRuntimeTextField.h"
+#import "AMRuntimeLabel.h"
 #import "AMRuntimeViewHelper.h"
 #import "AMComponent.h"
 #import "AMTextComponent.h"
 #import "AMCompositeTextDescriptor.h"
 
-@interface AMRuntimeTextField()
+@interface AMRuntimeLabel()
 
 @property (nonatomic, strong) AMLayout *layoutObject;
 @property (nonatomic, strong) AMComponent *component;
@@ -21,7 +21,7 @@
 
 @end
 
-@implementation AMRuntimeTextField
+@implementation AMRuntimeLabel
 
 #pragma mark - Getters and Setters
 
@@ -53,21 +53,29 @@
 }
 
 - (void)updateFromTextDescriptor {
-    self.attributedStringValue = self.textComponent.textDescriptor.attributedString;
     
-    NSFont *font = nil;
+    NSAttributedString *attributedString =
+    self.textComponent.textDescriptor.attributedString;
     
-    if (self.attributedStringValue.length > 0) {
+#if TARGET_OS_IPHONE
+    self.attributedText = attributedString;
+#else
+    self.attributedStringValue = attributedString;
+#endif
+    
+    AMFont *font = nil;
+    
+    if (attributedString.length > 0) {
         
         font =
-        [self.attributedStringValue
+        [attributedString
          attribute:NSFontAttributeName
          atIndex:0
          effectiveRange:NULL];
     }
     
     if (font == nil) {
-        font = [NSFont systemFontOfSize:16.0f];
+        font = [AMFont systemFontOfSize:16.0f];
     }
     
     self.font = font;
@@ -79,20 +87,19 @@
     [self.helper layoutView:self];
 }
 
-- (void)clearLayout {
-    [self.helper clearLayout:self];
-}
-
-- (void)layoutDidChange {
-    [self.helper layoutDidChange:self];
+- (void)layoutSubviews {
+    [self.helper layoutView:self];
 }
 
 #pragma mark - Constraints
+
+- (void)clearConstraints {
+    [self.helper clearConstraints:self];
+}
 
 - (void)updateConstraints {
     [super updateConstraints];
     [self.helper updateConstraintsFromComponent:self];
 }
-
 
 @end

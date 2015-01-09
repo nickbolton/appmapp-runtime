@@ -37,7 +37,7 @@ static NSString * const kAMBaseTextDescriptorTextDescriptorsKey = @"textDescript
         NSArray *descriptors = dict[kAMBaseTextDescriptorTextDescriptorsKey];
         [descriptors enumerateObjectsUsingBlock:^(NSDictionary *descriptorDict, NSUInteger idx, BOOL *stop) {
             
-            NSString *className = descriptorDict[kAMBaseTextDescriptorClassNameKey];
+            NSString *className = descriptorDict[kAMTextDescriptorClassNameKey];
             
             AMTextDescriptor *textDescriptor =
             [[NSClassFromString(className) alloc] initWithDictionary:descriptorDict];

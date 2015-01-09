@@ -18,6 +18,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.view.backgroundColor = [UIColor lightGrayColor];
+    
     [[AMAppMap sharedInstance]
      buildViewFromResourceName:@"rootView"
      componentName:@"container0"
@@ -25,7 +27,7 @@
     
     [[AMAppMap sharedInstance]
      buildViewFromResourceName:@"rootView"
-     componentName:@"container2"
+     componentName:@"container1"
      inContainer:self.view];
 }
 

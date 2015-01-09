@@ -25,7 +25,7 @@
 
     [[AMAppMap sharedInstance]
      buildViewFromResourceName:@"rootView"
-     componentName:@"container2"
+     componentName:@"container1"
      inContainer:self.contentView];
 }
 

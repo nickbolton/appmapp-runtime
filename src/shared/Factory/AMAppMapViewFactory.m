@@ -16,15 +16,15 @@
     return nil;
 }
 
-- (NSView <AMRuntimeView> *)buildViewFromComponent:(AMComponent *)component
-                                       inContainer:(NSView *)container {
+- (AMView <AMRuntimeView> *)buildViewFromComponent:(AMComponent *)component
+                                       inContainer:(AMView *)container {
 
     NSAssert(component != nil, @"no component given");
     NSAssert(container != nil, @"no container given");
     
     Class clazz = NSClassFromString(self.viewClass);
     
-    NSView <AMRuntimeView> *view = [clazz new];
+    AMView <AMRuntimeView> *view = [clazz new];
     view.translatesAutoresizingMaskIntoConstraints = NO;
     
     [container addSubview:view];

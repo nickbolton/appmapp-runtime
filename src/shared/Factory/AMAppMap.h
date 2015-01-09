@@ -16,9 +16,9 @@
 
 - (AMRuntimeView *)buildViewFromResourceName:(NSString *)resourceName
                                componentName:(NSString *)componentName
-                              inContainer:(NSView *)container;
+                              inContainer:(AMView *)container;
 
 - (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
-                              inContainer:(NSView *)container;
+                              inContainer:(AMView *)container;
 
 @end

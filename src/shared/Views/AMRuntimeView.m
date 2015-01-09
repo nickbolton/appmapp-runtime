@@ -11,7 +11,7 @@
 #import "AMLayoutFactory.h"
 #import "AMRuntimeViewHelper.h"
 
-NSString * const kAMRuntimeViewLayoutDidChangeNotification = @"kAMRuntimeViewLayoutDidChangeNotification";
+NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeViewConstraintsDidChangeNotification";
 
 @interface AMRuntimeView()
 
@@ -51,15 +51,15 @@ NSString * const kAMRuntimeViewLayoutDidChangeNotification = @"kAMRuntimeViewLay
     [self.helper layoutView:self];
 }
 
-- (void)clearLayout {
-    [self.helper clearLayout:self];
-}
-
-- (void)layoutDidChange {
-    [self.helper layoutDidChange:self];
+- (void)layoutSubviews {
+    [self.helper layoutView:self];
 }
 
 #pragma mark - Constraints
+
+- (void)clearConstraints {
+    [self.helper clearConstraints:self];
+}
 
 - (void)updateConstraints {
     [super updateConstraints];

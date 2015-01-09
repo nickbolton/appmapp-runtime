@@ -10,23 +10,30 @@
 #import "AMComponent.h"
 #import "AMRuntimeView.h"
 #import "AMLayoutFactory.h"
+#import "AMLayout.h"
 
 @implementation AMRuntimeViewHelper
 
-- (void)setBaseAttributes:(NSView <AMRuntimeView> *)view {
+- (void)setBaseAttributes:(AMView <AMRuntimeView> *)view {
     
+#if TARGET_OS_IPHONE
+    view.alpha = view.component.alpha;
+    view.backgroundColor = view.component.backgroundColor;
+#else
     view.wantsLayer = YES;
     //    view.layer. = self.component.isClipped;
     view.alphaValue = view.component.alpha;
+    view.layer.backgroundColor = view.component.backgroundColor.CGColor;
+#endif
+    
     view.layer.borderWidth = view.component.borderWidth;
     view.layer.borderColor = view.component.borderColor.CGColor;
     view.layer.cornerRadius = view.component.cornerRadius;
-    view.layer.backgroundColor = view.component.backgroundColor.CGColor;
 }
 
 #pragma mark - Getters and Setters
 
-- (void)setComponent:(AMComponent *)component forView:(NSView<AMRuntimeView> *)view {
+- (void)setComponent:(AMComponent *)component forView:(AMView<AMRuntimeView> *)view {
     
     view.layoutObject =
     [[AMLayoutFactory sharedInstance] buildLayoutOfType:component.layoutType];
@@ -39,29 +46,40 @@
 
 #pragma mark - Layout
 
-- (void)layoutView:(NSView<AMRuntimeView> *)view {
+- (void)layoutView:(AMView<AMRuntimeView> *)view {
+#if TARGET_OS_IPHONE
+    [view.superview layoutSubviews];
+    [view setNeedsUpdateConstraints];
+#else
     [view.superview layout];
     [view setNeedsUpdateConstraints:YES];
+#endif
 }
 
-- (void)clearLayout:(NSView<AMRuntimeView> *)view {
+- (void)clearConstraints:(AMView<AMRuntimeView> *)view {
     [view.layoutObject clearLayout];
+    
+#if TARGET_OS_IPHONE
+    [view setNeedsUpdateConstraints];
+#else
     [view setNeedsUpdateConstraints:YES];
+#endif
 }
 
-- (void)layoutDidChange:(NSView<AMRuntimeView> *)runtimeView {
+- (void)constraintsDidChange:(AMView<AMRuntimeView> *)runtimeView {
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:kAMRuntimeViewLayoutDidChangeNotification
+     postNotificationName:kAMRuntimeViewConstraintsDidChangeNotification
      object:runtimeView
      userInfo:nil];
 }
 
 #pragma mark - Constraints
 
-- (void)updateConstraintsFromComponent:(NSView<AMRuntimeView> *)view {
+- (void)updateConstraintsFromComponent:(AMView<AMRuntimeView> *)view {
     CGRect frame = view.component.frame;
     [view.layoutObject updateLayoutWithFrame:frame];
+    [self constraintsDidChange:view];
 }
 
 @end
