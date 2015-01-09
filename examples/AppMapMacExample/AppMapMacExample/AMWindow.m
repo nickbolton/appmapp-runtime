@@ -23,10 +23,10 @@
      componentName:@"container0"
      inContainer:self.contentView];
 
-//    [[AMAppMap sharedInstance]
-//     buildViewFromResourceName:@"rootView"
-//     componentName:@"container2"
-//     inContainer:self.contentView];
+    [[AMAppMap sharedInstance]
+     buildViewFromResourceName:@"rootView"
+     componentName:@"container2"
+     inContainer:self.contentView];
 }
 
 @end

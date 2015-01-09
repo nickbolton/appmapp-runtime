@@ -43,20 +43,6 @@ NSString * const kAMRuntimeViewLayoutDidChangeNotification = @"kAMRuntimeViewLay
 
 - (void)setBaseAttributes {
     [self.helper setBaseAttributes:self];
-    [self doit];
-}
-
-- (void)doit {
-    
-    NSLog(@"view: %@ - %@", self, NSStringFromRect(self.frame));
-    
-    [self setNeedsUpdateConstraints:YES];
-    
-    double delayInSeconds = 1.0;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self doit];
-    });
 }
 
 #pragma mark - Layout
