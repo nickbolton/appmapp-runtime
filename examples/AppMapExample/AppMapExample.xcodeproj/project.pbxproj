@@ -41,8 +41,8 @@
 		FC7A79701A6064F2009BCA50 /* AMRuntimeView.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7A79561A6064F2009BCA50 /* AMRuntimeView.m */; };
 		FC7A79711A6064F2009BCA50 /* AMRuntimeViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7A79581A6064F2009BCA50 /* AMRuntimeViewHelper.m */; };
 		FC925F0C1A615463005C9ECE /* rootView.dict in Resources */ = {isa = PBXBuildFile; fileRef = FC925F0B1A615463005C9ECE /* rootView.dict */; };
-		FC925F4C1A615CBA005C9ECE /* _PBcontainer0ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC925F491A615CBA005C9ECE /* _PBcontainer0ViewController.m */; };
-		FC925F4D1A615CBA005C9ECE /* PBcontainer0ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC925F4B1A615CBA005C9ECE /* PBcontainer0ViewController.m */; };
+		FC925F641A6160CA005C9ECE /* _PBContainer0ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC925F611A6160CA005C9ECE /* _PBContainer0ViewController.m */; };
+		FC925F651A6160CA005C9ECE /* PBContainer0ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC925F631A6160CA005C9ECE /* PBContainer0ViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -124,10 +124,10 @@
 		FC7A79571A6064F2009BCA50 /* AMRuntimeViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMRuntimeViewHelper.h; sourceTree = "<group>"; };
 		FC7A79581A6064F2009BCA50 /* AMRuntimeViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMRuntimeViewHelper.m; sourceTree = "<group>"; };
 		FC925F0B1A615463005C9ECE /* rootView.dict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = rootView.dict; sourceTree = "<group>"; };
-		FC925F481A615CBA005C9ECE /* _PBcontainer0ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _PBcontainer0ViewController.h; sourceTree = "<group>"; };
-		FC925F491A615CBA005C9ECE /* _PBcontainer0ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _PBcontainer0ViewController.m; sourceTree = "<group>"; };
-		FC925F4A1A615CBA005C9ECE /* PBcontainer0ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBcontainer0ViewController.h; sourceTree = "<group>"; };
-		FC925F4B1A615CBA005C9ECE /* PBcontainer0ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBcontainer0ViewController.m; sourceTree = "<group>"; };
+		FC925F601A6160CA005C9ECE /* _PBContainer0ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _PBContainer0ViewController.h; sourceTree = "<group>"; };
+		FC925F611A6160CA005C9ECE /* _PBContainer0ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _PBContainer0ViewController.m; sourceTree = "<group>"; };
+		FC925F621A6160CA005C9ECE /* PBContainer0ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBContainer0ViewController.h; sourceTree = "<group>"; };
+		FC925F631A6160CA005C9ECE /* PBContainer0ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBContainer0ViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,7 +178,7 @@
 		FC7A781F1A6035C3009BCA50 /* AppMapExample */ = {
 			isa = PBXGroup;
 			children = (
-				FC925F471A615CBA005C9ECE /* container0 */,
+				FC925F5F1A6160CA005C9ECE /* container0 */,
 				FC7A78241A6035C3009BCA50 /* AppDelegate.h */,
 				FC7A78251A6035C3009BCA50 /* AppDelegate.m */,
 				FC7A78271A6035C3009BCA50 /* ViewController.h */,
@@ -353,13 +353,13 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		FC925F471A615CBA005C9ECE /* container0 */ = {
+		FC925F5F1A6160CA005C9ECE /* container0 */ = {
 			isa = PBXGroup;
 			children = (
-				FC925F481A615CBA005C9ECE /* _PBcontainer0ViewController.h */,
-				FC925F491A615CBA005C9ECE /* _PBcontainer0ViewController.m */,
-				FC925F4A1A615CBA005C9ECE /* PBcontainer0ViewController.h */,
-				FC925F4B1A615CBA005C9ECE /* PBcontainer0ViewController.m */,
+				FC925F601A6160CA005C9ECE /* _PBContainer0ViewController.h */,
+				FC925F611A6160CA005C9ECE /* _PBContainer0ViewController.m */,
+				FC925F621A6160CA005C9ECE /* PBContainer0ViewController.h */,
+				FC925F631A6160CA005C9ECE /* PBContainer0ViewController.m */,
 			);
 			path = container0;
 			sourceTree = "<group>";
@@ -466,10 +466,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC7A796B1A6064F2009BCA50 /* AMLayoutFactory.m in Sources */,
+				FC925F651A6160CA005C9ECE /* PBContainer0ViewController.m in Sources */,
 				FC7A79601A6064F2009BCA50 /* AMAppMapViewFactory.m in Sources */,
 				FC7A79661A6064F2009BCA50 /* AMAnchoredTopLayout.m in Sources */,
 				FC7A78291A6035C3009BCA50 /* ViewController.m in Sources */,
-				FC925F4D1A615CBA005C9ECE /* PBcontainer0ViewController.m in Sources */,
 				FC7A79011A604346009BCA50 /* UIColor+AppMap.m in Sources */,
 				FC7A795C1A6064F2009BCA50 /* AMTextComponent.m in Sources */,
 				FC7A796D1A6064F2009BCA50 /* AMCompositeTextDescriptor.m in Sources */,
@@ -485,6 +485,7 @@
 				FC7A79701A6064F2009BCA50 /* AMRuntimeView.m in Sources */,
 				FC7A796F1A6064F2009BCA50 /* AMRuntimeLabel.m in Sources */,
 				FC7A79621A6064F2009BCA50 /* AMAnchoredBottomLeftLayout.m in Sources */,
+				FC925F641A6160CA005C9ECE /* _PBContainer0ViewController.m in Sources */,
 				FC7A78231A6035C3009BCA50 /* main.m in Sources */,
 				FC7A79591A6064F2009BCA50 /* AMColor+AMColor.m in Sources */,
 				FC7A79641A6064F2009BCA50 /* AMAnchoredLeftLayout.m in Sources */,
@@ -495,7 +496,6 @@
 				FC7A79681A6064F2009BCA50 /* AMAnchoredTopRightLayout.m in Sources */,
 				FC7A795D1A6064F2009BCA50 /* AMAppMap.m in Sources */,
 				FC7A796E1A6064F2009BCA50 /* AMTextDescriptor.m in Sources */,
-				FC925F4C1A615CBA005C9ECE /* _PBcontainer0ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

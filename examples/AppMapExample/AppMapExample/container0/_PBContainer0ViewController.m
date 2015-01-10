@@ -1,10 +1,10 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to PBcontainer0ViewController.m instead.
+// Make changes to PBContainer0ViewController.m instead.
 
-#import "_PBcontainer0ViewController.h"
+#import "_PBContainer0ViewController.h"
 #import "AMAppMap.h"
 
-@interface _PBcontainer0ViewController ()
+@interface _PBContainer0ViewController ()
 
 @property (nonatomic, strong) AMComponent *component;
 @property (nonatomic, readwrite) UIView *container0;
@@ -12,7 +12,7 @@
 
 @end
 
-@implementation _PBcontainer0ViewController
+@implementation _PBContainer0ViewController
 
 #pragma mark - Setup
 
@@ -45,8 +45,8 @@
             @"cornerRadius" : @(2),
             @"name" : @"Container-0",
             @"childComponents" : @[],
-        },
-@{
+            },
+            @{
             @"borderColor" : @"0.403922,0.458824,0.513726,1.000000",
             @"frame" : @"{{123, 125}, {123, 127}}",
             @"backgroundColor" : @"0.874510,0.894118,0.913725,0.700000",
@@ -59,9 +59,9 @@
             @"cornerRadius" : @(2),
             @"name" : @"Container-1",
             @"childComponents" : @[],
-        },
+            },
         ],
-    };
+        };
     
     self.component =
     [[AMAppMap sharedInstance]

@@ -36,8 +36,8 @@
 //     componentName:@"container1"
 //     inContainer:self.view];
     
-    PBcontainer0ViewController *viewController =
-    [PBcontainer0ViewController new];
+    PBContainer0ViewController *viewController =
+    [PBContainer0ViewController new];
     
     UIView *view = viewController.view;
     view.translatesAutoresizingMaskIntoConstraints = NO;

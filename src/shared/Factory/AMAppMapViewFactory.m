@@ -32,7 +32,7 @@
     [container addSubview:view];
     
     view.component = component;
-    
+
     NSString *setterName =
     [NSString stringWithFormat:@"set%@%@:",
      [component.exportedName substringToIndex:1].uppercaseString,

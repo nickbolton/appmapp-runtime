@@ -155,9 +155,9 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName {
                    classPrefix:(NSString *)classPrefix {
 
     if (classPrefix.length > 0) {
-        return [classPrefix stringByAppendingString:name];
+        return [classPrefix stringByAppendingString:name.capitalizedString];
     }
-    return name;
+    return name.capitalizedString;
 }
 
 - (NSString *)buildBaseViewControllerName:(NSString *)name
@@ -290,7 +290,7 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName {
     template =
     [template
      stringByReplacingOccurrencesOfString:kAMComponentDictionaryToken
-     withString:[self buildComponentReplacement:componentDictionary indentLevel:1]];
+     withString:[self buildComponentReplacement:componentDictionary indentLevel:1 prefixIndent:0]];
     
     template =
     [template
@@ -345,9 +345,11 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName {
      readQualifier, viewClass, propertyName];
 }
 
-- (NSString *)buildComponentReplacement:(NSDictionary *)dictionary indentLevel:(NSInteger)indentLevel {
+- (NSString *)buildComponentReplacement:(NSDictionary *)dictionary indentLevel:(NSInteger)indentLevel prefixIndent:(NSInteger)prefixIndent {
     
-    NSMutableString *result = [NSMutableString stringWithString:@"@{\n"];
+    NSMutableString *result = [NSMutableString stringWithString:@""];
+    [result appendString:[self indentString:prefixIndent]];
+    [result appendString:@"@{\n"];
     
     [dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
         
@@ -375,37 +377,43 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName {
     NSDictionary *childComponentsDictionary = dictionary[kAMComponentChildComponentsKey];
     
     NSString *keyToken = [self stringToken:kAMComponentChildComponentsKey];
-    NSMutableString *childComponents = [NSMutableString stringWithString:@"    "];
-    [childComponents appendString:[self indentString:indentLevel]];
+    NSMutableString *childComponents = [NSMutableString stringWithString:@""];
+    [childComponents appendString:[self indentString:indentLevel+1]];
     [childComponents appendString:keyToken];
     [childComponents appendString:@" : @["];
     
     if (childComponentsDictionary.count > 0) {
-        [childComponents appendString:@"\n    "];
-        [childComponents appendString:[self indentString:indentLevel+1]];
+        [childComponents appendString:@"\n"];
+        [childComponents appendString:[self indentString:indentLevel+2]];
     }
     
-    [childComponentsDictionary enumerateKeysAndObjectsUsingBlock:^(id key, NSDictionary *childDictionary, BOOL *stop) {
+    NSArray *childComponentsArray = childComponentsDictionary.allValues;
+    
+    [childComponentsArray enumerateObjectsUsingBlock:^(NSDictionary *childDictionary, NSUInteger idx, BOOL *stop) {
+        
+        NSInteger prefixIndent = idx > 0 ? indentLevel : 0;
         
         NSString *child =
-        [self buildComponentReplacement:childDictionary indentLevel:indentLevel+1];
+        [self buildComponentReplacement:childDictionary indentLevel:indentLevel+1 prefixIndent:prefixIndent];
         
         [childComponents appendString:child];
         
         [childComponents appendString:@",\n"];
+        
+        if (idx < (childComponentsArray.count-1)) {
+            [childComponents appendString:[self indentString:indentLevel+1]];
+        }
     }];
     
     if (childComponentsDictionary.count > 0) {
-        [childComponents appendString:@"    "];
-        [childComponents appendString:[self indentString:indentLevel]];
+        [childComponents appendString:[self indentString:indentLevel+1]];
     }
     
     [childComponents appendString:@"],\n"];
     
     [result appendString:childComponents];
     
-    [result appendString:@"    "];
-    [result appendString:[self indentString:indentLevel-1]];
+    [result appendString:[self indentString:indentLevel+1]];
     [result appendString:@"}"];
     
     return result;
