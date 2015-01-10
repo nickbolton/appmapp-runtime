@@ -6,14 +6,8 @@
 //  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "AMGenerator.h"
 
-@interface AMViewControllerGenerator : NSObject
-
-- (void)generateViewControllersWithComponentsDictionary:(NSDictionary *)componentDictionary
-                                        targetDirectory:(NSURL *)targetDirectory
-                                                    ios:(BOOL)ios
-                                            classPrefix:(NSString *)classPrefix
-                            baseViewControllerClassName:(NSString *)baseViewControllerClassName;
+@interface AMViewControllerGenerator : AMGenerator
 
 @end

@@ -41,8 +41,14 @@
 		FC7A79701A6064F2009BCA50 /* AMRuntimeView.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7A79561A6064F2009BCA50 /* AMRuntimeView.m */; };
 		FC7A79711A6064F2009BCA50 /* AMRuntimeViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7A79581A6064F2009BCA50 /* AMRuntimeViewHelper.m */; };
 		FC925F0C1A615463005C9ECE /* rootView.dict in Resources */ = {isa = PBXBuildFile; fileRef = FC925F0B1A615463005C9ECE /* rootView.dict */; };
-		FC925F641A6160CA005C9ECE /* _PBContainer0ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC925F611A6160CA005C9ECE /* _PBContainer0ViewController.m */; };
-		FC925F651A6160CA005C9ECE /* PBContainer0ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC925F631A6160CA005C9ECE /* PBContainer0ViewController.m */; };
+		FC92600D1A618CC4005C9ECE /* _PBContainer1View.m in Sources */ = {isa = PBXBuildFile; fileRef = FC925FFA1A618CC4005C9ECE /* _PBContainer1View.m */; };
+		FC92600E1A618CC4005C9ECE /* PBContainer1View.m in Sources */ = {isa = PBXBuildFile; fileRef = FC925FFC1A618CC4005C9ECE /* PBContainer1View.m */; };
+		FC92600F1A618CC4005C9ECE /* _PBContainer2View.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9260001A618CC4005C9ECE /* _PBContainer2View.m */; };
+		FC9260101A618CC4005C9ECE /* PBContainer2View.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9260021A618CC4005C9ECE /* PBContainer2View.m */; };
+		FC9260111A618CC4005C9ECE /* _PBContainer0ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9260051A618CC4005C9ECE /* _PBContainer0ViewController.m */; };
+		FC9260121A618CC4005C9ECE /* PBContainer0ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9260071A618CC4005C9ECE /* PBContainer0ViewController.m */; };
+		FC9260131A618CC4005C9ECE /* _PBContainer0View.m in Sources */ = {isa = PBXBuildFile; fileRef = FC92600A1A618CC4005C9ECE /* _PBContainer0View.m */; };
+		FC9260141A618CC4005C9ECE /* PBContainer0View.m in Sources */ = {isa = PBXBuildFile; fileRef = FC92600C1A618CC4005C9ECE /* PBContainer0View.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -124,10 +130,22 @@
 		FC7A79571A6064F2009BCA50 /* AMRuntimeViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMRuntimeViewHelper.h; sourceTree = "<group>"; };
 		FC7A79581A6064F2009BCA50 /* AMRuntimeViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMRuntimeViewHelper.m; sourceTree = "<group>"; };
 		FC925F0B1A615463005C9ECE /* rootView.dict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = rootView.dict; sourceTree = "<group>"; };
-		FC925F601A6160CA005C9ECE /* _PBContainer0ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _PBContainer0ViewController.h; sourceTree = "<group>"; };
-		FC925F611A6160CA005C9ECE /* _PBContainer0ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _PBContainer0ViewController.m; sourceTree = "<group>"; };
-		FC925F621A6160CA005C9ECE /* PBContainer0ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBContainer0ViewController.h; sourceTree = "<group>"; };
-		FC925F631A6160CA005C9ECE /* PBContainer0ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBContainer0ViewController.m; sourceTree = "<group>"; };
+		FC925FF91A618CC4005C9ECE /* _PBContainer1View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _PBContainer1View.h; sourceTree = "<group>"; };
+		FC925FFA1A618CC4005C9ECE /* _PBContainer1View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _PBContainer1View.m; sourceTree = "<group>"; };
+		FC925FFB1A618CC4005C9ECE /* PBContainer1View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBContainer1View.h; sourceTree = "<group>"; };
+		FC925FFC1A618CC4005C9ECE /* PBContainer1View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBContainer1View.m; sourceTree = "<group>"; };
+		FC925FFF1A618CC4005C9ECE /* _PBContainer2View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _PBContainer2View.h; sourceTree = "<group>"; };
+		FC9260001A618CC4005C9ECE /* _PBContainer2View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _PBContainer2View.m; sourceTree = "<group>"; };
+		FC9260011A618CC4005C9ECE /* PBContainer2View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBContainer2View.h; sourceTree = "<group>"; };
+		FC9260021A618CC4005C9ECE /* PBContainer2View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBContainer2View.m; sourceTree = "<group>"; };
+		FC9260041A618CC4005C9ECE /* _PBContainer0ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _PBContainer0ViewController.h; sourceTree = "<group>"; };
+		FC9260051A618CC4005C9ECE /* _PBContainer0ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _PBContainer0ViewController.m; sourceTree = "<group>"; };
+		FC9260061A618CC4005C9ECE /* PBContainer0ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBContainer0ViewController.h; sourceTree = "<group>"; };
+		FC9260071A618CC4005C9ECE /* PBContainer0ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBContainer0ViewController.m; sourceTree = "<group>"; };
+		FC9260091A618CC4005C9ECE /* _PBContainer0View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _PBContainer0View.h; sourceTree = "<group>"; };
+		FC92600A1A618CC4005C9ECE /* _PBContainer0View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _PBContainer0View.m; sourceTree = "<group>"; };
+		FC92600B1A618CC4005C9ECE /* PBContainer0View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBContainer0View.h; sourceTree = "<group>"; };
+		FC92600C1A618CC4005C9ECE /* PBContainer0View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBContainer0View.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,7 +196,7 @@
 		FC7A781F1A6035C3009BCA50 /* AppMapExample */ = {
 			isa = PBXGroup;
 			children = (
-				FC925F5F1A6160CA005C9ECE /* container0 */,
+				FC925FF61A618CC4005C9ECE /* container0 */,
 				FC7A78241A6035C3009BCA50 /* AppDelegate.h */,
 				FC7A78251A6035C3009BCA50 /* AppDelegate.m */,
 				FC7A78271A6035C3009BCA50 /* ViewController.h */,
@@ -353,15 +371,75 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		FC925F5F1A6160CA005C9ECE /* container0 */ = {
+		FC925FF61A618CC4005C9ECE /* container0 */ = {
 			isa = PBXGroup;
 			children = (
-				FC925F601A6160CA005C9ECE /* _PBContainer0ViewController.h */,
-				FC925F611A6160CA005C9ECE /* _PBContainer0ViewController.m */,
-				FC925F621A6160CA005C9ECE /* PBContainer0ViewController.h */,
-				FC925F631A6160CA005C9ECE /* PBContainer0ViewController.m */,
+				FC925FF71A618CC4005C9ECE /* container1 */,
+				FC925FFD1A618CC4005C9ECE /* container2 */,
+				FC9260031A618CC4005C9ECE /* ViewControllers */,
+				FC9260081A618CC4005C9ECE /* Views */,
 			);
 			path = container0;
+			sourceTree = "<group>";
+		};
+		FC925FF71A618CC4005C9ECE /* container1 */ = {
+			isa = PBXGroup;
+			children = (
+				FC925FF81A618CC4005C9ECE /* Views */,
+			);
+			path = container1;
+			sourceTree = "<group>";
+		};
+		FC925FF81A618CC4005C9ECE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FC925FF91A618CC4005C9ECE /* _PBContainer1View.h */,
+				FC925FFA1A618CC4005C9ECE /* _PBContainer1View.m */,
+				FC925FFB1A618CC4005C9ECE /* PBContainer1View.h */,
+				FC925FFC1A618CC4005C9ECE /* PBContainer1View.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		FC925FFD1A618CC4005C9ECE /* container2 */ = {
+			isa = PBXGroup;
+			children = (
+				FC925FFE1A618CC4005C9ECE /* Views */,
+			);
+			path = container2;
+			sourceTree = "<group>";
+		};
+		FC925FFE1A618CC4005C9ECE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FC925FFF1A618CC4005C9ECE /* _PBContainer2View.h */,
+				FC9260001A618CC4005C9ECE /* _PBContainer2View.m */,
+				FC9260011A618CC4005C9ECE /* PBContainer2View.h */,
+				FC9260021A618CC4005C9ECE /* PBContainer2View.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		FC9260031A618CC4005C9ECE /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				FC9260041A618CC4005C9ECE /* _PBContainer0ViewController.h */,
+				FC9260051A618CC4005C9ECE /* _PBContainer0ViewController.m */,
+				FC9260061A618CC4005C9ECE /* PBContainer0ViewController.h */,
+				FC9260071A618CC4005C9ECE /* PBContainer0ViewController.m */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		FC9260081A618CC4005C9ECE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FC9260091A618CC4005C9ECE /* _PBContainer0View.h */,
+				FC92600A1A618CC4005C9ECE /* _PBContainer0View.m */,
+				FC92600B1A618CC4005C9ECE /* PBContainer0View.h */,
+				FC92600C1A618CC4005C9ECE /* PBContainer0View.m */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -466,30 +544,36 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC7A796B1A6064F2009BCA50 /* AMLayoutFactory.m in Sources */,
-				FC925F651A6160CA005C9ECE /* PBContainer0ViewController.m in Sources */,
 				FC7A79601A6064F2009BCA50 /* AMAppMapViewFactory.m in Sources */,
 				FC7A79661A6064F2009BCA50 /* AMAnchoredTopLayout.m in Sources */,
 				FC7A78291A6035C3009BCA50 /* ViewController.m in Sources */,
+				FC9260101A618CC4005C9ECE /* PBContainer2View.m in Sources */,
 				FC7A79011A604346009BCA50 /* UIColor+AppMap.m in Sources */,
 				FC7A795C1A6064F2009BCA50 /* AMTextComponent.m in Sources */,
+				FC92600D1A618CC4005C9ECE /* _PBContainer1View.m in Sources */,
 				FC7A796D1A6064F2009BCA50 /* AMCompositeTextDescriptor.m in Sources */,
 				FC7A79711A6064F2009BCA50 /* AMRuntimeViewHelper.m in Sources */,
 				FC7A796C1A6064F2009BCA50 /* AMPositionLayout.m in Sources */,
 				FC7A795B1A6064F2009BCA50 /* AMComponentFactory.m in Sources */,
+				FC9260121A618CC4005C9ECE /* PBContainer0ViewController.m in Sources */,
 				FC7A78261A6035C3009BCA50 /* AppDelegate.m in Sources */,
 				FC7A79691A6064F2009BCA50 /* AMExpandingLayout.m in Sources */,
 				FC7A795F1A6064F2009BCA50 /* AMAppMapLabelFactory.m in Sources */,
 				FC7A795E1A6064F2009BCA50 /* AMAppMapContainerFactory.m in Sources */,
+				FC9260131A618CC4005C9ECE /* _PBContainer0View.m in Sources */,
+				FC92600F1A618CC4005C9ECE /* _PBContainer2View.m in Sources */,
 				FC7A795A1A6064F2009BCA50 /* AMComponent.m in Sources */,
 				FC7A796A1A6064F2009BCA50 /* AMLayout.m in Sources */,
 				FC7A79701A6064F2009BCA50 /* AMRuntimeView.m in Sources */,
+				FC9260141A618CC4005C9ECE /* PBContainer0View.m in Sources */,
 				FC7A796F1A6064F2009BCA50 /* AMRuntimeLabel.m in Sources */,
 				FC7A79621A6064F2009BCA50 /* AMAnchoredBottomLeftLayout.m in Sources */,
-				FC925F641A6160CA005C9ECE /* _PBContainer0ViewController.m in Sources */,
 				FC7A78231A6035C3009BCA50 /* main.m in Sources */,
 				FC7A79591A6064F2009BCA50 /* AMColor+AMColor.m in Sources */,
 				FC7A79641A6064F2009BCA50 /* AMAnchoredLeftLayout.m in Sources */,
+				FC9260111A618CC4005C9ECE /* _PBContainer0ViewController.m in Sources */,
 				FC7A79651A6064F2009BCA50 /* AMAnchoredRightLayout.m in Sources */,
+				FC92600E1A618CC4005C9ECE /* PBContainer1View.m in Sources */,
 				FC7A79611A6064F2009BCA50 /* AMAnchoredBottomLayout.m in Sources */,
 				FC7A79671A6064F2009BCA50 /* AMAnchoredTopLeftLayout.m in Sources */,
 				FC7A79631A6064F2009BCA50 /* AMAnchoredBottomRightLayout.m in Sources */,

@@ -10,8 +10,4 @@
 
 @implementation AMAppMapContainerFactory
 
-- (NSString *)viewClass {
-    return NSStringFromClass([AMRuntimeView class]);
-}
-
 @end

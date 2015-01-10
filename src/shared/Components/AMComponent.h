@@ -11,6 +11,7 @@
 
 extern NSString * const kAMComponentClassNameKey;
 extern NSString * kAMComponentNameKey;
+extern NSString * kAMComponentClassPrefixKey;
 extern NSString * kAMComponentLayoutTypeKey;
 extern NSString * kAMComponentIdentifierKey;
 extern NSString * kAMComponentClippedKey;
@@ -26,6 +27,7 @@ extern NSString * kAMComponentChildComponentsKey;
 
 @property (nonatomic, strong) NSString *identifier;
 @property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *classPrefix;
 @property (nonatomic, readonly) NSString *exportedName;
 @property (nonatomic, readonly) NSString *defaultName;
 @property (nonatomic, readonly) AMComponentType componentType;

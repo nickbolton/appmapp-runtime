@@ -11,8 +11,4 @@
 
 @implementation AMAppMapLabelFactory
 
-- (NSString *)viewClass {
-    return NSStringFromClass([AMRuntimeLabel class]);
-}
-
 @end

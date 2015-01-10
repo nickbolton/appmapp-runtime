@@ -1,66 +1,70 @@
 //
-//  AMViewControllerGenerator.m
+//  AMViewGenerator.m
 //  AppMap
 //
-//  Created by Nick Bolton on 1/9/15.
+//  Created by Nick Bolton on 1/10/15.
 //  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
 
-#import "AMViewControllerGenerator.h"
 #import "AMViewGenerator.h"
-#import "NSString+AMGenerator.h"
 #import "AMAppMap.h"
+#import "NSString+AMGenerator.h"
 
-static NSString * const kAMViewControllerNameToken = @"VIEW_CONTROLLER_NAME";
-static NSString * const kAMViewControllerBaseClassToken = @"VIEW_CONTROLLER_BASE_CLASS";
+static NSString * const kAMViewNameToken = @"VIEW_NAME";
+static NSString * const kAMViewBaseClassToken = @"VIEW_BASE_CLASS";
 
-static NSString * const kAMOSXBaseViewControllerClassName = @"NSViewController";
-static NSString * const kAMIOSBaseViewControllerClassName = @"UIViewController";
-
-@implementation AMViewControllerGenerator
+@implementation AMViewGenerator
 
 - (BOOL)buildClass:(NSDictionary *)componentDict
-            targetDirectory:(NSURL *)targetDirectory
-                        ios:(BOOL)ios
-                classPrefix:(NSString *)classPrefix
+   targetDirectory:(NSURL *)targetDirectory
+               ios:(BOOL)ios
+       classPrefix:(NSString *)classPrefix
 baseViewControllerClassName:(NSString *)baseViewControllerClassName
  baseViewClassName:(NSString *)baseViewClassName {
-
-    NSDictionary *viewComponentsDict =
-    @{
-      kAMComponentsKey : @[componentDict],
-      };
-    
-    AMViewGenerator *viewGenerator = [AMViewGenerator new];
-    [viewGenerator
-     generateClassesWithComponentsDictionary:viewComponentsDict
-     targetDirectory:targetDirectory
-     ios:ios
-     classPrefix:classPrefix
-     baseViewControllerClassName:baseViewControllerClassName
-     baseViewClassName:baseViewClassName];
-    
-    NSFileManager *fm = [NSFileManager defaultManager];
     
     AMComponent *component =
     [[AMAppMap sharedInstance]
      loadComponentWithDictionary:componentDict];
-    
-    NSString *humanViewControllerName =
-    [self buildViewControllerName:component.exportedName classPrefix:classPrefix];
 
-    NSString *machineViewControllerName =
-    [@"_" stringByAppendingString:humanViewControllerName];
+    NSDictionary *childComponentsDict = componentDict[kAMComponentChildComponentsKey];
     
-    NSString *baseViewControllerName =
-    [self buildBaseViewControllerName:baseViewControllerClassName ios:ios];
+    if (childComponentsDict.count > 0) {
+        
+        NSDictionary *viewComponentsDict =
+        @{
+          kAMComponentsKey : childComponentsDict,
+          };
+        
+        NSURL *subTargetDirectory =
+        [targetDirectory URLByAppendingPathComponent:component.exportedName];
+        
+        AMViewGenerator *viewGenerator = [AMViewGenerator new];
+        [viewGenerator
+         generateClassesWithComponentsDictionary:viewComponentsDict
+         targetDirectory:subTargetDirectory
+         ios:ios
+         classPrefix:classPrefix
+         baseViewControllerClassName:baseViewControllerClassName
+         baseViewClassName:baseViewClassName];
+    }
+
+    NSFileManager *fm = [NSFileManager defaultManager];
     
+    NSString *humanViewName =
+    [self buildViewName:component classPrefix:classPrefix];
+    
+    NSString *machineViewName =
+    [@"_" stringByAppendingString:humanViewName];
+    
+    NSString *baseViewName =
+    [self buildBaseViewName:baseViewClassName ios:ios];
+
     NSURL *componentDirectoryURL =
     [targetDirectory URLByAppendingPathComponent:component.exportedName];
     
     componentDirectoryURL =
-    [componentDirectoryURL URLByAppendingPathComponent:@"ViewControllers"];
-
+    [componentDirectoryURL URLByAppendingPathComponent:@"Views"];
+    
     if ([fm fileExistsAtPath:componentDirectoryURL.path] == NO) {
         
         NSError *error = nil;
@@ -78,96 +82,76 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
         }
     }
     
-    NSString *humanViewControllerClassName =
-    [NSString stringWithFormat:@"%@ViewController", humanViewControllerName];
-
-    NSString *machineViewControllerClassName =
-    [NSString stringWithFormat:@"%@ViewController", machineViewControllerName];
-    
     NSURL *humanInterfaceURL =
-    [componentDirectoryURL URLByAppendingPathComponent:humanViewControllerClassName];
+    [componentDirectoryURL URLByAppendingPathComponent:humanViewName];
     humanInterfaceURL = [humanInterfaceURL URLByAppendingPathExtension:@"h"];
-
+    
     NSURL *humanImplementationURL =
-    [componentDirectoryURL URLByAppendingPathComponent:humanViewControllerClassName];
+    [componentDirectoryURL URLByAppendingPathComponent:humanViewName];
     humanImplementationURL = [humanImplementationURL URLByAppendingPathExtension:@"m"];
-
+    
     NSURL *machineInterfaceURL =
-    [componentDirectoryURL URLByAppendingPathComponent:machineViewControllerClassName];
+    [componentDirectoryURL URLByAppendingPathComponent:machineViewName];
     machineInterfaceURL = [machineInterfaceURL URLByAppendingPathExtension:@"h"];
     
     NSURL *machineImplementationURL =
-    [componentDirectoryURL URLByAppendingPathComponent:machineViewControllerClassName];
+    [componentDirectoryURL URLByAppendingPathComponent:machineViewName];
     machineImplementationURL = [machineImplementationURL URLByAppendingPathExtension:@"m"];
-
-    NSString *viewSubClassName =
-    [self buildViewName:component classPrefix:classPrefix];
-
+    
     [self
      generateHumanFileIfNeeded:humanInterfaceURL
      interface:YES
-     viewControllerName:humanViewControllerClassName];
-
+     viewName:humanViewName];
+    
     [self
      generateHumanFileIfNeeded:humanImplementationURL
      interface:NO
-     viewControllerName:humanViewControllerClassName];
+     viewName:humanViewName];
     
     [self
      generateMachineFile:machineInterfaceURL
      interface:YES
      ios:ios
-     viewControllerName:humanViewControllerClassName
-     viewControllerBaseClass:baseViewControllerName
-     viewBaseClass:viewSubClassName
+     viewName:humanViewName
+     viewBaseClass:baseViewName
      classPrefix:classPrefix
      componentDictionary:componentDict
      component:component];
-
+    
     [self
      generateMachineFile:machineImplementationURL
      interface:NO
      ios:ios
-     viewControllerName:humanViewControllerClassName
-     viewControllerBaseClass:baseViewControllerName
-     viewBaseClass:viewSubClassName
+     viewName:humanViewName
+     viewBaseClass:baseViewName
      classPrefix:classPrefix
      componentDictionary:componentDict
      component:component];
-
+    
     return YES;
 }
 
-- (NSString *)buildViewControllerName:(NSString *)name
-                   classPrefix:(NSString *)classPrefix {
-
-    if (classPrefix.length > 0) {
-        return [classPrefix stringByAppendingString:name.capitalizedString];
-    }
-    return name.capitalizedString;
-}
-
-- (NSString *)buildBaseViewControllerName:(NSString *)name
-                                      ios:(BOOL)ios {
+- (NSString *)buildBaseViewName:(NSString *)name
+                            ios:(BOOL)ios {
     if (name.length > 0) {
         return name;
     }
     
     if (ios) {
-        return kAMIOSBaseViewControllerClassName;
+        return kAMIOSBaseViewClassName;
     }
     
-    return kAMOSXBaseViewControllerClassName;
+    return kAMOSXBaseViewClassName;
 }
 
 - (BOOL)generateHumanFileIfNeeded:(NSURL *)url
                         interface:(BOOL)interface
-           viewControllerName:(NSString *)viewControllerName {
-
+                         viewName:(NSString *)viewName {
+    
     NSFileManager *fm = [NSFileManager defaultManager];
     if ([fm fileExistsAtPath:url.path] == NO) {
         
-        static NSString * const filename = @"AMViewControllerHumanTemplate";
+        static NSString * const filename = @"AMViewHumanTemplate";
         
         NSString *suffix = interface ? @"_h" : @"_m";
         
@@ -193,8 +177,8 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
         
         template =
         [template
-         stringByReplacingOccurrencesOfString:kAMViewControllerNameToken
-         withString:viewControllerName];
+         stringByReplacingOccurrencesOfString:kAMViewNameToken
+         withString:viewName];
         
         [template
          writeToURL:url
@@ -217,8 +201,7 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
 - (BOOL)generateMachineFile:(NSURL *)url
                   interface:(BOOL)interface
                         ios:(BOOL)ios
-         viewControllerName:(NSString *)viewControllerName
-    viewControllerBaseClass:(NSString *)viewControllerBaseClass
+                   viewName:(NSString *)viewName
               viewBaseClass:(NSString *)viewBaseClass
                 classPrefix:(NSString *)classPrefix
         componentDictionary:(NSDictionary *)componentDictionary
@@ -239,7 +222,7 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
         }
     }
     
-    static NSString * const filename = @"AMViewControllerMachineTemplate";
+    static NSString * const filename = @"AMViewMachineTemplate";
     
     NSString *suffix = interface ? @"_h" : @"_m";
     
@@ -268,33 +251,33 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
     
     template =
     [template
-     stringByReplacingOccurrencesOfString:kAMViewControllerNameToken
-     withString:viewControllerName];
+     stringByReplacingOccurrencesOfString:kAMViewNameToken
+     withString:viewName];
     
     template =
     [template
-     stringByReplacingOccurrencesOfString:kAMViewControllerBaseClassToken
-     withString:viewControllerBaseClass];
+     stringByReplacingOccurrencesOfString:kAMViewBaseClassToken
+     withString:viewBaseClass];
     
     template =
     [template
      stringByReplacingOccurrencesOfString:kAMComponentDictionaryToken
-     withString:[self buildComponentReplacement:componentDictionary indentLevel:1 prefixIndent:0 classPrefix:classPrefix]];
+     withString:[self buildComponentReplacement:componentDictionary indentLevel:1 prefixIndent:0]];
     
     template =
     [template
      stringByReplacingOccurrencesOfString:kAMMachinePropertiesToken
-     withString:[self buildMachineProperty:component ios:ios interface:interface viewBaseClass:viewBaseClass classPrefix:classPrefix]];
+     withString:[self buildMachineProperties:component ios:ios interface:interface viewBaseClass:viewBaseClass classPrefix:classPrefix]];
     
     template =
     [template
      stringByReplacingOccurrencesOfString:kAMFrameworkImportToken
      withString:frameworkImport];
-
+    
     template =
     [template
      stringByReplacingOccurrencesOfString:kAMClassImportsToken
-     withString:[self buildClassImport:component classPrefix:classPrefix]];
+     withString:[self buildClassImports:component.childComponents classPrefix:classPrefix]];
     
     [template
      writeToURL:url
@@ -309,14 +292,11 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
         
         return NO;
     }
-
+    
     return YES;
 }
 
-- (NSString *)buildComponentReplacement:(NSDictionary *)dictionary
-                            indentLevel:(NSInteger)indentLevel
-                           prefixIndent:(NSInteger)prefixIndent
-                            classPrefix:(NSString *)classPrefix {
+- (NSString *)buildComponentReplacement:(NSDictionary *)dictionary indentLevel:(NSInteger)indentLevel prefixIndent:(NSInteger)prefixIndent {
     
     NSMutableString *result = [NSMutableString stringWithString:@""];
     [result appendString:[NSString indentString:prefixIndent]];
@@ -345,17 +325,6 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
         }
     }];
     
-    if (classPrefix != nil) {
-        
-        NSString *classPrefixKeyToken = [NSString stringToken:kAMComponentClassPrefixKey];
-        NSString *classPrefixValueToken = [NSString stringToken:classPrefix];
-        
-        [result appendString:classPrefixKeyToken];
-        [result appendString:@" : "];
-        [result appendString:classPrefixValueToken];
-        [result appendString:@",\n"];
-    }
-    
     NSDictionary *childComponentsDictionary = dictionary[kAMComponentChildComponentsKey];
     
     NSString *keyToken = [NSString stringToken:kAMComponentChildComponentsKey];
@@ -376,7 +345,7 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
         NSInteger prefixIndent = idx > 0 ? indentLevel : 0;
         
         NSString *child =
-        [self buildComponentReplacement:childDictionary indentLevel:indentLevel+1 prefixIndent:prefixIndent classPrefix:classPrefix];
+        [self buildComponentReplacement:childDictionary indentLevel:indentLevel+1 prefixIndent:prefixIndent];
         
         [childComponents appendString:child];
         

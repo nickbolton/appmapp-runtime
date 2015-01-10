@@ -12,11 +12,6 @@
 
 @implementation AMAppMapViewFactory
 
-- (NSString *)viewClass {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
 - (AMView <AMRuntimeView> *)buildViewFromComponent:(AMComponent *)component
                                        inContainer:(AMView *)container
                                      bindingObject:(id)bindingObject {
@@ -24,7 +19,18 @@
     NSAssert(component != nil, @"no component given");
     NSAssert(container != nil, @"no container given");
     
-    Class clazz = NSClassFromString(self.viewClass);
+    NSString *classPrefix =
+    component.classPrefix != nil ? component.classPrefix : @"";
+    
+    NSString *viewName =
+    [NSString stringWithFormat:@"%@View",
+     component.exportedName.capitalizedString];
+    
+    NSString *viewClassName =
+    [NSString stringWithFormat:@"%@%@",
+     classPrefix, viewName];
+
+    Class clazz = NSClassFromString(viewClassName);
     
     AMView <AMRuntimeView> *view = [clazz new];
     view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -32,11 +38,9 @@
     [container addSubview:view];
     
     view.component = component;
-
+    
     NSString *setterName =
-    [NSString stringWithFormat:@"set%@%@:",
-     [component.exportedName substringToIndex:1].uppercaseString,
-     (component.exportedName.length > 1 ? [component.exportedName substringFromIndex:1] : @"")];
+    [NSString stringWithFormat:@"set%@:", viewName];
     
     SEL setter = NSSelectorFromString(setterName);
     
@@ -52,7 +56,7 @@
         [[AMAppMap sharedInstance]
          buildViewFromComponent:childComponent
          inContainer:view
-         bindingObject:bindingObject];
+         bindingObject:view];
     }];
     
     return view;

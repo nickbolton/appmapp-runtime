@@ -1,0 +1,9 @@
+#import "VIEW_NAME.h"
+
+@interface VIEW_NAME ()
+// Private interface goes here.
+@end
+
+@implementation VIEW_NAME
+// Custom logic goes here.
+@end

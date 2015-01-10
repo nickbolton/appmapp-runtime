@@ -13,6 +13,7 @@
 NSString * const kAMComponentClassNameKey = @"class-name";
 
 NSString * kAMComponentNameKey = @"name";
+NSString * kAMComponentClassPrefixKey = @"classPrefix";
 NSString * kAMComponentLayoutTypeKey = @"layoutType";
 NSString * kAMComponentIdentifierKey = @"identifier";
 NSString * kAMComponentClippedKey = @"clipped";
@@ -39,6 +40,7 @@ NSString * kAMComponentChildComponentsKey = @"childComponents";
 - (void)encodeWithCoder:(NSCoder *)coder {
     
     [coder encodeObject:self.name forKey:kAMComponentNameKey];
+    [coder encodeObject:self.classPrefix forKey:kAMComponentClassPrefixKey];
     [coder encodeInt32:self.layoutType forKey:kAMComponentLayoutTypeKey];
     [coder encodeObject:self.identifier forKey:kAMComponentIdentifierKey];
     [coder encodeBool:self.isClipped forKey:kAMComponentClippedKey];
@@ -63,6 +65,7 @@ NSString * kAMComponentChildComponentsKey = @"childComponents";
     if (self != nil) {
 
         self.name = [decoder decodeObjectForKey:kAMComponentNameKey];
+        self.classPrefix = [decoder decodeObjectForKey:kAMComponentClassPrefixKey];
         self.layoutType = [decoder decodeInt32ForKey:kAMComponentLayoutTypeKey];
         self.identifier = [decoder decodeObjectForKey:kAMComponentIdentifierKey];
         self.clipped = [decoder decodeBoolForKey:kAMComponentClippedKey];
@@ -97,6 +100,7 @@ NSString * kAMComponentChildComponentsKey = @"childComponents";
         NSString *borderColorString = dict[kAMComponentBorderColorWidthKey];
 
         self.name = dict[kAMComponentNameKey];
+        self.classPrefix = dict[kAMComponentClassPrefixKey];
         self.layoutType = [dict[kAMComponentLayoutTypeKey] integerValue];
         self.identifier = dict[kAMComponentIdentifierKey];
         self.clipped = [dict[kAMComponentClippedKey] boolValue];
@@ -153,6 +157,8 @@ NSString * kAMComponentChildComponentsKey = @"childComponents";
 - (id)copy {
     
     AMComponent *component = [[self.class alloc] init];
+    component.name = self.name.copy;
+    component.classPrefix = self.classPrefix.copy;
     component.identifier = self.identifier.copy;
     component.frame = self.frame;
     component.layoutType = self.layoutType;
@@ -191,6 +197,10 @@ NSString * kAMComponentChildComponentsKey = @"childComponents";
     dict[kAMComponentAlphaKey] = @(self.alpha);
     dict[kAMComponentCornerRadiusKey] = @(self.cornerRadius);
     dict[kAMComponentBorderWidthKey] = @(self.borderWidth);
+    
+    if (self.classPrefix != nil) {
+        dict[kAMComponentClassPrefixKey] = self.classPrefix;
+    }
     
 #if TARGET_OS_IPHONE
     dict[kAMComponentFrameKey] = NSStringFromCGRect(self.frame);
