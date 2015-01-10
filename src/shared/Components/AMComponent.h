@@ -10,6 +10,17 @@
 #import "AppMapTypes.h"
 
 extern NSString * const kAMComponentClassNameKey;
+extern NSString * kAMComponentNameKey;
+extern NSString * kAMComponentLayoutTypeKey;
+extern NSString * kAMComponentIdentifierKey;
+extern NSString * kAMComponentClippedKey;
+extern NSString * kAMComponentBackgroundColorKey;
+extern NSString * kAMComponentBorderWidthKey;
+extern NSString * kAMComponentBorderColorWidthKey;
+extern NSString * kAMComponentAlphaKey;
+extern NSString * kAMComponentFrameKey;
+extern NSString * kAMComponentCornerRadiusKey;
+extern NSString * kAMComponentChildComponentsKey;
 
 @interface AMComponent : NSObject <NSCoding, NSCopying>
 

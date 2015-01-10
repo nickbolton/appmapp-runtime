@@ -40,7 +40,9 @@
 		FC7A796F1A6064F2009BCA50 /* AMRuntimeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7A79541A6064F2009BCA50 /* AMRuntimeLabel.m */; };
 		FC7A79701A6064F2009BCA50 /* AMRuntimeView.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7A79561A6064F2009BCA50 /* AMRuntimeView.m */; };
 		FC7A79711A6064F2009BCA50 /* AMRuntimeViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7A79581A6064F2009BCA50 /* AMRuntimeViewHelper.m */; };
-		FC925E941A60A202005C9ECE /* rootView.dict in Resources */ = {isa = PBXBuildFile; fileRef = FC925E931A60A202005C9ECE /* rootView.dict */; };
+		FC925F0C1A615463005C9ECE /* rootView.dict in Resources */ = {isa = PBXBuildFile; fileRef = FC925F0B1A615463005C9ECE /* rootView.dict */; };
+		FC925F451A615C69005C9ECE /* _PBcontainer0ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC925F421A615C69005C9ECE /* _PBcontainer0ViewController.m */; };
+		FC925F461A615C69005C9ECE /* PBcontainer0ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC925F441A615C69005C9ECE /* PBcontainer0ViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,7 +123,11 @@
 		FC7A79561A6064F2009BCA50 /* AMRuntimeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMRuntimeView.m; sourceTree = "<group>"; };
 		FC7A79571A6064F2009BCA50 /* AMRuntimeViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMRuntimeViewHelper.h; sourceTree = "<group>"; };
 		FC7A79581A6064F2009BCA50 /* AMRuntimeViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMRuntimeViewHelper.m; sourceTree = "<group>"; };
-		FC925E931A60A202005C9ECE /* rootView.dict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = rootView.dict; sourceTree = "<group>"; };
+		FC925F0B1A615463005C9ECE /* rootView.dict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = rootView.dict; sourceTree = "<group>"; };
+		FC925F411A615C69005C9ECE /* _PBcontainer0ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _PBcontainer0ViewController.h; sourceTree = "<group>"; };
+		FC925F421A615C69005C9ECE /* _PBcontainer0ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _PBcontainer0ViewController.m; sourceTree = "<group>"; };
+		FC925F431A615C69005C9ECE /* PBcontainer0ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBcontainer0ViewController.h; sourceTree = "<group>"; };
+		FC925F441A615C69005C9ECE /* PBcontainer0ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBcontainer0ViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,8 +182,8 @@
 				FC7A78251A6035C3009BCA50 /* AppDelegate.m */,
 				FC7A78271A6035C3009BCA50 /* ViewController.h */,
 				FC7A78281A6035C3009BCA50 /* ViewController.m */,
+				FC925F0B1A615463005C9ECE /* rootView.dict */,
 				FC7A782A1A6035C3009BCA50 /* Main.storyboard */,
-				FC925E931A60A202005C9ECE /* rootView.dict */,
 				FC7A782D1A6035C3009BCA50 /* Images.xcassets */,
 				FC7A782F1A6035C3009BCA50 /* LaunchScreen.xib */,
 				FC7A78201A6035C3009BCA50 /* Supporting Files */,
@@ -223,6 +229,7 @@
 		FC7A78591A60405D009BCA50 /* shared */ = {
 			isa = PBXGroup;
 			children = (
+				FC925F401A615C69005C9ECE /* container0 */,
 				FC7A791F1A6064F2009BCA50 /* AppMap.h */,
 				FC7A79201A6064F2009BCA50 /* AppMapTypes.h */,
 				FC7A79211A6064F2009BCA50 /* Categories */,
@@ -346,6 +353,17 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		FC925F401A615C69005C9ECE /* container0 */ = {
+			isa = PBXGroup;
+			children = (
+				FC925F411A615C69005C9ECE /* _PBcontainer0ViewController.h */,
+				FC925F421A615C69005C9ECE /* _PBcontainer0ViewController.m */,
+				FC925F431A615C69005C9ECE /* PBcontainer0ViewController.h */,
+				FC925F441A615C69005C9ECE /* PBcontainer0ViewController.m */,
+			);
+			path = container0;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -428,7 +446,7 @@
 			files = (
 				FC7A782C1A6035C3009BCA50 /* Main.storyboard in Resources */,
 				FC7A78311A6035C3009BCA50 /* LaunchScreen.xib in Resources */,
-				FC925E941A60A202005C9ECE /* rootView.dict in Resources */,
+				FC925F0C1A615463005C9ECE /* rootView.dict in Resources */,
 				FC7A782E1A6035C3009BCA50 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -451,6 +469,7 @@
 				FC7A79601A6064F2009BCA50 /* AMAppMapViewFactory.m in Sources */,
 				FC7A79661A6064F2009BCA50 /* AMAnchoredTopLayout.m in Sources */,
 				FC7A78291A6035C3009BCA50 /* ViewController.m in Sources */,
+				FC925F461A615C69005C9ECE /* PBcontainer0ViewController.m in Sources */,
 				FC7A79011A604346009BCA50 /* UIColor+AppMap.m in Sources */,
 				FC7A795C1A6064F2009BCA50 /* AMTextComponent.m in Sources */,
 				FC7A796D1A6064F2009BCA50 /* AMCompositeTextDescriptor.m in Sources */,
@@ -476,6 +495,7 @@
 				FC7A79681A6064F2009BCA50 /* AMAnchoredTopRightLayout.m in Sources */,
 				FC7A795D1A6064F2009BCA50 /* AMAppMap.m in Sources */,
 				FC7A796E1A6064F2009BCA50 /* AMTextDescriptor.m in Sources */,
+				FC925F451A615C69005C9ECE /* _PBcontainer0ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

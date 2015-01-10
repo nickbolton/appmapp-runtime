@@ -10,9 +10,13 @@
 #import "AMComponent.h"
 #import "AMLayoutFactory.h"
 
+extern NSString * const kAMComponentsKey;
+
 @interface AMAppMap : NSObject
 
 + (instancetype)sharedInstance;
+
+- (AMComponent *)loadComponentWithDictionary:(NSDictionary *)componentDict;
 
 - (AMRuntimeView *)buildViewFromResourceName:(NSString *)resourceName
                                componentName:(NSString *)componentName
@@ -20,5 +24,9 @@
 
 - (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
                               inContainer:(AMView *)container;
+
+- (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
+                              inContainer:(AMView *)container
+                            bindingObject:(id)bindingObject;
 
 @end

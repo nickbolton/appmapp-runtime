@@ -11,6 +11,8 @@
 #import "AMAppMapContainerFactory.h"
 #import "AMAppMapLabelFactory.h"
 
+NSString * const kAMComponentsKey = @"components";
+
 @interface AMAppMap()
 
 @property (nonatomic, strong) NSDictionary *factoryClasses;
@@ -43,6 +45,16 @@
 
 - (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
                               inContainer:(AMView *)container {
+    return
+    [self
+     buildViewFromComponent:component
+     inContainer:container
+     bindingObject:nil];
+}
+
+- (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
+                              inContainer:(AMView *)container
+                            bindingObject:(id)bindingObject {
 
     NSString *classString = self.factoryClasses[@(component.componentType)];
     
@@ -51,7 +63,7 @@
              (int)component.componentType);
     
     Class clazz = NSClassFromString(classString);
-    return [[clazz new] buildViewFromComponent:component inContainer:container];
+    return [[clazz new] buildViewFromComponent:component inContainer:container bindingObject:bindingObject];
 }
 
 - (AMRuntimeView *)buildViewFromResourceName:(NSString *)resourceName
@@ -122,13 +134,12 @@
     NSMutableDictionary *componentCache =
     [self componentCacheForResourceName:resourceName];
     
-    NSDictionary *componentDict = resourceDict[@"components"];
+    NSDictionary *componentDict = resourceDict[kAMComponentsKey];
     
     [componentDict enumerateKeysAndObjectsUsingBlock:^(NSString *name, NSDictionary *componentDict, BOOL *stop) {
         
-        NSString *className = componentDict[kAMComponentClassNameKey];
         AMComponent *component =
-        [[NSClassFromString(className) alloc] initWithDictionary:componentDict];
+        [self loadComponentWithDictionary:componentDict];
         
         componentCache[name] = component;
         
@@ -137,6 +148,14 @@
          parentComponentPath:name
          componentCache:componentCache];
     }];
+}
+
+- (AMComponent *)loadComponentWithDictionary:(NSDictionary *)componentDict {
+    
+    NSString *className = componentDict[kAMComponentClassNameKey];
+    AMComponent *component =
+    [[NSClassFromString(className) alloc] initWithDictionary:componentDict];
+    return component;
 }
 
 - (void)cacheChildComponents:(NSArray *)childComponents

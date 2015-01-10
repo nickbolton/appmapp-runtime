@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "AMAppMap.h"
+#import "PBcontainer0ViewController.h"
 
 @interface ViewController ()
 
@@ -25,15 +26,41 @@
      blue:0.7215686275f
      alpha:1.0f];
     
-    [[AMAppMap sharedInstance]
-     buildViewFromResourceName:@"rootView"
-     componentName:@"container0"
-     inContainer:self.view];
+//    [[AMAppMap sharedInstance]
+//     buildViewFromResourceName:@"rootView"
+//     componentName:@"container0"
+//     inContainer:self.view];
+//    
+//    [[AMAppMap sharedInstance]
+//     buildViewFromResourceName:@"rootView"
+//     componentName:@"container1"
+//     inContainer:self.view];
     
-    [[AMAppMap sharedInstance]
-     buildViewFromResourceName:@"rootView"
-     componentName:@"container1"
-     inContainer:self.view];
+    PBcontainer0ViewController *viewController =
+    [PBcontainer0ViewController new];
+    
+    UIView *view = viewController.view;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [self addChildViewController:viewController];
+    [self.view addSubview:view];
+    [viewController didMoveToParentViewController:self];
+    
+    NSArray *hConstraints =
+    [NSLayoutConstraint
+     constraintsWithVisualFormat:@"H:|-(0)-[v]-(0)-|"
+     options:NSLayoutFormatAlignAllCenterX
+     metrics:nil
+     views:@{@"v" : view}];
+    [view.superview addConstraints:hConstraints];
+    
+    NSArray *vConstraints =
+    [NSLayoutConstraint
+     constraintsWithVisualFormat:@"V:|-(0)-[v]-(0)-|"
+     options:NSLayoutFormatAlignAllCenterY
+     metrics:nil
+     views:@{@"v" : view}];
+    [view.superview addConstraints:vConstraints];
 }
 
 @end

@@ -36,12 +36,14 @@ typedef UIView AMView;
 typedef UIColor AMColor;
 typedef UIFont AMFont;
 typedef UILabel AMLabel;
+typedef UIViewController AMViewController;
 #else
 #define AMColorType NSColor
 typedef NSView AMView;
 typedef NSColor AMColor;
 typedef NSFont AMFont;
 typedef NSTextField AMLabel;
+typedef NSViewController AMViewController;
 #endif
 
 #endif

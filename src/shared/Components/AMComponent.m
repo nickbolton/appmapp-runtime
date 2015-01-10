@@ -12,17 +12,17 @@
 
 NSString * const kAMComponentClassNameKey = @"class-name";
 
-static NSString * kAMComponentNameKey = @"name";
-static NSString * kAMComponentLayoutTypeKey = @"layoutType";
-static NSString * kAMComponentIdentifierKey = @"identifier";
-static NSString * kAMComponentClippedKey = @"clipped";
-static NSString * kAMComponentBackgroundColorKey = @"backgroundColor";
-static NSString * kAMComponentBorderWidthKey = @"borderWidth";
-static NSString * kAMComponentBorderColorWidthKey = @"borderColor";
-static NSString * kAMComponentAlphaKey = @"alpha";
-static NSString * kAMComponentFrameKey = @"frame";
-static NSString * kAMComponentCornerRadiusKey = @"cornerRadius";
-static NSString * kAMComponentChildComponentsKey = @"childComponents";
+NSString * kAMComponentNameKey = @"name";
+NSString * kAMComponentLayoutTypeKey = @"layoutType";
+NSString * kAMComponentIdentifierKey = @"identifier";
+NSString * kAMComponentClippedKey = @"clipped";
+NSString * kAMComponentBackgroundColorKey = @"backgroundColor";
+NSString * kAMComponentBorderWidthKey = @"borderWidth";
+NSString * kAMComponentBorderColorWidthKey = @"borderColor";
+NSString * kAMComponentAlphaKey = @"alpha";
+NSString * kAMComponentFrameKey = @"frame";
+NSString * kAMComponentCornerRadiusKey = @"cornerRadius";
+NSString * kAMComponentChildComponentsKey = @"childComponents";
 
 @interface AMComponent()
 
@@ -113,8 +113,16 @@ static NSString * kAMComponentChildComponentsKey = @"childComponents";
 #endif
         
         NSMutableArray *childComponents = [NSMutableArray array];
-        NSDictionary *children = dict[kAMComponentChildComponentsKey];
-        [children enumerateKeysAndObjectsUsingBlock:^(id key, NSDictionary *childDict, BOOL *stop) {
+        id children = dict[kAMComponentChildComponentsKey];
+        NSArray *childrenArray = nil;
+        
+        if ([children isKindOfClass:[NSArray class]]) {
+            childrenArray = children;
+        } else if ([children isKindOfClass:[NSDictionary class]]) {
+            childrenArray = ((NSDictionary *)children).allValues;
+        }
+        
+        [childrenArray enumerateObjectsUsingBlock:^(NSDictionary *childDict, NSUInteger idx, BOOL *stop) {
             
             NSString *className = childDict[kAMComponentClassNameKey];
             AMComponent *childComponent =

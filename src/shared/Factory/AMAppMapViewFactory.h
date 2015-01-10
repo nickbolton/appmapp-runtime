@@ -16,6 +16,7 @@
 @property (nonatomic, readonly) NSString *viewClass;
 
 - (AMView <AMRuntimeView> *)buildViewFromComponent:(AMComponent *)component
-                                       inContainer:(AMView *)container;
+                                       inContainer:(AMView *)container
+                                     bindingObject:(id)bindingObject;
 
 @end
