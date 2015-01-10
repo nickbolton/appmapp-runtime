@@ -61,6 +61,9 @@
      metrics:nil
      views:@{@"v" : view}];
     [view.superview addConstraints:vConstraints];
+    
+    viewController.container0.backgroundColor = [UIColor redColor];
+    viewController.container1.backgroundColor = [UIColor greenColor];
 }
 
 @end

@@ -81,7 +81,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self _setupComponent];
-    [self _setupRootView];
+    [self _setupRootView];    
 }
 
 @end
