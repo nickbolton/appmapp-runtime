@@ -9,9 +9,9 @@
 			<key>alpha</key>
 			<real>1</real>
 			<key>backgroundColor</key>
-			<string>3741647895-0.700000</string>
+			<string>0.874510,0.894118,0.913725,0.700000</string>
 			<key>borderColor</key>
-			<string>1728974205-1.000000</string>
+			<string>0.403922,0.458824,0.513726,1.000000</string>
 			<key>borderWidth</key>
 			<real>1</real>
 			<key>childComponents</key>
@@ -23,40 +23,13 @@
 			<key>cornerRadius</key>
 			<real>2</real>
 			<key>frame</key>
-			<string>{{103, 63}, {186, 173}}</string>
+			<string>{{98.83984375, 89.09375}, {205, 223}}</string>
 			<key>identifier</key>
-			<string>8D33AE69-FBF1-48A1-9FA0-CD49624A91FB</string>
+			<string>CAF1905E-6D5E-4281-B6B9-36AC5CDD036E</string>
 			<key>layoutType</key>
 			<integer>0</integer>
 			<key>name</key>
 			<string>Container-0</string>
-		</dict>
-		<key>container1</key>
-		<dict>
-			<key>alpha</key>
-			<real>1</real>
-			<key>backgroundColor</key>
-			<string>3741647895-0.700000</string>
-			<key>borderColor</key>
-			<string>1728974205-1.000000</string>
-			<key>borderWidth</key>
-			<real>1</real>
-			<key>childComponents</key>
-			<dict/>
-			<key>class-name</key>
-			<string>AMComponent</string>
-			<key>clipped</key>
-			<false/>
-			<key>cornerRadius</key>
-			<real>2</real>
-			<key>frame</key>
-			<string>{{150, 269}, {218, 88}}</string>
-			<key>identifier</key>
-			<string>2567914F-BC93-49FA-A367-16DB65C9A073</string>
-			<key>layoutType</key>
-			<integer>0</integer>
-			<key>name</key>
-			<string>Container-1</string>
 		</dict>
 	</dict>
 </dict>

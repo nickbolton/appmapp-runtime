@@ -18,7 +18,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor lightGrayColor];
+    self.view.backgroundColor =
+    [UIColor
+     colorWithRed:0.6352941176f
+     green:0.6784313725f
+     blue:0.7215686275f
+     alpha:1.0f];
     
     [[AMAppMap sharedInstance]
      buildViewFromResourceName:@"rootView"

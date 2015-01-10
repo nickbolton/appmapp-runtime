@@ -19,16 +19,7 @@
     
     [self getRed:&red green:&green blue:&blue alpha:&alpha];
     
-    red *= 255.0f;
-    green *= 255.0f;
-    blue *= 255.0f;
-    
-    NSInteger hexcode =
-    (NSInteger)(red * 255) * 256 * 256 +
-    (NSInteger)(green * 255) * 256 +
-    (NSInteger)(blue * 255) * 1;
-    
-    return [NSString stringWithFormat:@"%ld-%f", (long)hexcode, alpha];
+    return [NSString stringWithFormat:@"%f,%f,%f,%f", red, green, blue, alpha];
 }
 
 @end

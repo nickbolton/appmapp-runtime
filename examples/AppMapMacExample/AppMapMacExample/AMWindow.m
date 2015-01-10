@@ -11,8 +11,17 @@
 
 @implementation AMWindow
 
-- (void)setContentView:(id)contentView {
+- (void)setContentView:(NSView *)contentView {
     [super setContentView:contentView];
+    
+    contentView.wantsLayer = YES;
+    contentView.layer.backgroundColor =
+    [NSColor
+     colorWithRed:0.6352941176f
+     green:0.6784313725f
+     blue:0.7215686275f
+     alpha:1.0f].CGColor;
+
     [self loadRootView];
 }
 

@@ -12,35 +12,56 @@
 
 + (AMColor *)colorWithHexcodePlusAlpha:(NSString *)colorString {
     
-    NSArray *components = [colorString componentsSeparatedByString:@"-"];
-    NSString *hexString = components.firstObject;
-    NSString *alphaString = @"1.0";
+    NSArray *components = [colorString componentsSeparatedByString:@","];
     
-    if (components.count > 1) {
-        alphaString = components[1];
+    if (components.count != 4) {
+        return nil;
     }
     
-    unsigned rgbValue = 0;
-    NSScanner *scanner = [NSScanner scannerWithString:hexString];
+    NSScanner *scanner;
+    float red;
+    float green;
+    float blue;
+    float alpha;
     
-    if ([scanner scanHexInt:&rgbValue]) {
-        
-        NSScanner *alphaScanner = [NSScanner scannerWithString:alphaString];
-        float alphaValue = 1.0f;
-        
-        if ([alphaScanner scanFloat:&alphaValue] == NO) {
-            alphaValue = 1.0f;
-        }
-        
-        return
-        [AMColor
-         colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0
-         green:((rgbValue & 0xFF00) >> 8)/255.0
-         blue:(rgbValue & 0xFF)/255.0
-         alpha:alphaValue];
+    scanner = [NSScanner scannerWithString:components[0]];
+    if ([scanner scanFloat:&red] == NO) {
+        return nil;
     }
+
+    scanner = [NSScanner scannerWithString:components[1]];
+    if ([scanner scanFloat:&green] == NO) {
+        return nil;
+    }
+
+    scanner = [NSScanner scannerWithString:components[2]];
+    if ([scanner scanFloat:&blue] == NO) {
+        return nil;
+    }
+
+    scanner = [NSScanner scannerWithString:components[3]];
+    if ([scanner scanFloat:&alpha] == NO) {
+        return nil;
+    }
+
+#if TARGET_OS_IPHONE
     
-    return nil;
+    return
+    [AMColor
+     colorWithRed:red
+     green:green
+     blue:blue
+     alpha:alpha];
+    
+#else
+
+    return
+    [AMColor
+     colorWithCalibratedRed:red
+     green:green
+     blue:blue
+     alpha:alpha];
+#endif
 }
 
 @end

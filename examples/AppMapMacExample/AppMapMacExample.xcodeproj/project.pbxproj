@@ -39,7 +39,7 @@
 		FC7A79181A6063C5009BCA50 /* AMAppMapContainerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7A79131A6063C5009BCA50 /* AMAppMapContainerFactory.m */; };
 		FC7A79191A6063C5009BCA50 /* AMAppMapLabelFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7A79151A6063C5009BCA50 /* AMAppMapLabelFactory.m */; };
 		FC7A791A1A6063C5009BCA50 /* AMAppMapViewFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7A79171A6063C5009BCA50 /* AMAppMapViewFactory.m */; };
-		FC7A79DE1A606B10009BCA50 /* rootView.dict in Resources */ = {isa = PBXBuildFile; fileRef = FC7A79DD1A606B10009BCA50 /* rootView.dict */; };
+		FC925E961A60A20C005C9ECE /* rootView.dict in Resources */ = {isa = PBXBuildFile; fileRef = FC925E951A60A20C005C9ECE /* rootView.dict */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,7 +119,7 @@
 		FC7A79151A6063C5009BCA50 /* AMAppMapLabelFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMAppMapLabelFactory.m; sourceTree = "<group>"; };
 		FC7A79161A6063C5009BCA50 /* AMAppMapViewFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMAppMapViewFactory.h; sourceTree = "<group>"; };
 		FC7A79171A6063C5009BCA50 /* AMAppMapViewFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMAppMapViewFactory.m; sourceTree = "<group>"; };
-		FC7A79DD1A606B10009BCA50 /* rootView.dict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = rootView.dict; sourceTree = "<group>"; };
+		FC925E951A60A20C005C9ECE /* rootView.dict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = rootView.dict; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,7 +174,7 @@
 				FC7A773A1A5F5F74009BCA50 /* AppDelegate.m */,
 				FC7A773E1A5F5F75009BCA50 /* Images.xcassets */,
 				FC7A77401A5F5F75009BCA50 /* MainMenu.xib */,
-				FC7A79DD1A606B10009BCA50 /* rootView.dict */,
+				FC925E951A60A20C005C9ECE /* rootView.dict */,
 				FC7A77571A5F6053009BCA50 /* AMWindow.h */,
 				FC7A77581A5F6053009BCA50 /* AMWindow.m */,
 				FC7A77371A5F5F74009BCA50 /* Supporting Files */,
@@ -424,7 +424,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC7A773F1A5F5F75009BCA50 /* Images.xcassets in Resources */,
-				FC7A79DE1A606B10009BCA50 /* rootView.dict in Resources */,
+				FC925E961A60A20C005C9ECE /* rootView.dict in Resources */,
 				FC7A77421A5F5F75009BCA50 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
