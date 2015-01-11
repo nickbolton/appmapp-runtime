@@ -25,6 +25,10 @@ NSString * kAMComponentFrameKey = @"frame";
 NSString * kAMComponentCornerRadiusKey = @"cornerRadius";
 NSString * kAMComponentChildComponentsKey = @"childComponents";
 
+static NSString * kAMComponentDefaultNamePrefix = @"Container-";
+
+static NSInteger AMComponentMaxDefaultComponentNumber = 0;
+
 @interface AMComponent()
 
 @property (nonatomic, strong) NSMutableArray *primChildComponents;
@@ -85,6 +89,8 @@ NSString * kAMComponentChildComponentsKey = @"childComponents";
         [decoder decodeObjectForKey:kAMComponentChildComponentsKey];
         
         [self addChildComponents:childComponents];
+        
+        [self updateComponentMaxDefaultComponentNumber];
     }
     
     return self;
@@ -136,6 +142,8 @@ NSString * kAMComponentChildComponentsKey = @"childComponents";
         }];
         
         [self addChildComponents:childComponents];
+        
+        [self updateComponentMaxDefaultComponentNumber];
     }
     
     return self;
@@ -148,6 +156,20 @@ NSString * kAMComponentChildComponentsKey = @"childComponents";
     [[NSClassFromString(className) alloc] initWithDictionary:dict];
     
     return component;
+}
+
+- (void)updateComponentMaxDefaultComponentNumber {
+    
+    if ([self.name hasPrefix:kAMComponentDefaultNamePrefix] &&
+        self.name.length > kAMComponentDefaultNamePrefix.length) {
+        
+        NSString *numberString =
+        [self.name substringFromIndex:kAMComponentDefaultNamePrefix.length];
+        NSInteger componentNumber = [numberString integerValue];
+        
+        AMComponentMaxDefaultComponentNumber =
+        MAX(AMComponentMaxDefaultComponentNumber, componentNumber+1);
+    }
 }
 
 - (id)copyWithZone:(NSZone *)zone {
@@ -288,9 +310,10 @@ NSString * kAMComponentChildComponentsKey = @"childComponents";
     
     if (_defaultName == nil) {
         
-        static NSInteger index = 0;
-        
-        _defaultName = [NSString stringWithFormat:@"Container-%d", (int)index++];
+        _defaultName =
+        [NSString stringWithFormat:@"%@%d",
+         kAMComponentDefaultNamePrefix,
+         (int)AMComponentMaxDefaultComponentNumber++];
     }
     
     return _defaultName;

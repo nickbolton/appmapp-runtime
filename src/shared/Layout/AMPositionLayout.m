@@ -75,7 +75,7 @@
          attribute:NSLayoutAttributeNotAnAttribute
          multiplier:1.0f
          constant:0.0f];
-        [self.view.superview addConstraint:self.width];
+        [self.view addConstraint:self.width];
     }
     
     if (self.height == nil) {
@@ -89,7 +89,7 @@
          attribute:NSLayoutAttributeNotAnAttribute
          multiplier:1.0f
          constant:0.0f];
-        [self.view.superview addConstraint:self.height];
+        [self.view addConstraint:self.height];
     }
 }
 
