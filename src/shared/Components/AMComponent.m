@@ -194,6 +194,24 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     return component;
 }
 
+- (instancetype)copyForPasting {
+    
+    AMComponent *result = self.copy;
+    result.identifier = [[NSUUID new] UUIDString];
+    
+    NSMutableArray *children = [NSMutableArray array];
+    
+    for (AMComponent *childComponent in self.childComponents) {
+        
+        AMComponent *childCopy = [childComponent copyForPasting];
+        [children addObject:childCopy];
+    }
+    
+    result.childComponents = children;
+    
+    return result;
+}
+
 + (AMComponent *)buildComponent {
     
     AMComponent *component = [[self.class alloc] init];

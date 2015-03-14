@@ -62,4 +62,6 @@ extern NSString * kAMComponentChildComponentsKey;
 
 + (instancetype)buildComponent;
 
+- (instancetype)copyForPasting;
+
 @end
