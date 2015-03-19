@@ -30,11 +30,15 @@ extern NSString * kAMComponentChildComponentsKey;
 @property (nonatomic, strong) NSString *classPrefix;
 @property (nonatomic, readonly) NSString *exportedName;
 @property (nonatomic, readonly) NSString *defaultName;
+@property (nonatomic, readonly) NSInteger depth;
+@property (nonatomic, readonly) NSInteger childIndex;
 @property (nonatomic, readonly) AMComponentType componentType;
 @property (nonatomic) AMLayoutType layoutType;
 @property (nonatomic, strong) NSArray *childComponents;
 @property (nonatomic, weak) AMComponent *parentComponent;
 @property (nonatomic, weak) AMComponent *lastParentComponent;
+@property (nonatomic, readonly) AMComponent *topLevelComponent;
+
 @property (nonatomic) CGFloat cornerRadius;
 @property (nonatomic) CGFloat borderWidth;
 
@@ -57,11 +61,17 @@ extern NSString * kAMComponentChildComponentsKey;
 - (void)removeChildComponents:(NSArray *)components;
 - (void)insertChildComponent:(AMComponent *)insertedComponent
              beforeComponent:(AMComponent *)siblingComponent;
+- (void)insertChildComponent:(AMComponent *)insertedComponent
+              afterComponent:(AMComponent *)siblingComponent;
 
 - (NSDictionary *)exportComponent;
 
 + (instancetype)buildComponent;
 
 - (instancetype)copyForPasting;
+
++ (BOOL)doesHaveCommonTopLevelComponent:(NSArray *)components;
++ (BOOL)doesHaveCommonTopLevelComponent:(NSArray *)components
+                          withComponent:(AMComponent *)component;
 
 @end

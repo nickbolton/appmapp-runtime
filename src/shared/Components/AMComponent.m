@@ -261,7 +261,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"Component: %@, %@, %d", self.name, self.identifier, (int)self.componentType];
+    return [NSString stringWithFormat:@"Component: %@, %@ (parent: %@), %d", self.name, self.identifier, self.parentComponent.identifier, (int)self.componentType];
 }
 
 #pragma mark - Getters and Setters
@@ -357,6 +357,64 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     return _primChildComponents;
 }
 
+- (NSInteger)depth {
+    
+    if (self.parentComponent != nil) {
+        return [self.parentComponent depth] + 1;
+    }
+    
+    return 1;
+}
+
+- (NSInteger)childIndex {
+    
+    NSInteger result = NSNotFound;
+    
+    if (self.parentComponent != nil) {
+        result = [self.parentComponent.childComponents indexOfObject:self];
+    }
+    
+    return result;
+}
+
+- (AMComponent *)topLevelComponent {
+    
+    if (self.parentComponent != nil) {
+        return self.parentComponent.topLevelComponent;
+    }
+    
+    return self;
+}
+
++ (BOOL)doesHaveCommonTopLevelComponent:(NSArray *)components {
+ 
+    NSMutableSet *topLevelComponents = [NSMutableSet set];
+    BOOL allAreTopLevelComponents = components.count > 0;
+    
+    for (AMComponent *component in components) {
+        
+        [topLevelComponents addObject:component.topLevelComponent];
+        if (component.parentComponent != nil) {
+            allAreTopLevelComponents = NO;
+        }
+    }
+    
+    return allAreTopLevelComponents || topLevelComponents.count == 1;
+}
+
++ (BOOL)doesHaveCommonTopLevelComponent:(NSArray *)components
+                          withComponent:(AMComponent *)component {
+    
+    NSMutableArray *allComponents = [NSMutableArray array];
+    [allComponents addObjectsFromArray:components];
+    
+    if (component != nil) {
+        [allComponents addObject:component];
+    }
+    
+    return [self doesHaveCommonTopLevelComponent:allComponents];
+}
+
 #pragma mark - Public
 
 - (void)addChildComponent:(AMComponent *)component {
@@ -369,14 +427,14 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
     NSMutableArray *primComponents = self.primChildComponents;
 
-    [components enumerateObjectsUsingBlock:^(AMComponent *component, NSUInteger idx, BOOL *stop) {
+    for (AMComponent *component in components) {
         
         if ([primComponents containsObject:component] == NO) {
             [primComponents addObject:component];
         }
         
         component.parentComponent = self;
-    }];
+    }
 }
 
 - (void)insertChildComponent:(AMComponent *)insertedComponent
@@ -395,6 +453,35 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
     
     [primComponents insertObject:insertedComponent atIndex:pos];
+    
+    insertedComponent.parentComponent = self;
+}
+
+- (void)insertChildComponent:(AMComponent *)insertedComponent
+              afterComponent:(AMComponent *)siblingComponent {
+    
+    NSMutableArray *primComponents = self.primChildComponents;
+    
+    NSUInteger pos = [primComponents indexOfObject:siblingComponent];
+    
+    if (pos == NSNotFound) {
+        pos = primComponents.count-1;
+    }
+    
+    pos++;
+    pos = MIN(pos, primComponents.count);
+    
+    if ([primComponents containsObject:insertedComponent]) {
+        [primComponents removeObject:insertedComponent];
+    }
+    
+    if (pos < primComponents.count) {
+        [primComponents insertObject:insertedComponent atIndex:pos];
+    } else {
+        [primComponents addObject:insertedComponent];
+    }
+    
+    insertedComponent.parentComponent = self;
 }
 
 - (void)removeChildComponent:(AMComponent *)component {
