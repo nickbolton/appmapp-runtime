@@ -184,13 +184,27 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.identifier = self.identifier.copy;
     component.frame = self.frame;
     component.layoutType = self.layoutType;
-    component.childComponents = self.primChildComponents.mutableCopy;
     component.clipped = self.isClipped;
     component.backgroundColor = self.backgroundColor;
     component.alpha = self.alpha;
     component.borderWidth = self.borderWidth;
     component.borderColor = self.borderColor;
     
+    // only used to refer back to original parent
+    // children will have this reset with the next loop
+    component.parentComponent = self.parentComponent;
+    
+    for (AMComponent *childComponent in component.childComponents) {
+        childComponent.parentComponent = component;
+    }
+    
+    NSMutableArray *children = [NSMutableArray array];
+
+    for (AMComponent *component in self.primChildComponents) {
+        [children addObject:component.copy];
+    }
+    component.childComponents = children;
+
     return component;
 }
 
@@ -261,7 +275,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"Component: %@, %@ (parent: %@), %d", self.name, self.identifier, self.parentComponent.identifier, (int)self.componentType];
+    return [NSString stringWithFormat:@"Component: %p %@, %@ (parent: %@), %d, frame: %@", self, self.name, self.identifier, self.parentComponent.identifier, (int)self.componentType, NSStringFromCGRect(self.frame)];
+//    return [NSString stringWithFormat:@"Component: %p %@, %@ (parent: %@), %d, frame: %@, children: %@", self, self.name, self.identifier, self.parentComponent.identifier, (int)self.componentType, NSStringFromCGRect(self.frame), self.childComponents];
 }
 
 #pragma mark - Getters and Setters
@@ -416,6 +431,40 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 #pragma mark - Public
+
+- (AMComponent *)ancestorBefore:(AMComponent *)component {
+    
+    AMComponent *parentComponent = self.parentComponent;
+    AMComponent *result = self;
+    
+    while (parentComponent != nil) {
+        
+        if ([parentComponent.identifier isEqualToString:component.identifier]) {
+            return result;
+        }
+        
+        result = parentComponent;
+        parentComponent = parentComponent.parentComponent;
+    }
+    
+    return nil;
+}
+
+- (BOOL)isDescendent:(AMComponent *)component {
+    
+    AMComponent *parentComponent = component.parentComponent;
+    
+    while (parentComponent != nil) {
+        
+        if ([parentComponent.identifier isEqualToString:self.identifier]) {
+            return YES;
+        }
+        
+        parentComponent = parentComponent.parentComponent;
+    }
+    
+    return NO;
+}
 
 - (void)addChildComponent:(AMComponent *)component {
     if (component != nil) {

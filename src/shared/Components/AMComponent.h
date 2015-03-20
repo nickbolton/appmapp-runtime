@@ -69,6 +69,8 @@ extern NSString * kAMComponentChildComponentsKey;
 + (instancetype)buildComponent;
 
 - (instancetype)copyForPasting;
+- (BOOL)isDescendent:(AMComponent *)component;
+- (AMComponent *)ancestorBefore:(AMComponent *)component;
 
 + (BOOL)doesHaveCommonTopLevelComponent:(NSArray *)components;
 + (BOOL)doesHaveCommonTopLevelComponent:(NSArray *)components
