@@ -266,7 +266,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     [self.childComponents enumerateObjectsUsingBlock:^(AMComponent *childComponent, NSUInteger idx, BOOL *stop) {
     
-        children[childComponent.exportedName] = [childComponent exportComponent];
+        children[childComponent.identifier] = [childComponent exportComponent];
     }];
 
     dict[kAMComponentChildComponentsKey] = children;

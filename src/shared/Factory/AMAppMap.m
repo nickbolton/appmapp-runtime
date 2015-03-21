@@ -16,8 +16,6 @@ NSString * const kAMComponentsKey = @"components";
 @interface AMAppMap()
 
 @property (nonatomic, strong) NSDictionary *factoryClasses;
-@property (nonatomic, strong) NSMutableDictionary *resourceCache;
-@property (nonatomic, strong) NSMutableDictionary *componentCache;
 
 @end
 
@@ -32,10 +30,7 @@ NSString * const kAMComponentsKey = @"components";
 }
 
 - (void)commonInit {
-    
-    self.resourceCache = [NSMutableDictionary dictionary];
-    self.componentCache = [NSMutableDictionary dictionary];
-    
+
     self.factoryClasses =
     @{
       @(AMComponentContainer) : NSStringFromClass([AMAppMapContainerFactory class]),
@@ -66,128 +61,12 @@ NSString * const kAMComponentsKey = @"components";
     return [[clazz new] buildViewFromComponent:component inContainer:container bindingObject:bindingObject];
 }
 
-- (AMRuntimeView *)buildViewFromResourceName:(NSString *)resourceName
-                               componentName:(NSString *)componentName
-                                 inContainer:(AMView *)container {
-    
-    if (resourceName == nil) {
-        NSLog(@"no resourceName!");
-        return nil;
-    }
-
-    if (componentName == nil) {
-        NSLog(@"no componentName!");
-        return nil;
-    }
-    
-    if (container == nil) {
-        NSLog(@"no container!");
-        return nil;
-    }
-    
-    NSMutableDictionary *componentCache =
-    [self componentCacheForResourceName:resourceName];
-    
-    AMComponent *component = componentCache[componentName];
-    
-    if (component == nil) {
-
-        NSDictionary *resourceDict = self.resourceCache[resourceName];
-        
-        if (resourceDict == nil) {
-            
-            NSBundle *bundle = [NSBundle mainBundle];
-            NSURL *resourceURL = [bundle URLForResource:resourceName withExtension:@"dict"];
-            if (resourceURL != nil) {
-                
-                resourceDict =
-                [NSDictionary dictionaryWithContentsOfURL:resourceURL];
-            }
-            
-            if (resourceDict != nil) {
-                self.resourceCache[resourceName] = resourceDict;
-            } else {
-                NSLog(@"no resource found named: %@", resourceName);
-                return nil;
-            }
-        }
-        
-        if (componentCache.count <= 0) {
-            
-            [self loadComponentResourceWithDictionary:resourceDict resourceName:resourceName];
-            component = componentCache[componentName];
-        }
-        
-        if (component == nil) {
-            NSLog(@"No component found named: %@ in resource: %@", componentName, resourceName);
-            return nil;
-        }
-    }
-    
-    return [self buildViewFromComponent:component inContainer:container];
-}
-
-- (void)loadComponentResourceWithDictionary:(NSDictionary *)resourceDict
-                               resourceName:(NSString *)resourceName {
-    
-    
-    NSMutableDictionary *componentCache =
-    [self componentCacheForResourceName:resourceName];
-    
-    NSDictionary *componentDict = resourceDict[kAMComponentsKey];
-    
-    [componentDict enumerateKeysAndObjectsUsingBlock:^(NSString *name, NSDictionary *componentDict, BOOL *stop) {
-        
-        AMComponent *component =
-        [self loadComponentWithDictionary:componentDict];
-        
-        componentCache[name] = component;
-        
-        [self
-         cacheChildComponents:component.childComponents
-         parentComponentPath:name
-         componentCache:componentCache];
-    }];
-}
-
 - (AMComponent *)loadComponentWithDictionary:(NSDictionary *)componentDict {
     
     NSString *className = componentDict[kAMComponentClassNameKey];
     AMComponent *component =
     [[NSClassFromString(className) alloc] initWithDictionary:componentDict];
     return component;
-}
-
-- (void)cacheChildComponents:(NSArray *)childComponents
-                parentComponentPath:(NSString *)parentComponentPath
-              componentCache:(NSMutableDictionary *)componentCache {
-    
-    [childComponents enumerateObjectsUsingBlock:^(AMComponent *childComponent, NSUInteger idx, BOOL *stop) {
-       
-        NSString *name =
-        [parentComponentPath
-         stringByAppendingPathExtension:childComponent.exportedName];
-        
-        componentCache[name] = childComponent;
-        
-        [self
-         cacheChildComponents:childComponent.childComponents
-         parentComponentPath:name
-         componentCache:componentCache];
-    }];
-}
-
-#pragma mark - Getters and Setters
-
-- (NSMutableDictionary *)componentCacheForResourceName:(NSString *)resourceName {
-    
-    NSMutableDictionary *cache = self.componentCache[resourceName];
-    if (cache == nil) {
-        cache = [NSMutableDictionary dictionary];
-        self.componentCache[resourceName] = cache;
-    }
-    
-    return cache;
 }
 
 #pragma mark - Singleton Methods

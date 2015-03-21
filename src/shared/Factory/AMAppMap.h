@@ -18,10 +18,6 @@ extern NSString * const kAMComponentsKey;
 
 - (AMComponent *)loadComponentWithDictionary:(NSDictionary *)componentDict;
 
-- (AMRuntimeView *)buildViewFromResourceName:(NSString *)resourceName
-                               componentName:(NSString *)componentName
-                              inContainer:(AMView *)container;
-
 - (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
                               inContainer:(AMView *)container;
 
