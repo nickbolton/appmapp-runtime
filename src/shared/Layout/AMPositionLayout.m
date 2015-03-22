@@ -7,101 +7,72 @@
 //
 
 #import "AMPositionLayout.h"
+#import "AMAnchoredLeftLayout.h"
+#import "AMAnchoredTopLayout.h"
+#import "AMFixedWidthLayout.h"
+#import "AMFixedHeightLayout.h"
 
 @interface AMPositionLayout()
 
-@property (nonatomic, readwrite) NSLayoutConstraint *leftSpace;
-@property (nonatomic, readwrite) NSLayoutConstraint *topSpace;
-@property (nonatomic, readwrite) NSLayoutConstraint *width;
-@property (nonatomic, readwrite) NSLayoutConstraint *height;
+@property (nonatomic, strong) AMAnchoredTopLayout *topLayout;
+@property (nonatomic, strong) AMAnchoredLeftLayout *leftLayout;
+@property (nonatomic, strong) AMFixedWidthLayout *widthLayout;
+@property (nonatomic, strong) AMFixedHeightLayout *heightLayout;
 
 @end
 
 @implementation AMPositionLayout
 
+- (id)init {
+    self = [super init];
+    
+    if (self != nil) {
+        self.topLayout = [AMAnchoredTopLayout new];
+        self.leftLayout = [AMAnchoredLeftLayout new];
+        self.widthLayout = [AMFixedWidthLayout new];
+        self.heightLayout = [AMFixedHeightLayout new];
+    }
+    
+    return self;
+}
+
+#pragma mark - Getters and Setters
+
+- (void)setView:(NSView *)view {
+    self.topLayout.view = view;
+    self.leftLayout.view = view;
+    self.widthLayout.view = view;
+    self.heightLayout.view = view;
+}
+
+#pragma mark - Public
+
 - (void)clearLayout {
     [super clearLayout];
-    
-    [self.view.superview removeConstraint:self.leftSpace];
-    [self.view.superview removeConstraint:self.topSpace];
-    [self.view removeConstraint:self.width];
-    [self.view removeConstraint:self.height];
-    
-    self.leftSpace = nil;
-    self.topSpace = nil;
-    self.width = nil;
-    self.height = nil;
+    [self.topLayout clearLayout];
+    [self.leftLayout clearLayout];
+    [self.widthLayout clearLayout];
+    [self.heightLayout clearLayout];
 }
 
-- (void)createConstraintsIfNecessary {
-    [super createConstraintsIfNecessary];
+- (void)createConstraintsIfNecessaryWithMultiplier:(CGFloat)multiplier
+                                          priority:(NSLayoutPriority)priority {
     
-    if (self.leftSpace == nil && self.view.superview != nil) {
-       
-        self.leftSpace =
-        [NSLayoutConstraint
-         constraintWithItem:self.view
-         attribute:NSLayoutAttributeLeft
-         relatedBy:NSLayoutRelationEqual
-         toItem:self.view.superview
-         attribute:NSLayoutAttributeLeft
-         multiplier:1.0f
-         constant:0.0f];
-        [self.view.superview addConstraint:self.leftSpace];
-    }
-    
-    if (self.topSpace == nil && self.view.superview != nil) {
-        
-        self.topSpace =
-        [NSLayoutConstraint
-         constraintWithItem:self.view
-         attribute:NSLayoutAttributeTop
-         relatedBy:NSLayoutRelationEqual
-         toItem:self.view.superview
-         attribute:NSLayoutAttributeTop
-         multiplier:1.0f
-         constant:0.0f];
-        [self.view.superview addConstraint:self.topSpace];
-    }
-    
-    if (self.width == nil) {
-        
-        self.width =
-        [NSLayoutConstraint
-         constraintWithItem:self.view
-         attribute:NSLayoutAttributeWidth
-         relatedBy:NSLayoutRelationEqual
-         toItem:nil
-         attribute:NSLayoutAttributeNotAnAttribute
-         multiplier:1.0f
-         constant:0.0f];
-        [self.view addConstraint:self.width];
-    }
-    
-    if (self.height == nil) {
-        
-        self.height =
-        [NSLayoutConstraint
-         constraintWithItem:self.view
-         attribute:NSLayoutAttributeHeight
-         relatedBy:NSLayoutRelationEqual
-         toItem:nil
-         attribute:NSLayoutAttributeNotAnAttribute
-         multiplier:1.0f
-         constant:0.0f];
-        [self.view addConstraint:self.height];
-    }
+    [self.topLayout createConstraintsIfNecessaryWithMultiplier:multiplier priority:priority];
+    [self.leftLayout createConstraintsIfNecessaryWithMultiplier:multiplier priority:priority];
+    [self.widthLayout createConstraintsIfNecessaryWithMultiplier:multiplier priority:priority];
+    [self.heightLayout createConstraintsIfNecessaryWithMultiplier:multiplier priority:priority];
 }
 
-- (void)updateLayoutWithFrame:(CGRect)frame {
-    [super updateLayoutWithFrame:frame];
-    
-    [self createConstraintsIfNecessary];
-
-    self.leftSpace.constant = CGRectGetMinX(frame);
-    self.topSpace.constant = CGRectGetMinY(frame);
-    self.width.constant = CGRectGetWidth(frame);
-    self.height.constant = CGRectGetHeight(frame);
+- (void)updateLayoutWithFrame:(CGRect)frame
+                   multiplier:(CGFloat)multiplier
+                     priority:(NSLayoutPriority)priority
+                  parentFrame:(CGRect)parentFrame {
+    [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
+    [self.topLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
+    [self.leftLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
+    [self.widthLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
+    [self.heightLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
 }
 
 @end

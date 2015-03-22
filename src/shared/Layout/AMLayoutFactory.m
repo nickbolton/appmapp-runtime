@@ -12,10 +12,10 @@
 #import "AMAnchoredBottomLayout.h"
 #import "AMAnchoredLeftLayout.h"
 #import "AMAnchoredRightLayout.h"
-#import "AMAnchoredTopLeftLayout.h"
-#import "AMAnchoredTopRightLayout.h"
-#import "AMAnchoredBottomLeftLayout.h"
-#import "AMAnchoredBottomRightLayout.h"
+#import "AMCenterHorizontallyLayout.h"
+#import "AMCenterVerticallyLayout.h"
+#import "AMFixedHeightLayout.h"
+#import "AMFixedWidthLayout.h"
 
 @interface AMLayoutFactory()
 
@@ -42,10 +42,10 @@
       @(AMLayoutTypeAnchoredBottom) : NSStringFromClass([AMAnchoredBottomLayout class]),
       @(AMLayoutTypeAnchoredLeft) : NSStringFromClass([AMAnchoredLeftLayout class]),
       @(AMLayoutTypeAnchoredRight) : NSStringFromClass([AMAnchoredRightLayout class]),
-      @(AMLayoutTypeAnchoredTopLeft) : NSStringFromClass([AMAnchoredTopLeftLayout class]),
-      @(AMLayoutTypeAnchoredTopRight) : NSStringFromClass([AMAnchoredTopRightLayout class]),
-      @(AMLayoutTypeAnchoredBottomLeft) : NSStringFromClass([AMAnchoredBottomLeftLayout class]),
-      @(AMLayoutTypeAnchoredBottomRight) : NSStringFromClass([AMAnchoredBottomRightLayout class]),
+      @(AMLayoutTypeCenterHorizontally) : NSStringFromClass([AMCenterHorizontallyLayout class]),
+      @(AMLayoutTypeCenterVertically) : NSStringFromClass([AMCenterVerticallyLayout class]),
+      @(AMLayoutTypeFixedWidth) : NSStringFromClass([AMFixedWidthLayout class]),
+      @(AMLayoutTypeFixedHeight) : NSStringFromClass([AMFixedHeightLayout class]),
       };
 }
 

@@ -1,29 +1,25 @@
 //
-//  AMAnchoredBottomLayout.m
+//  AMFixedWidthLayout.m
 //  AppMap
 //
-//  Created by Nick Bolton on 12/28/14.
-//  Copyright (c) 2014 Pixelbleed LLC. All rights reserved.
+//  Created by Nick Bolton on 3/22/15.
+//  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
 
-#import "AMAnchoredBottomLayout.h"
+#import "AMFixedWidthLayout.h"
 
-@interface AMAnchoredBottomLayout()
-
-@end
-
-@implementation AMAnchoredBottomLayout
+@implementation AMFixedWidthLayout
 
 - (NSLayoutConstraint *)buildConstraintWithMultiplier:(CGFloat)multiplier {
-
+    
     return
     [NSLayoutConstraint
      constraintWithItem:self.view
-     attribute:NSLayoutAttributeBottom
+     attribute:NSLayoutAttributeWidth
      relatedBy:NSLayoutRelationEqual
-     toItem:self.view.superview
-     attribute:NSLayoutAttributeBottom
-     multiplier:multiplier
+     toItem:nil
+     attribute:NSLayoutAttributeNotAnAttribute
+     multiplier:1.0f
      constant:0.0f];
 }
 
@@ -32,9 +28,7 @@
                      priority:(NSLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame {
     [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
-
-    CGFloat bottomDistance = CGRectGetHeight(parentFrame) - CGRectGetMaxY(frame);
-    self.constraint.constant = -bottomDistance;
+    self.constraint.constant = CGRectGetWidth(frame);
 }
 
 @end

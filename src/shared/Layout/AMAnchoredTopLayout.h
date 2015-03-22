@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Pixelbleed LLC. All rights reserved.
 //
 
-#import "AMLayout.h"
+#import "AMParentLayout.h"
 
-@interface AMAnchoredTopLayout : AMLayout
+@interface AMAnchoredTopLayout : AMParentLayout
 
 @end

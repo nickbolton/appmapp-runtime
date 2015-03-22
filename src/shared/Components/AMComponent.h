@@ -12,7 +12,7 @@
 extern NSString * const kAMComponentClassNameKey;
 extern NSString * kAMComponentNameKey;
 extern NSString * kAMComponentClassPrefixKey;
-extern NSString * kAMComponentLayoutTypeKey;
+extern NSString * kAMComponentLayoutTypesKey;
 extern NSString * kAMComponentIdentifierKey;
 extern NSString * kAMComponentClippedKey;
 extern NSString * kAMComponentBackgroundColorKey;
@@ -33,7 +33,7 @@ extern NSString * kAMComponentChildComponentsKey;
 @property (nonatomic, readonly) NSInteger depth;
 @property (nonatomic, readonly) NSInteger childIndex;
 @property (nonatomic, readonly) AMComponentType componentType;
-@property (nonatomic) AMLayoutType layoutType;
+@property (nonatomic, strong) NSArray *layoutTypes;
 @property (nonatomic, strong) NSArray *childComponents;
 @property (nonatomic, weak) AMComponent *parentComponent;
 @property (nonatomic, weak) AMComponent *lastParentComponent;

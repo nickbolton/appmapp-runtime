@@ -20,14 +20,14 @@ typedef NS_ENUM(NSInteger, AMComponentType) {
 typedef NS_ENUM(NSInteger, AMLayoutType) {
     
     AMLayoutTypePosition = 0,
+    AMLayoutTypeFixedWidth,
+    AMLayoutTypeFixedHeight,
     AMLayoutTypeAnchoredTop,
     AMLayoutTypeAnchoredBottom,
     AMLayoutTypeAnchoredLeft,
     AMLayoutTypeAnchoredRight,
-    AMLayoutTypeAnchoredTopLeft,
-    AMLayoutTypeAnchoredTopRight,
-    AMLayoutTypeAnchoredBottomLeft,
-    AMLayoutTypeAnchoredBottomRight,
+    AMLayoutTypeCenterHorizontally,
+    AMLayoutTypeCenterVertically,
 };
 
 #if TARGET_OS_IPHONE

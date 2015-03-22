@@ -15,13 +15,24 @@ NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeVi
 
 @interface AMRuntimeView()
 
-@property (nonatomic, strong) AMLayout *layoutObject;
+@property (nonatomic, strong) NSMutableArray *_layoutObjects;
 @property (nonatomic, strong) AMComponent *component;
 @property (nonatomic, strong) AMRuntimeViewHelper *helper;
 
 @end
 
 @implementation AMRuntimeView
+
+- (id)init {
+    self = [super init];
+    
+    if (self != nil) {
+        self._layoutObjects = [NSMutableArray array];
+    }
+    
+    return self;
+}
+
 
 #pragma mark - Getters and Setters
 
@@ -46,6 +57,30 @@ NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeVi
 }
 
 #pragma mark - Layout
+
+- (NSArray *)layoutObjects {
+    return self._layoutObjects.copy;
+}
+
+- (void)setLayoutObjects:(NSArray *)layoutObjects {
+    [self clearLayoutObjects];
+    [self._layoutObjects addObjectsFromArray:layoutObjects];
+}
+
+- (void)clearLayoutObjects {
+    [self clearConstraints];
+    [self._layoutObjects removeAllObjects];
+}
+
+- (void)addLayoutObject:(AMLayout *)layoutObject {
+    [self clearConstraints];
+    [self._layoutObjects addObject:layoutObject];
+}
+
+- (void)removeLayoutObject:(AMLayout *)layoutObject {
+    [self clearConstraints];
+    [self._layoutObjects removeObject:layoutObject];
+}
 
 - (void)layout {
     [self.helper layoutView:self];

@@ -9,10 +9,18 @@
 
 @interface AMLayout : NSObject
 
+@property (nonatomic, strong) NSLayoutConstraint *constraint;
+
 @property (nonatomic, weak) AMView *view;
 
 - (void)clearLayout;
-- (void)updateLayoutWithFrame:(CGRect)frame;
-- (void)createConstraintsIfNecessary;
+- (void)updateLayoutWithFrame:(CGRect)frame
+                   multiplier:(CGFloat)multiplier
+                     priority:(NSLayoutPriority)priority
+                  parentFrame:(CGRect)parentFrame;
 
+- (void)applyConstraint;
+- (void)createConstraintsIfNecessaryWithMultiplier:(CGFloat)multiplier
+                                          priority:(NSLayoutPriority)priority;
+- (NSLayoutConstraint *)buildConstraintWithMultiplier:(CGFloat)multiplier;
 @end

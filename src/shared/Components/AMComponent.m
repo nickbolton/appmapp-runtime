@@ -14,7 +14,7 @@ NSString * const kAMComponentClassNameKey = @"class-name";
 
 NSString * kAMComponentNameKey = @"name";
 NSString * kAMComponentClassPrefixKey = @"classPrefix";
-NSString * kAMComponentLayoutTypeKey = @"layoutType";
+NSString * kAMComponentLayoutTypesKey = @"layoutTypes";
 NSString * kAMComponentIdentifierKey = @"identifier";
 NSString * kAMComponentClippedKey = @"clipped";
 NSString * kAMComponentBackgroundColorKey = @"backgroundColor";
@@ -45,7 +45,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     [coder encodeObject:self.name forKey:kAMComponentNameKey];
     [coder encodeObject:self.classPrefix forKey:kAMComponentClassPrefixKey];
-    [coder encodeInt32:self.layoutType forKey:kAMComponentLayoutTypeKey];
+    [coder encodeObject:self.layoutTypes forKey:kAMComponentLayoutTypesKey];
     [coder encodeObject:self.identifier forKey:kAMComponentIdentifierKey];
     [coder encodeBool:self.isClipped forKey:kAMComponentClippedKey];
     [coder encodeObject:self.backgroundColor forKey:kAMComponentBackgroundColorKey];
@@ -70,7 +70,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
         self.name = [decoder decodeObjectForKey:kAMComponentNameKey];
         self.classPrefix = [decoder decodeObjectForKey:kAMComponentClassPrefixKey];
-        self.layoutType = [decoder decodeInt32ForKey:kAMComponentLayoutTypeKey];
+        self.layoutTypes = [decoder decodeObjectForKey:kAMComponentLayoutTypesKey];
         self.identifier = [decoder decodeObjectForKey:kAMComponentIdentifierKey];
         self.clipped = [decoder decodeBoolForKey:kAMComponentClippedKey];
         self.backgroundColor = [decoder decodeObjectForKey:kAMComponentBackgroundColorKey];
@@ -107,7 +107,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
         self.name = dict[kAMComponentNameKey];
         self.classPrefix = dict[kAMComponentClassPrefixKey];
-        self.layoutType = [dict[kAMComponentLayoutTypeKey] integerValue];
+        self.layoutTypes = dict[kAMComponentLayoutTypesKey];
         self.identifier = dict[kAMComponentIdentifierKey];
         self.clipped = [dict[kAMComponentClippedKey] boolValue];
         self.alpha = [dict[kAMComponentAlphaKey] floatValue];
@@ -183,7 +183,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.classPrefix = self.classPrefix.copy;
     component.identifier = self.identifier.copy;
     component.frame = self.frame;
-    component.layoutType = self.layoutType;
+    component.layoutTypes = self.layoutTypes.copy;
     component.clipped = self.isClipped;
     component.backgroundColor = self.backgroundColor;
     component.alpha = self.alpha;
@@ -233,6 +233,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.cornerRadius = 2.0f;
     component.borderWidth = 1.0f;
     component.alpha = 1.0f;
+    component.layoutTypes = @[@(AMLayoutTypePosition)];
 
     return component;
 }
@@ -243,7 +244,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     dict[kAMComponentClassNameKey] = NSStringFromClass(self.class);
     dict[kAMComponentNameKey] = self.name;
-    dict[kAMComponentLayoutTypeKey] = @(self.layoutType);
+    dict[kAMComponentLayoutTypesKey] = self.layoutTypes != nil ? self.layoutTypes : @[];
     dict[kAMComponentIdentifierKey] = self.identifier;
     dict[kAMComponentClippedKey] = @(self.isClipped);
     dict[kAMComponentBackgroundColorKey] = [self.backgroundColor hexcodePlusAlpha];

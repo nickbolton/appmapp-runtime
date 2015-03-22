@@ -23,8 +23,8 @@
     self.constraints = nil;
 }
 
-- (void)createConstraintsIfNecessary {
-    [super createConstraintsIfNecessary];
+- (void)createConstraintsIfNecessaryWithMultiplier:(CGFloat)multiplier
+                                          priority:(NSLayoutPriority)priority {
     
     if (self.constraints == nil && self.view.superview != nil) {
         
@@ -49,11 +49,6 @@
         
         self.constraints = constraints;
     }
-}
-
-- (void)updateLayoutWithFrame:(CGRect)frame {
-    [super updateLayoutWithFrame:frame];    
-    [self createConstraintsIfNecessary];
 }
 
 @end

@@ -10,9 +10,4 @@
 
 @interface AMPositionLayout : AMLayout
 
-@property (nonatomic, readonly) NSLayoutConstraint *leftSpace;
-@property (nonatomic, readonly) NSLayoutConstraint *topSpace;
-@property (nonatomic, readonly) NSLayoutConstraint *width;
-@property (nonatomic, readonly) NSLayoutConstraint *height;
-
 @end
