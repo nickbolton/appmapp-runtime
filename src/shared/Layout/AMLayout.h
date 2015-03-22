@@ -16,11 +16,11 @@
 - (void)clearLayout;
 - (void)updateLayoutWithFrame:(CGRect)frame
                    multiplier:(CGFloat)multiplier
-                     priority:(NSLayoutPriority)priority
+                     priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame;
 
 - (void)applyConstraint;
 - (void)createConstraintsIfNecessaryWithMultiplier:(CGFloat)multiplier
-                                          priority:(NSLayoutPriority)priority;
+                                          priority:(AMLayoutPriority)priority;
 - (NSLayoutConstraint *)buildConstraintWithMultiplier:(CGFloat)multiplier;
 @end

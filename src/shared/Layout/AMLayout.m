@@ -16,13 +16,13 @@
 
 - (void)updateLayoutWithFrame:(CGRect)frame
                    multiplier:(CGFloat)multiplier
-                     priority:(NSLayoutPriority)priority
+                     priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame {
     [self createConstraintsIfNecessaryWithMultiplier:multiplier priority:priority];
 }
 
 - (void)createConstraintsIfNecessaryWithMultiplier:(CGFloat)multiplier
-                                          priority:(NSLayoutPriority)priority {
+                                          priority:(AMLayoutPriority)priority {
 
     if (self.view != nil &&
         (self.constraint == nil ||

@@ -25,7 +25,7 @@
 
 - (void)updateLayoutWithFrame:(CGRect)frame
                    multiplier:(CGFloat)multiplier
-                     priority:(NSLayoutPriority)priority
+                     priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame {
     [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
     self.constraint.constant = CGRectGetWidth(frame);

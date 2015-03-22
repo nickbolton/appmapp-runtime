@@ -31,19 +31,35 @@ typedef NS_ENUM(NSInteger, AMLayoutType) {
 };
 
 #if TARGET_OS_IPHONE
+
 #define AMColorType UIColor
 typedef UIView AMView;
 typedef UIColor AMColor;
 typedef UIFont AMFont;
 typedef UILabel AMLabel;
 typedef UIViewController AMViewController;
+typedef UILayoutPriority AMLayoutPriority;
+
+static const AMLayoutPriority AMLayoutPriorityRequired = UILayoutPriorityRequired;
+static const AMLayoutPriority AMLayoutPriorityDefaultHigh = UILayoutPriorityDefaultHigh;
+static const AMLayoutPriority AMLayoutPriorityDefaultLow = UILayoutPriorityDefaultLow;
+static const AMLayoutPriority AMLayoutPriorityFittingSizeLevel = UILayoutPriorityFittingSizeLevel;
+
 #else
+
 #define AMColorType NSColor
 typedef NSView AMView;
 typedef NSColor AMColor;
 typedef NSFont AMFont;
 typedef NSTextField AMLabel;
 typedef NSViewController AMViewController;
+typedef NSLayoutPriority AMLayoutPriority;
+
+static const AMLayoutPriority AMLayoutPriorityRequired = NSLayoutPriorityRequired;
+static const AMLayoutPriority AMLayoutPriorityDefaultHigh = NSLayoutPriorityDefaultHigh;
+static const AMLayoutPriority AMLayoutPriorityDefaultLow = NSLayoutPriorityDefaultLow;
+static const AMLayoutPriority AMLayoutPriorityFittingSizeLevel = NSLayoutPriorityFittingSizeCompression;
+
 #endif
 
 #endif

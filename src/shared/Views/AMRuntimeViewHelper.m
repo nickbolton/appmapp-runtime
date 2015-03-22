@@ -107,7 +107,7 @@
         [layoutObject
          updateLayoutWithFrame:frame
          multiplier:1.0f
-         priority:NSLayoutPriorityRequired
+         priority:AMLayoutPriorityRequired
          parentFrame:parentFrame];
     }
     [self constraintsDidChange:view];

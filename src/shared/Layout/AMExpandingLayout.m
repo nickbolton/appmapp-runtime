@@ -24,7 +24,7 @@
 }
 
 - (void)createConstraintsIfNecessaryWithMultiplier:(CGFloat)multiplier
-                                          priority:(NSLayoutPriority)priority {
+                                          priority:(AMLayoutPriority)priority {
     
     if (self.constraints == nil && self.view.superview != nil) {
         

@@ -38,7 +38,7 @@
 
 #pragma mark - Getters and Setters
 
-- (void)setView:(NSView *)view {
+- (void)setView:(UIView *)view {
     self.topLayout.view = view;
     self.leftLayout.view = view;
     self.widthLayout.view = view;
@@ -56,7 +56,7 @@
 }
 
 - (void)createConstraintsIfNecessaryWithMultiplier:(CGFloat)multiplier
-                                          priority:(NSLayoutPriority)priority {
+                                          priority:(AMLayoutPriority)priority {
     
     [self.topLayout createConstraintsIfNecessaryWithMultiplier:multiplier priority:priority];
     [self.leftLayout createConstraintsIfNecessaryWithMultiplier:multiplier priority:priority];
@@ -66,7 +66,7 @@
 
 - (void)updateLayoutWithFrame:(CGRect)frame
                    multiplier:(CGFloat)multiplier
-                     priority:(NSLayoutPriority)priority
+                     priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame {
     [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
     [self.topLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
