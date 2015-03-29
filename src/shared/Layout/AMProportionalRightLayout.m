@@ -37,6 +37,7 @@
     
     CGFloat rightSpace = self.proportionalValue * CGRectGetWidth(parentFrame);
     self.constraint.constant = -rightSpace;
+    [self applyConstraintIfNecessary];
 }
 
 - (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {

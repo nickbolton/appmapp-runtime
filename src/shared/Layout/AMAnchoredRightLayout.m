@@ -39,6 +39,7 @@
     [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
     CGFloat rightDistance = CGRectGetWidth(parentFrame) - CGRectGetMaxX(frame);
     self.constraint.constant = -rightDistance;
+    [self applyConstraintIfNecessary];
 }
 
 @end

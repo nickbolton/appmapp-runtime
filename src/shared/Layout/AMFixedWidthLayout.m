@@ -34,6 +34,7 @@
                        inView:(NSView *)view {
     [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
     self.constraint.constant = CGRectGetWidth(frame);
+    [self applyConstraintIfNecessary];
 }
 
 @end

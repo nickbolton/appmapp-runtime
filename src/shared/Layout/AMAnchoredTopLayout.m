@@ -39,6 +39,7 @@
     
     [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
     self.constraint.constant = CGRectGetMinY(frame);
+    [self applyConstraintIfNecessary];
 }
 
 @end

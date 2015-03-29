@@ -13,6 +13,10 @@
 NSString * kAMLayoutClassNameKey = @"className";
 NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
+@interface AMLayout()
+
+@end
+
 @implementation AMLayout
 
 - (void)encodeWithCoder:(NSCoder *)coder {
@@ -64,6 +68,7 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 - (void)clearLayout {
     self.constraint = nil;
+    self.layoutApplied = NO;
 }
 
 - (void)updateLayoutWithFrame:(CGRect)frame
@@ -87,7 +92,6 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
         if (self.view.superview != nil) {
             self.constraint = [self buildConstraintWithMultiplier:multiplier];
             self.constraint.priority = priority;
-            [self applyConstraint];
         }
     }
 }
@@ -95,7 +99,7 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 - (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
 }
 
-- (void)applyConstraint {
+- (void)applyConstraintIfNecessary {    
     [self doesNotRecognizeSelector:_cmd];
 }
 

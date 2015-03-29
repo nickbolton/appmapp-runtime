@@ -55,4 +55,14 @@
     }
 }
 
+- (void)updateLayoutWithFrame:(CGRect)frame
+                   multiplier:(CGFloat)multiplier
+                     priority:(AMLayoutPriority)priority
+                  parentFrame:(CGRect)parentFrame
+                       inView:(AMView *)view {
+    
+    [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
+    [self applyConstraintIfNecessary];
+}
+
 @end

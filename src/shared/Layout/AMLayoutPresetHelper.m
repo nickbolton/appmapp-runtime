@@ -163,22 +163,78 @@
 
 //AMLayoutPresetFixedYPosHeightLeftRightMargins,
 - (NSArray *)layoutTypesForAMLayoutPresetFixedYPosHeightLeftRightMargins:(AMComponent *)component {
-    return @[@(AMLayoutTypePosition)];
+
+//    return @[@(AMLayoutTypePosition)];
+
+    if (component.parentComponent == nil) {
+        return @[@(AMLayoutTypePosition)];
+    }
+    
+    NSMutableArray *layoutTypes = [NSMutableArray array];
+    
+    [layoutTypes addObject:@(AMLayoutTypeAnchoredLeft)];
+    [layoutTypes addObject:@(AMLayoutTypeAnchoredRight)];
+    [layoutTypes addObject:@(AMLayoutTypeAnchoredTop)];
+    [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
+    
+    return layoutTypes;
 }
 
 //AMLayoutPresetFixedXPosWidthTopBottomMargins,
 - (NSArray *)layoutTypesForAMLayoutPresetFixedXPosWidthTopBottomMargins:(AMComponent *)component {
-    return @[@(AMLayoutTypePosition)];
+    
+//    return @[@(AMLayoutTypePosition)];
+
+    if (component.parentComponent == nil) {
+        return @[@(AMLayoutTypePosition)];
+    }
+    
+    NSMutableArray *layoutTypes = [NSMutableArray array];
+    
+    [layoutTypes addObject:@(AMLayoutTypeAnchoredTop)];
+    [layoutTypes addObject:@(AMLayoutTypeAnchoredBottom)];
+    [layoutTypes addObject:@(AMLayoutTypeAnchoredLeft)];
+    [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
+    
+    return layoutTypes;
 }
 
 //AMLayoutPresetFixedMargins,
 - (NSArray *)layoutTypesForAMLayoutPresetFixedMargins:(AMComponent *)component {
-    return @[@(AMLayoutTypePosition)];
+
+//    return @[@(AMLayoutTypePosition)];
+
+    if (component.parentComponent == nil) {
+        return @[@(AMLayoutTypePosition)];
+    }
+    
+    NSMutableArray *layoutTypes = [NSMutableArray array];
+    
+    [layoutTypes addObject:@(AMLayoutTypeAnchoredLeft)];
+    [layoutTypes addObject:@(AMLayoutTypeAnchoredRight)];
+    [layoutTypes addObject:@(AMLayoutTypeAnchoredTop)];
+    [layoutTypes addObject:@(AMLayoutTypeAnchoredBottom)];
+    
+    return layoutTypes;
 }
 
 //AMLayoutPresetProportionalMargins,
 - (NSArray *)layoutTypesForAMLayoutPresetProportionalMargins:(AMComponent *)component {
-    return @[@(AMLayoutTypePosition)];
+
+//    return @[@(AMLayoutTypePosition)];
+
+    if (component.parentComponent == nil) {
+        return @[@(AMLayoutTypePosition)];
+    }
+    
+    NSMutableArray *layoutTypes = [NSMutableArray array];
+    
+    [layoutTypes addObject:@(AMLayoutTypeProportionalLeft)];
+    [layoutTypes addObject:@(AMLayoutTypeProportionalRight)];
+    [layoutTypes addObject:@(AMLayoutTypeProportionalTop)];
+    [layoutTypes addObject:@(AMLayoutTypeProportionalBottom)];
+    
+    return layoutTypes;
 }
 
 @end

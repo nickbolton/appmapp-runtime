@@ -15,8 +15,12 @@
     [super clearLayout];
 }
 
-- (void)applyConstraint {
-    [self.view addConstraint:self.constraint];
+- (void)applyConstraintIfNecessary {
+    
+    if (self.layoutApplied == NO && self.constraint != nil) {
+        [self.view addConstraint:self.constraint];
+        self.layoutApplied = YES;
+    }
 }
 
 @end

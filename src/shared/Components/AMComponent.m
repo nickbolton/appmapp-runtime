@@ -155,6 +155,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         }
         
         self.layoutObjects = layoutObjects;
+//        self.layoutPreset = AMLayoutPresetFixedSizeFixedPosition;
         
         [self addChildComponents:childComponents];
         

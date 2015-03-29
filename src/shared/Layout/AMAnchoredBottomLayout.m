@@ -39,6 +39,7 @@
     [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
     CGFloat bottomDistance = CGRectGetHeight(parentFrame) - CGRectGetMaxY(frame);
     self.constraint.constant = -bottomDistance;
+    [self applyConstraintIfNecessary];
 }
 
 @end

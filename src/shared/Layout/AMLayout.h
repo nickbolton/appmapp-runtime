@@ -12,6 +12,7 @@
 @property (nonatomic) CGFloat proportionalValue;
 @property (nonatomic, strong) NSLayoutConstraint *constraint;
 @property (nonatomic, readonly) AMLayoutType layoutType;
+@property (nonatomic) BOOL layoutApplied;
 
 @property (nonatomic, weak) AMView *view;
 
@@ -26,7 +27,7 @@
                   parentFrame:(CGRect)parentFrame
                        inView:(AMView *)view;
 
-- (void)applyConstraint;
+- (void)applyConstraintIfNecessary;
 - (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame;
 - (void)createConstraintsIfNecessaryWithMultiplier:(CGFloat)multiplier
                                           priority:(AMLayoutPriority)priority;

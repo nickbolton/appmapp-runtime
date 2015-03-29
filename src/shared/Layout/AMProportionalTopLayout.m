@@ -37,6 +37,7 @@
     
     CGFloat topSpace = self.proportionalValue * CGRectGetHeight(parentFrame);
     self.constraint.constant = topSpace;
+    [self applyConstraintIfNecessary];
 }
 
 - (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
