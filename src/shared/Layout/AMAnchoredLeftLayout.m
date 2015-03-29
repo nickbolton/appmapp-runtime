@@ -35,8 +35,16 @@
                    multiplier:(CGFloat)multiplier
                      priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame
+             allLayoutObjects:(NSArray *)allLayoutObjects
                        inView:(AMView *)view {
-    [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
+    [super
+     updateLayoutWithFrame:frame
+     multiplier:multiplier
+     priority:priority
+     parentFrame:parentFrame
+     allLayoutObjects:allLayoutObjects
+     inView:view];
+    
     self.constraint.constant = CGRectGetMinX(frame);
     [self applyConstraintIfNecessary];
 }

@@ -7,8 +7,12 @@
 //
 
 #import "AMAnchoredRightLayout.h"
+#import "AMAnchoredLeftLayout.h"
 
 @interface AMAnchoredRightLayout()
+
+@property (nonatomic) CGFloat originalConstant;
+@property (nonatomic) CGFloat reduceThresholdWidth;
 
 @end
 
@@ -35,11 +39,64 @@
                    multiplier:(CGFloat)multiplier
                      priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame
+             allLayoutObjects:(NSArray *)allLayoutObjects
                        inView:(AMView *)view {
-    [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
+    [super
+     updateLayoutWithFrame:frame
+     multiplier:multiplier
+     priority:priority
+     parentFrame:parentFrame
+     allLayoutObjects:allLayoutObjects
+     inView:view];
+    
     CGFloat rightDistance = CGRectGetWidth(parentFrame) - CGRectGetMaxX(frame);
-    self.constraint.constant = -rightDistance;
+    
+    self.originalConstant = -rightDistance;
+    self.constraint.constant = self.originalConstant;
     [self applyConstraintIfNecessary];
+    
+    CGFloat leftSpace = [self leftConstraintConstant:allLayoutObjects];
+    self.reduceThresholdWidth = leftSpace + rightDistance;
+}
+
+- (CGFloat)leftConstraintConstant:(NSArray *)allLayoutObjects {
+    
+    CGFloat leftSpace = -MAXFLOAT;
+    
+    for (AMLayout *layout in allLayoutObjects) {
+        if ([layout isKindOfClass:[AMAnchoredLeftLayout class]]) {
+            if (layout.constraint.isActive) {
+                leftSpace = layout.constraint.constant;
+            }
+        }
+    }
+
+    return leftSpace;
+}
+
+- (void)adjustLayoutFromParentFrameChange:(CGRect)frame
+                               multiplier:(CGFloat)multiplier
+                                 priority:(AMLayoutPriority)priority
+                              parentFrame:(CGRect)parentFrame
+                         allLayoutObjects:(NSArray *)allLayoutObjects
+                                   inView:(AMView *)view {
+    
+    CGFloat leftSpace = [self leftConstraintConstant:allLayoutObjects];
+    
+    if (leftSpace > -MAXFLOAT) {
+        
+        CGFloat rightDistance = -self.constraint.constant;
+        
+        CGFloat minWidth = leftSpace + rightDistance;
+        minWidth = MAX(minWidth, self.reduceThresholdWidth);
+        
+        if (CGRectGetWidth(parentFrame) < minWidth) {
+            rightDistance = CGRectGetWidth(parentFrame) - leftSpace;
+            
+            self.constraint.constant = -rightDistance;
+            [self applyConstraintIfNecessary];
+        }
+    }
 }
 
 @end

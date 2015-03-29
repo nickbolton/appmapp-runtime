@@ -88,13 +88,50 @@
                    multiplier:(CGFloat)multiplier
                      priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame
+             allLayoutObjects:(NSArray *)allLayoutObjects
                        inView:(AMView *)view {
+    [super
+     updateLayoutWithFrame:frame
+     multiplier:multiplier
+     priority:priority
+     parentFrame:parentFrame
+     allLayoutObjects:allLayoutObjects
+     inView:view];
 
-    [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
-    [self.topLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
-    [self.leftLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
-    [self.widthLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
-    [self.heightLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
+    NSArray *allLayouts =
+    @[self.topLayout, self.leftLayout, self.widthLayout, self.heightLayout];
+    
+    [self.topLayout
+     updateLayoutWithFrame:frame
+     multiplier:multiplier
+     priority:priority
+     parentFrame:parentFrame
+     allLayoutObjects:allLayouts
+     inView:view];
+
+    [self.leftLayout
+     updateLayoutWithFrame:frame
+     multiplier:multiplier
+     priority:priority
+     parentFrame:parentFrame
+     allLayoutObjects:allLayouts
+     inView:view];
+
+    [self.widthLayout
+     updateLayoutWithFrame:frame
+     multiplier:multiplier
+     priority:priority
+     parentFrame:parentFrame
+     allLayoutObjects:allLayouts
+     inView:view];
+
+    [self.heightLayout
+     updateLayoutWithFrame:frame
+     multiplier:multiplier
+     priority:priority
+     parentFrame:parentFrame
+     allLayoutObjects:allLayouts
+     inView:view];
 }
 
 @end

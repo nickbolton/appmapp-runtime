@@ -98,6 +98,7 @@
          multiplier:1.0f
          priority:AMLayoutPriorityRequired
          parentFrame:parentFrame
+         allLayoutObjects:view.component.layoutObjects
          inView:view];
     }
     [self constraintsDidChange:view];

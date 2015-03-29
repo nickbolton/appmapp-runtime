@@ -25,7 +25,15 @@
                    multiplier:(CGFloat)multiplier
                      priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame
+             allLayoutObjects:(NSArray *)allLayoutObjects
                        inView:(AMView *)view;
+
+- (void)adjustLayoutFromParentFrameChange:(CGRect)frame
+                               multiplier:(CGFloat)multiplier
+                                 priority:(AMLayoutPriority)priority
+                              parentFrame:(CGRect)parentFrame
+                         allLayoutObjects:(NSArray *)allLayoutObjects
+                                   inView:(AMView *)view;
 
 - (void)applyConstraintIfNecessary;
 - (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame;

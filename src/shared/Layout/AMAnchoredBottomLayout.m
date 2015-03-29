@@ -7,8 +7,12 @@
 //
 
 #import "AMAnchoredBottomLayout.h"
+#import "AMAnchoredTopLayout.h"
 
 @interface AMAnchoredBottomLayout()
+
+@property (nonatomic) CGFloat originalConstant;
+@property (nonatomic) CGFloat reduceThresholdHeight;
 
 @end
 
@@ -35,11 +39,64 @@
                    multiplier:(CGFloat)multiplier
                      priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame
+             allLayoutObjects:(NSArray *)allLayoutObjects
                        inView:(AMView *)view {
-    [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
+    [super
+     updateLayoutWithFrame:frame
+     multiplier:multiplier
+     priority:priority
+     parentFrame:parentFrame
+     allLayoutObjects:allLayoutObjects
+     inView:view];
+    
     CGFloat bottomDistance = CGRectGetHeight(parentFrame) - CGRectGetMaxY(frame);
-    self.constraint.constant = -bottomDistance;
+    
+    self.originalConstant = -bottomDistance;
+    self.constraint.constant = self.originalConstant;
     [self applyConstraintIfNecessary];
+    
+    CGFloat topSpace = [self topConstraintConstant:allLayoutObjects];
+    self.reduceThresholdHeight = topSpace + bottomDistance;
+}
+
+- (CGFloat)topConstraintConstant:(NSArray *)allLayoutObjects {
+    
+    CGFloat topSpace = -MAXFLOAT;
+    
+    for (AMLayout *layout in allLayoutObjects) {
+        if ([layout isKindOfClass:[AMAnchoredTopLayout class]]) {
+            if (layout.constraint.isActive) {
+                topSpace = layout.constraint.constant;
+            }
+        }
+    }
+    
+    return topSpace;
+}
+
+- (void)adjustLayoutFromParentFrameChange:(CGRect)frame
+                               multiplier:(CGFloat)multiplier
+                                 priority:(AMLayoutPriority)priority
+                              parentFrame:(CGRect)parentFrame
+                         allLayoutObjects:(NSArray *)allLayoutObjects
+                                   inView:(AMView *)view {
+    
+    CGFloat topSpace = [self topConstraintConstant:allLayoutObjects];
+    
+    if (topSpace > -MAXFLOAT) {
+        
+        CGFloat bottomDistance = -self.constraint.constant;
+        
+        CGFloat minHeight = topSpace + bottomDistance;
+        minHeight = MAX(minHeight, self.reduceThresholdHeight);
+        
+        if (CGRectGetHeight(parentFrame) < minHeight) {
+            bottomDistance = CGRectGetHeight(parentFrame) - topSpace;
+            
+            self.constraint.constant = -bottomDistance;
+            [self applyConstraintIfNecessary];
+        }
+    }
 }
 
 @end
