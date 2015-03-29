@@ -9,17 +9,25 @@
 
 @interface AMLayout : NSObject
 
+@property (nonatomic) CGFloat proportionalValue;
 @property (nonatomic, strong) NSLayoutConstraint *constraint;
+@property (nonatomic, readonly) AMLayoutType layoutType;
 
 @property (nonatomic, weak) AMView *view;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dict;
++ (instancetype)layoutWithDictionary:(NSDictionary *)dict;
+- (NSDictionary *)exportComponent;
 
 - (void)clearLayout;
 - (void)updateLayoutWithFrame:(CGRect)frame
                    multiplier:(CGFloat)multiplier
                      priority:(AMLayoutPriority)priority
-                  parentFrame:(CGRect)parentFrame;
+                  parentFrame:(CGRect)parentFrame
+                       inView:(AMView *)view;
 
 - (void)applyConstraint;
+- (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame;
 - (void)createConstraintsIfNecessaryWithMultiplier:(CGFloat)multiplier
                                           priority:(AMLayoutPriority)priority;
 - (NSLayoutConstraint *)buildConstraintWithMultiplier:(CGFloat)multiplier;

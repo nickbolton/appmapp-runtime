@@ -1,25 +1,21 @@
 //
-//  AMAnchoredBottomLayout.m
+//  AMProportionalBottomLayout.m
 //  AppMap
 //
-//  Created by Nick Bolton on 12/28/14.
-//  Copyright (c) 2014 Pixelbleed LLC. All rights reserved.
+//  Created by Nick Bolton on 3/28/15.
+//  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
 
-#import "AMAnchoredBottomLayout.h"
+#import "AMProportionalBottomLayout.h"
 
-@interface AMAnchoredBottomLayout()
-
-@end
-
-@implementation AMAnchoredBottomLayout
+@implementation AMProportionalBottomLayout
 
 - (AMLayoutType)layoutType {
-    return AMLayoutTypeAnchoredBottom;
+    return AMLayoutTypeProportionalBottom;
 }
 
 - (NSLayoutConstraint *)buildConstraintWithMultiplier:(CGFloat)multiplier {
-
+    
     return
     [NSLayoutConstraint
      constraintWithItem:self.view
@@ -35,10 +31,16 @@
                    multiplier:(CGFloat)multiplier
                      priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame
-                       inView:(AMView *)view {
+                       inView:(NSView *)view {
+    
     [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
-    CGFloat bottomDistance = CGRectGetHeight(parentFrame) - CGRectGetMaxY(frame);
-    self.constraint.constant = -bottomDistance;
+    
+    CGFloat bottomSpace = self.proportionalValue * CGRectGetHeight(parentFrame);
+    self.constraint.constant = -bottomSpace;
+}
+
+- (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+    self.proportionalValue = (CGRectGetHeight(parentFrame) - CGRectGetMaxY(frame)) / CGRectGetHeight(parentFrame);
 }
 
 @end

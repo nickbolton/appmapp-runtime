@@ -14,12 +14,6 @@
 
 @protocol AMRuntimeView <NSObject>
 
-- (NSArray *)layoutObjects;
-- (void)setLayoutObjects:(NSArray *)layoutObjects;
-- (void)clearLayoutObjects;
-- (void)addLayoutObject:(AMLayout *)layoutObject;
-- (void)removeLayoutObject:(AMLayout *)layoutObject;
-
 - (AMComponent *)component;
 - (void)setComponent:(AMComponent *)component;
 

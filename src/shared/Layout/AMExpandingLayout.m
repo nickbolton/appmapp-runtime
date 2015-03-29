@@ -16,6 +16,10 @@
 
 @implementation AMExpandingLayout
 
+- (AMLayoutType)layoutType {
+    return AMLayoutTypeExpanding;
+}
+
 - (void)clearLayout {
     [super clearLayout];
     

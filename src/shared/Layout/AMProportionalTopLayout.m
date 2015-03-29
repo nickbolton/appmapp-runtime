@@ -1,17 +1,17 @@
 //
-//  AMFixedWidthLayout.m
+//  AMProportionalTopLayout.m
 //  AppMap
 //
-//  Created by Nick Bolton on 3/22/15.
+//  Created by Nick Bolton on 3/28/15.
 //  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
 
-#import "AMFixedWidthLayout.h"
+#import "AMProportionalTopLayout.h"
 
-@implementation AMFixedWidthLayout
+@implementation AMProportionalTopLayout
 
 - (AMLayoutType)layoutType {
-    return AMLayoutTypeFixedWidth;
+    return AMLayoutTypeProportionalTop;
 }
 
 - (NSLayoutConstraint *)buildConstraintWithMultiplier:(CGFloat)multiplier {
@@ -19,11 +19,11 @@
     return
     [NSLayoutConstraint
      constraintWithItem:self.view
-     attribute:NSLayoutAttributeWidth
+     attribute:NSLayoutAttributeTop
      relatedBy:NSLayoutRelationEqual
-     toItem:nil
-     attribute:NSLayoutAttributeNotAnAttribute
-     multiplier:1.0f
+     toItem:self.view.superview
+     attribute:NSLayoutAttributeTop
+     multiplier:multiplier
      constant:0.0f];
 }
 
@@ -32,8 +32,15 @@
                      priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame
                        inView:(NSView *)view {
+    
     [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
-    self.constraint.constant = CGRectGetWidth(frame);
+    
+    CGFloat topSpace = self.proportionalValue * CGRectGetHeight(parentFrame);
+    self.constraint.constant = topSpace;
+}
+
+- (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+    self.proportionalValue = CGRectGetMinY(frame) / CGRectGetHeight(parentFrame);
 }
 
 @end

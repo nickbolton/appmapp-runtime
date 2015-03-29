@@ -14,6 +14,10 @@
 
 @implementation AMAnchoredRightLayout
 
+- (AMLayoutType)layoutType {
+    return AMLayoutTypeAnchoredRight;
+}
+
 - (NSLayoutConstraint *)buildConstraintWithMultiplier:(CGFloat)multiplier {
     
     return
@@ -30,8 +34,9 @@
 - (void)updateLayoutWithFrame:(CGRect)frame
                    multiplier:(CGFloat)multiplier
                      priority:(AMLayoutPriority)priority
-                  parentFrame:(CGRect)parentFrame {
-    [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
+                  parentFrame:(CGRect)parentFrame
+                       inView:(AMView *)view {
+    [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
     CGFloat rightDistance = CGRectGetWidth(parentFrame) - CGRectGetMaxX(frame);
     self.constraint.constant = -rightDistance;
 }

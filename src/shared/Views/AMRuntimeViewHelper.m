@@ -35,28 +35,17 @@
 
 - (void)setComponent:(AMComponent *)component forView:(AMView<AMRuntimeView> *)view {
     
-    NSMutableArray *layoutObjects = [NSMutableArray array];
-    
-    for (NSNumber *layoutType in component.layoutTypes) {
-        
-        AMLayout *layoutObject =
-        [[AMLayoutFactory sharedInstance] buildLayoutOfType:layoutType.integerValue];
-        
-        layoutObject.view = view;
-        [layoutObjects addObject:layoutObject];
+    for (AMLayout *layout in component.layoutObjects) {
+        layout.view = view;
     }
     
-    if (layoutObjects.count > 0) {
-
-        view.layoutObjects = layoutObjects;
-
-    } else {
+    if (component.layoutObjects.count <= 0) {
         
         AMLayout *layoutObject =
         [[AMLayoutFactory sharedInstance] buildLayoutOfType:AMLayoutTypePosition];
 
         layoutObject.view = view;
-        view.layoutObjects = @[layoutObject];
+        component.layoutObjects = @[layoutObject];
     }
     
     [view setBaseAttributes];
@@ -77,7 +66,7 @@
 
 - (void)clearConstraints:(AMView<AMRuntimeView> *)view {
     
-    for (AMLayout *layoutObject in view.layoutObjects) {
+    for (AMLayout *layoutObject in view.component.layoutObjects) {
         [layoutObject clearLayout];
     }
     
@@ -102,13 +91,14 @@
     CGRect frame = view.component.frame;
     CGRect parentFrame = view.component.parentComponent.frame;
     
-    for (AMLayout *layoutObject in view.layoutObjects) {
+    for (AMLayout *layoutObject in view.component.layoutObjects) {
         
         [layoutObject
          updateLayoutWithFrame:frame
          multiplier:1.0f
          priority:AMLayoutPriorityRequired
-         parentFrame:parentFrame];
+         parentFrame:parentFrame
+         inView:view];
     }
     [self constraintsDidChange:view];
 }

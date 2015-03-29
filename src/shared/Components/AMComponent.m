@@ -9,12 +9,14 @@
 #import "AMComponent.h"
 #import "AppMap.h"
 #import "AMColor+AMColor.h"
+#import "AMLayoutPresetHelper.h"
+#import "AMLayout.h"
+#import "AMLayoutFactory.h"
 
 NSString * const kAMComponentClassNameKey = @"class-name";
 
 NSString * kAMComponentNameKey = @"name";
 NSString * kAMComponentClassPrefixKey = @"classPrefix";
-NSString * kAMComponentLayoutTypesKey = @"layoutTypes";
 NSString * kAMComponentIdentifierKey = @"identifier";
 NSString * kAMComponentClippedKey = @"clipped";
 NSString * kAMComponentBackgroundColorKey = @"backgroundColor";
@@ -24,6 +26,8 @@ NSString * kAMComponentAlphaKey = @"alpha";
 NSString * kAMComponentFrameKey = @"frame";
 NSString * kAMComponentCornerRadiusKey = @"cornerRadius";
 NSString * kAMComponentChildComponentsKey = @"childComponents";
+NSString * kAMComponentLayoutObjectsKey = @"layoutObjects";
+NSString * kAMComponentLayoutPresetKey = @"layoutPreset";
 
 static NSString * kAMComponentDefaultNamePrefix = @"Container-";
 
@@ -34,6 +38,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 @property (nonatomic, strong) NSMutableArray *primChildComponents;
 @property (nonatomic, readwrite) NSString *defaultName;
 @property (nonatomic, readwrite) NSString *exportedName;
+@property (nonatomic, readwrite) BOOL hasProportionalLayout;
 
 @end
 
@@ -45,7 +50,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     [coder encodeObject:self.name forKey:kAMComponentNameKey];
     [coder encodeObject:self.classPrefix forKey:kAMComponentClassPrefixKey];
-    [coder encodeObject:self.layoutTypes forKey:kAMComponentLayoutTypesKey];
     [coder encodeObject:self.identifier forKey:kAMComponentIdentifierKey];
     [coder encodeBool:self.isClipped forKey:kAMComponentClippedKey];
     [coder encodeObject:self.backgroundColor forKey:kAMComponentBackgroundColorKey];
@@ -54,6 +58,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [coder encodeFloat:self.cornerRadius forKey:kAMComponentCornerRadiusKey];
     [coder encodeFloat:self.borderWidth forKey:kAMComponentBorderWidthKey];
     [coder encodeObject:self.childComponents forKey:kAMComponentChildComponentsKey];
+    [coder encodeInteger:self.layoutPreset forKey:kAMComponentLayoutPresetKey];
+    [coder encodeObject:self.layoutObjects forKey:kAMComponentLayoutObjectsKey];
     
 #if TARGET_OS_IPHONE
     [coder encodeObject:NSStringFromCGRect(self.frame) forKey:kAMComponentFrameKey];
@@ -70,7 +76,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
         self.name = [decoder decodeObjectForKey:kAMComponentNameKey];
         self.classPrefix = [decoder decodeObjectForKey:kAMComponentClassPrefixKey];
-        self.layoutTypes = [decoder decodeObjectForKey:kAMComponentLayoutTypesKey];
         self.identifier = [decoder decodeObjectForKey:kAMComponentIdentifierKey];
         self.clipped = [decoder decodeBoolForKey:kAMComponentClippedKey];
         self.backgroundColor = [decoder decodeObjectForKey:kAMComponentBackgroundColorKey];
@@ -78,6 +83,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         self.cornerRadius = [decoder decodeFloatForKey:kAMComponentCornerRadiusKey];
         self.borderWidth = [decoder decodeFloatForKey:kAMComponentBorderWidthKey];
         self.borderColor = [decoder decodeObjectForKey:kAMComponentBorderColorWidthKey];
+        self.layoutPreset = [decoder decodeIntegerForKey:kAMComponentLayoutPresetKey];
+        self.layoutObjects = [decoder decodeObjectForKey:kAMComponentLayoutObjectsKey];
         
 #if TARGET_OS_IPHONE
         self.frame = CGRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
@@ -107,7 +114,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
         self.name = dict[kAMComponentNameKey];
         self.classPrefix = dict[kAMComponentClassPrefixKey];
-        self.layoutTypes = dict[kAMComponentLayoutTypesKey];
         self.identifier = dict[kAMComponentIdentifierKey];
         self.clipped = [dict[kAMComponentClippedKey] boolValue];
         self.alpha = [dict[kAMComponentAlphaKey] floatValue];
@@ -115,6 +121,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         self.borderWidth = [dict[kAMComponentBorderWidthKey] floatValue];
         self.borderColor = [AMColor colorWithHexcodePlusAlpha:borderColorString];
         self.backgroundColor = [AMColor colorWithHexcodePlusAlpha:backgroundColorString];
+        self.layoutPreset = [dict[kAMComponentLayoutPresetKey] integerValue];
 
 #if TARGET_OS_IPHONE
         self.frame = CGRectFromString(dict[kAMComponentFrameKey]);
@@ -132,14 +139,22 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
             childrenArray = ((NSDictionary *)children).allValues;
         }
         
-        [childrenArray enumerateObjectsUsingBlock:^(NSDictionary *childDict, NSUInteger idx, BOOL *stop) {
-            
-            NSString *className = childDict[kAMComponentClassNameKey];
-            AMComponent *childComponent =
-            [[NSClassFromString(className) alloc] initWithDictionary:childDict];
-            
+        for (NSDictionary *childDict in childrenArray) {
+
+            AMComponent *childComponent = [AMComponent componentWithDictionary:childDict];
             [childComponents addObject:childComponent];
-        }];
+        }
+        
+        NSMutableArray *layoutObjects = [NSMutableArray array];
+        NSArray *layoutObjectDicts = dict[kAMComponentLayoutObjectsKey];
+        
+        for (NSDictionary *dict in layoutObjectDicts) {
+            
+            AMLayout *layout = [AMLayout layoutWithDictionary:dict];
+            [layoutObjects addObject:layout];
+        }
+        
+        self.layoutObjects = layoutObjects;
         
         [self addChildComponents:childComponents];
         
@@ -183,12 +198,13 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.classPrefix = self.classPrefix.copy;
     component.identifier = self.identifier.copy;
     component.frame = self.frame;
-    component.layoutTypes = self.layoutTypes.copy;
     component.clipped = self.isClipped;
     component.backgroundColor = self.backgroundColor;
     component.alpha = self.alpha;
     component.borderWidth = self.borderWidth;
     component.borderColor = self.borderColor;
+    component.layoutPreset = self.layoutPreset;
+    component.layoutObjects = self.layoutObjects.copy;
     
     // only used to refer back to original parent
     // children will have this reset with the next loop
@@ -233,7 +249,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.cornerRadius = 2.0f;
     component.borderWidth = 1.0f;
     component.alpha = 1.0f;
-    component.layoutTypes = @[@(AMLayoutTypePosition)];
+    component.layoutPreset = AMLayoutPresetFixedSizeNearestCorner;
 
     return component;
 }
@@ -244,7 +260,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     dict[kAMComponentClassNameKey] = NSStringFromClass(self.class);
     dict[kAMComponentNameKey] = self.name;
-    dict[kAMComponentLayoutTypesKey] = self.layoutTypes != nil ? self.layoutTypes : @[];
     dict[kAMComponentIdentifierKey] = self.identifier;
     dict[kAMComponentClippedKey] = @(self.isClipped);
     dict[kAMComponentBackgroundColorKey] = [self.backgroundColor hexcodePlusAlpha];
@@ -252,6 +267,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     dict[kAMComponentAlphaKey] = @(self.alpha);
     dict[kAMComponentCornerRadiusKey] = @(self.cornerRadius);
     dict[kAMComponentBorderWidthKey] = @(self.borderWidth);
+    dict[kAMComponentLayoutPresetKey] = @(self.layoutPreset);
     
     if (self.classPrefix != nil) {
         dict[kAMComponentClassPrefixKey] = self.classPrefix;
@@ -265,19 +281,27 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     NSMutableDictionary *children = [NSMutableDictionary dictionary];
     
-    [self.childComponents enumerateObjectsUsingBlock:^(AMComponent *childComponent, NSUInteger idx, BOOL *stop) {
-    
+    for (AMComponent *childComponent in self.childComponents) {
         children[childComponent.identifier] = [childComponent exportComponent];
-    }];
+    }
 
     dict[kAMComponentChildComponentsKey] = children;
+    
+    NSMutableArray *layoutObjectDicts = [NSMutableArray array];
+    
+    for (AMLayout *layout in self.layoutObjects) {
+        NSDictionary *dict = [layout exportComponent];
+        [layoutObjectDicts addObject:dict];
+    }
+    
+    dict[kAMComponentLayoutObjectsKey] = layoutObjectDicts;
     
     return dict;
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"Component: %p %@, %@ (parent: %@), %d, frame: %@", self, self.name, self.identifier, self.parentComponent.identifier, (int)self.componentType, NSStringFromCGRect(self.frame)];
-//    return [NSString stringWithFormat:@"Component: %p %@, %@ (parent: %@), %d, frame: %@, children: %@", self, self.name, self.identifier, self.parentComponent.identifier, (int)self.componentType, NSStringFromCGRect(self.frame), self.childComponents];
+    return [NSString stringWithFormat:@"Component: %p %@, LayoutPreset: %ld, %@ (parent: %@), %d, frame: %@", self, self.name, self.layoutPreset, self.identifier, self.parentComponent.identifier, (int)self.componentType, NSStringFromCGRect(self.frame)];
+//    return [NSString stringWithFormat:@"Component: %p %@, LayoutPreset: %ld, %@ (parent: %@), %d, frame: %@, children: %@", self, self.name, self.layoutPreset, self.identifier, self.parentComponent.identifier, (int)self.componentType, NSStringFromCGRect(self.frame), self.childComponents];
 }
 
 #pragma mark - Getters and Setters
@@ -429,6 +453,71 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
     
     return [self doesHaveCommonTopLevelComponent:allComponents];
+}
+
+- (void)setLayoutPreset:(AMLayoutPreset)layoutPreset {
+    _layoutPreset = layoutPreset;
+
+    _layoutPreset = MAX(0, _layoutPreset);
+    _layoutPreset = MIN(AMLayoutPresetCustom, _layoutPreset);
+    
+    if (_layoutPreset < AMLayoutPresetCustom) {
+        
+        AMLayoutPresetHelper *helper = [AMLayoutPresetHelper new];
+        
+        NSArray *layoutTypes = [helper layoutTypesForComponent:self layoutPreset:_layoutPreset];
+        NSMutableArray *layoutObjects = [NSMutableArray array];
+        
+        for (NSNumber *layoutType in layoutTypes) {
+            
+            AMLayout *layoutObject =
+            [[AMLayoutFactory sharedInstance]
+             buildLayoutOfType:layoutType.integerValue];
+            
+            [layoutObjects addObject:layoutObject];
+        }
+        
+        self.layoutObjects = layoutObjects;
+    }
+}
+
+- (void)setLayoutObjects:(NSArray *)layoutObjects {
+    
+    for (AMLayout *layoutObject in _layoutObjects) {
+        [layoutObject clearLayout];
+    }
+    
+    _layoutObjects = layoutObjects;
+    
+    [self updateProportionalLayouts];
+    
+    self.hasProportionalLayout = NO;
+    
+    for (AMLayout *layout in layoutObjects) {
+        
+        if (layout.layoutType >= AMLayoutTypeProportionalTop &&
+            layout.layoutType <= AMLayoutTypeProportionalRight) {
+            self.hasProportionalLayout = YES;
+            break;
+        }
+    }
+}
+
+- (void)updateProportionalLayouts {
+    
+    for (AMLayout *layout in self.layoutObjects) {
+        
+        if (self.parentComponent != nil) {
+            [layout
+             updateProportionalValueFromFrame:self.frame
+             parentFrame:self.parentComponent.frame];
+            
+            for (AMComponent *childComponent in self.childComponents) {
+         
+                [childComponent updateProportionalLayouts];
+            }
+        }
+    }
 }
 
 #pragma mark - Public

@@ -12,7 +12,6 @@
 extern NSString * const kAMComponentClassNameKey;
 extern NSString * kAMComponentNameKey;
 extern NSString * kAMComponentClassPrefixKey;
-extern NSString * kAMComponentLayoutTypesKey;
 extern NSString * kAMComponentIdentifierKey;
 extern NSString * kAMComponentClippedKey;
 extern NSString * kAMComponentBackgroundColorKey;
@@ -22,6 +21,8 @@ extern NSString * kAMComponentAlphaKey;
 extern NSString * kAMComponentFrameKey;
 extern NSString * kAMComponentCornerRadiusKey;
 extern NSString * kAMComponentChildComponentsKey;
+extern NSString * kAMComponentLayoutObjectsKey;
+extern NSString * kAMComponentLayoutPresetKey;
 
 @interface AMComponent : NSObject <NSCoding, NSCopying>
 
@@ -33,7 +34,7 @@ extern NSString * kAMComponentChildComponentsKey;
 @property (nonatomic, readonly) NSInteger depth;
 @property (nonatomic, readonly) NSInteger childIndex;
 @property (nonatomic, readonly) AMComponentType componentType;
-@property (nonatomic, strong) NSArray *layoutTypes;
+@property (nonatomic, strong) NSArray *layoutObjects;
 @property (nonatomic, strong) NSArray *childComponents;
 @property (nonatomic, weak) AMComponent *parentComponent;
 @property (nonatomic, weak) AMComponent *lastParentComponent;
@@ -43,12 +44,15 @@ extern NSString * kAMComponentChildComponentsKey;
 @property (nonatomic) CGFloat borderWidth;
 
 @property (nonatomic, getter=isClipped) BOOL clipped;
+@property (nonatomic, readonly) BOOL hasProportionalLayout;
 @property (nonatomic) CGFloat alpha;
 @property (nonatomic) CGRect frame;
 @property (nonatomic, readonly) BOOL isContainer;
 
 @property (nonatomic, strong) AMColor *borderColor;
 @property (nonatomic, strong) AMColor *backgroundColor;
+
+@property (nonatomic) AMLayoutPreset layoutPreset;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)componentWithDictionary:(NSDictionary *)dict;
@@ -63,6 +67,8 @@ extern NSString * kAMComponentChildComponentsKey;
              beforeComponent:(AMComponent *)siblingComponent;
 - (void)insertChildComponent:(AMComponent *)insertedComponent
               afterComponent:(AMComponent *)siblingComponent;
+
+- (void)updateProportionalLayouts;
 
 - (NSDictionary *)exportComponent;
 

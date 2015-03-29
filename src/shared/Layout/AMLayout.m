@@ -7,8 +7,60 @@
 //
 
 #import "AMLayout.h"
+#import "AMExpandingComponentView.h"
+#import "AMExpandingLayout.h"
+
+NSString * kAMLayoutClassNameKey = @"className";
+NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 @implementation AMLayout
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+    [coder encodeFloat:self.proportionalValue forKey:kAMLayoutProportionalValueKey];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    
+    self = [super init];
+    
+    if (self != nil) {
+        self.proportionalValue = [decoder decodeFloatForKey:kAMLayoutProportionalValueKey];
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithDictionary:(NSDictionary *)dict {
+    
+    self = [super init];
+    
+    if (self != nil) {
+        self.proportionalValue = [dict[kAMLayoutProportionalValueKey] floatValue];
+    }
+    
+    return self;
+}
+
++ (instancetype)layoutWithDictionary:(NSDictionary *)dict {
+    
+    NSString *className = dict[kAMLayoutClassNameKey];
+    AMLayout *layout =
+    [[NSClassFromString(className) alloc] initWithDictionary:dict];
+    
+    return layout;
+}
+
+- (NSDictionary *)exportComponent {
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    
+    dict[kAMLayoutClassNameKey] = NSStringFromClass(self.class);
+    dict[kAMLayoutProportionalValueKey] = @(self.proportionalValue);
+    
+    return dict;
+}
+
+#pragma mark - Public
 
 - (void)clearLayout {
     self.constraint = nil;
@@ -17,7 +69,8 @@
 - (void)updateLayoutWithFrame:(CGRect)frame
                    multiplier:(CGFloat)multiplier
                      priority:(AMLayoutPriority)priority
-                  parentFrame:(CGRect)parentFrame {
+                  parentFrame:(CGRect)parentFrame
+                       inView:(AMView *)view {
     [self createConstraintsIfNecessaryWithMultiplier:multiplier priority:priority];
 }
 
@@ -28,12 +81,18 @@
         (self.constraint == nil ||
          self.constraint.multiplier != multiplier ||
          self.constraint.priority != priority)) {
-        
+            
         [self clearLayout];
-        self.constraint = [self buildConstraintWithMultiplier:multiplier];
-        self.constraint.priority = priority;
-        [self applyConstraint];
+            
+        if (self.view.superview != nil) {
+            self.constraint = [self buildConstraintWithMultiplier:multiplier];
+            self.constraint.priority = priority;
+            [self applyConstraint];
+        }
     }
+}
+
+- (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
 }
 
 - (void)applyConstraint {

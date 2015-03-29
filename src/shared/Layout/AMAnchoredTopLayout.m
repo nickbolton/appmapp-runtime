@@ -14,6 +14,10 @@
 
 @implementation AMAnchoredTopLayout
 
+- (AMLayoutType)layoutType {
+    return AMLayoutTypeAnchoredTop;
+}
+
 - (NSLayoutConstraint *)buildConstraintWithMultiplier:(CGFloat)multiplier {
 
     return
@@ -30,8 +34,10 @@
 - (void)updateLayoutWithFrame:(CGRect)frame
                    multiplier:(CGFloat)multiplier
                      priority:(AMLayoutPriority)priority
-                  parentFrame:(CGRect)parentFrame {
-    [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
+                  parentFrame:(CGRect)parentFrame
+                       inView:(AMView *)view {
+    
+    [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
     self.constraint.constant = CGRectGetMinY(frame);
 }
 

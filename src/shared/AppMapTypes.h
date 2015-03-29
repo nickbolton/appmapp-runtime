@@ -20,6 +20,7 @@ typedef NS_ENUM(NSInteger, AMComponentType) {
 typedef NS_ENUM(NSInteger, AMLayoutType) {
     
     AMLayoutTypePosition = 0,
+    AMLayoutTypeExpanding,
     AMLayoutTypeFixedWidth,
     AMLayoutTypeFixedHeight,
     AMLayoutTypeAnchoredTop,
@@ -28,6 +29,21 @@ typedef NS_ENUM(NSInteger, AMLayoutType) {
     AMLayoutTypeAnchoredRight,
     AMLayoutTypeCenterHorizontally,
     AMLayoutTypeCenterVertically,
+    AMLayoutTypeProportionalTop,
+    AMLayoutTypeProportionalBottom,
+    AMLayoutTypeProportionalLeft,
+    AMLayoutTypeProportionalRight,
+};
+
+typedef NS_ENUM(NSInteger, AMLayoutPreset) {
+    AMLayoutPresetFixedSizeNearestCorner = 0,
+    AMLayoutPresetFixedSizeRelativePosition,
+    AMLayoutPresetFixedSizeFixedPosition,
+    AMLayoutPresetFixedYPosHeightLeftRightMargins,
+    AMLayoutPresetFixedXPosWidthTopBottomMargins,
+    AMLayoutPresetFixedMargins,
+    AMLayoutPresetProportionalMargins,
+    AMLayoutPresetCustom,
 };
 
 #if TARGET_OS_IPHONE

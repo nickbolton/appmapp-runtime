@@ -12,6 +12,10 @@
 #import "AMAnchoredBottomLayout.h"
 #import "AMAnchoredLeftLayout.h"
 #import "AMAnchoredRightLayout.h"
+#import "AMProportionalTopLayout.h"
+#import "AMProportionalBottomLayout.h"
+#import "AMProportionalLeftLayout.h"
+#import "AMProportionalRightLayout.h"
 #import "AMCenterHorizontallyLayout.h"
 #import "AMCenterVerticallyLayout.h"
 #import "AMFixedHeightLayout.h"
@@ -46,6 +50,10 @@
       @(AMLayoutTypeCenterVertically) : NSStringFromClass([AMCenterVerticallyLayout class]),
       @(AMLayoutTypeFixedWidth) : NSStringFromClass([AMFixedWidthLayout class]),
       @(AMLayoutTypeFixedHeight) : NSStringFromClass([AMFixedHeightLayout class]),
+      @(AMLayoutTypeProportionalTop) : NSStringFromClass([AMProportionalTopLayout class]),
+      @(AMLayoutTypeProportionalBottom) : NSStringFromClass([AMProportionalBottomLayout class]),
+      @(AMLayoutTypeProportionalLeft) : NSStringFromClass([AMProportionalLeftLayout class]),
+      @(AMLayoutTypeProportionalRight) : NSStringFromClass([AMProportionalRightLayout class]),
       };
 }
 

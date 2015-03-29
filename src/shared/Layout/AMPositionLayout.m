@@ -23,20 +23,39 @@
 
 @implementation AMPositionLayout
 
-- (id)init {
-    self = [super init];
-    
-    if (self != nil) {
-        self.topLayout = [AMAnchoredTopLayout new];
-        self.leftLayout = [AMAnchoredLeftLayout new];
-        self.widthLayout = [AMFixedWidthLayout new];
-        self.heightLayout = [AMFixedHeightLayout new];
+#pragma mark - Getters and Setters
+
+- (AMAnchoredTopLayout *)topLayout {
+    if (_topLayout == nil) {
+        _topLayout = [AMAnchoredTopLayout new];
     }
-    
-    return self;
+    return _topLayout;
 }
 
-#pragma mark - Getters and Setters
+- (AMAnchoredLeftLayout *)leftLayout {
+    if (_leftLayout == nil) {
+        _leftLayout = [AMAnchoredLeftLayout new];
+    }
+    return _leftLayout;
+}
+
+- (AMFixedWidthLayout *)widthLayout {
+    if (_widthLayout == nil) {
+        _widthLayout = [AMFixedWidthLayout new];
+    }
+    return _widthLayout;
+}
+
+- (AMFixedHeightLayout *)heightLayout {
+    if (_heightLayout == nil) {
+        _heightLayout = [AMFixedHeightLayout new];
+    }
+    return _heightLayout;
+}
+
+- (AMLayoutType)layoutType {
+    return AMLayoutTypePosition;
+}
 
 - (void)setView:(UIView *)view {
     self.topLayout.view = view;
@@ -48,6 +67,7 @@
 #pragma mark - Public
 
 - (void)clearLayout {
+    
     [super clearLayout];
     [self.topLayout clearLayout];
     [self.leftLayout clearLayout];
@@ -67,12 +87,14 @@
 - (void)updateLayoutWithFrame:(CGRect)frame
                    multiplier:(CGFloat)multiplier
                      priority:(AMLayoutPriority)priority
-                  parentFrame:(CGRect)parentFrame {
-    [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
-    [self.topLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
-    [self.leftLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
-    [self.widthLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
-    [self.heightLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame];
+                  parentFrame:(CGRect)parentFrame
+                       inView:(NSView *)view {
+
+    [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
+    [self.topLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
+    [self.leftLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
+    [self.widthLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
+    [self.heightLayout updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
 }
 
 @end

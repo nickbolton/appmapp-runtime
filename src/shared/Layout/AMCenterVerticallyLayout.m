@@ -10,6 +10,10 @@
 
 @implementation AMCenterVerticallyLayout
 
+- (AMLayoutType)layoutType {
+    return AMLayoutTypeCenterVertically;
+}
+
 - (NSLayoutConstraint *)buildConstraintWithMultiplier:(CGFloat)multiplier {
 
     return
