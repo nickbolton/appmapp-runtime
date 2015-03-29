@@ -31,7 +31,7 @@
                    multiplier:(CGFloat)multiplier
                      priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame
-                       inView:(NSView *)view {
+                       inView:(AMView *)view {
     [super updateLayoutWithFrame:frame multiplier:multiplier priority:priority parentFrame:parentFrame inView:view];
     self.constraint.constant = CGRectGetWidth(frame);
     [self applyConstraintIfNecessary];
