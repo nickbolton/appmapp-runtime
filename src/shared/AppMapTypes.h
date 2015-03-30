@@ -49,7 +49,9 @@ typedef NS_ENUM(NSInteger, AMLayoutPreset) {
 #if TARGET_OS_IPHONE
 
 #define AMColorType UIColor
+typedef UIImage AMImage;
 typedef UIView AMView;
+typedef UIImageView AMImageView;
 typedef UIColor AMColor;
 typedef UIFont AMFont;
 typedef UILabel AMLabel;
@@ -64,7 +66,9 @@ static const AMLayoutPriority AMLayoutPriorityFittingSizeLevel = UILayoutPriorit
 #else
 
 #define AMColorType NSColor
+typedef NSImage AMImage;
 typedef NSView AMView;
+typedef NSImageView AMImageView;
 typedef NSColor AMColor;
 typedef NSFont AMFont;
 typedef NSTextField AMLabel;

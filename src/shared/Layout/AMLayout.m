@@ -7,7 +7,6 @@
 //
 
 #import "AMLayout.h"
-#import "AMExpandingComponentView.h"
 #import "AMExpandingLayout.h"
 
 NSString * kAMLayoutClassNameKey = @"className";

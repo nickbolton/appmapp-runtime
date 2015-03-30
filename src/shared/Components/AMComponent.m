@@ -239,6 +239,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
     
     result.childComponents = children;
+    result.layoutObjects = nil;
+    result.layoutPreset = result.layoutPreset;
     
     return result;
 }
