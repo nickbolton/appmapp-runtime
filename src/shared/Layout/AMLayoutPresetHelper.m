@@ -56,22 +56,29 @@
 
 - (AMLayoutType)horizontalLayoutTypeBasedOnPosition:(AMComponent *)component
                                              center:(BOOL)center {
-    
-    static CGFloat const centeringThreshold = .01f;
 
-    CGFloat horizontalCenterPercent = 0.0f;
-    
-    if (CGRectGetWidth(component.parentComponent.frame) != 0.0f) {
+    if (center) {
+        static CGFloat const centeringThreshold = .01f;
         
-        horizontalCenterPercent =
-        CGRectGetMidX(component.frame) / CGRectGetWidth(component.parentComponent.frame);
-    }
-    
-    if (center && ABS(horizontalCenterPercent - .5f) <= centeringThreshold) {
-        return AMLayoutTypeCenterHorizontally;
+        CGFloat horizontalCenterPercent = 0.0f;
+        
+        if (CGRectGetWidth(component.parentComponent.frame) != 0.0f) {
+            
+            horizontalCenterPercent =
+            CGRectGetMidX(component.frame) / CGRectGetWidth(component.parentComponent.frame);
+        }
+        
+        if (ABS(horizontalCenterPercent - .5f) <= centeringThreshold) {
+            return AMLayoutTypeCenterHorizontally;
+        }
     }
 
-    if (horizontalCenterPercent > .5f) {
+    CGFloat leftDistance = ABS(CGRectGetMinX(component.frame));
+    
+    CGFloat rightDistance =
+    ABS(CGRectGetWidth(component.parentComponent.frame) - CGRectGetMaxX(component.frame));
+    
+    if (rightDistance < leftDistance) {
         return AMLayoutTypeAnchoredRight;
     }
     
@@ -81,21 +88,29 @@
 - (AMLayoutType)verticalLayoutTypeBasedOnPosition:(AMComponent *)component
                                            center:(BOOL)center {
     
-    static CGFloat const centeringThreshold = .01f;
-
-    CGFloat verticalCenterPercent = 0.0f;
-    
-    if (CGRectGetHeight(component.parentComponent.frame) != 0.0f) {
+    if (center) {
         
-        verticalCenterPercent =
-        CGRectGetMidY(component.frame) / CGRectGetHeight(component.parentComponent.frame);
+        static CGFloat const centeringThreshold = .01f;
+        
+        CGFloat verticalCenterPercent = 0.0f;
+        
+        if (CGRectGetHeight(component.parentComponent.frame) != 0.0f) {
+            
+            verticalCenterPercent =
+            CGRectGetMidY(component.frame) / CGRectGetHeight(component.parentComponent.frame);
+        }
+        
+        if (ABS(verticalCenterPercent - .5f) <= centeringThreshold) {
+            return AMLayoutTypeCenterVertically;
+        }
     }
     
-    if (center && ABS(verticalCenterPercent - .5f) <= centeringThreshold) {
-        return AMLayoutTypeCenterVertically;
-    }
+    CGFloat topDistance = ABS(CGRectGetMinY(component.frame));
     
-    if (verticalCenterPercent > .5f) {
+    CGFloat bottomDistance =
+    ABS(CGRectGetHeight(component.parentComponent.frame) - CGRectGetMaxY(component.frame));
+    
+    if (bottomDistance < topDistance) {
         return AMLayoutTypeAnchoredBottom;
     }
     
@@ -128,8 +143,6 @@
 
 //AMLayoutPresetFixedSizeRelativePosition,
 - (NSArray *)layoutTypesForAMLayoutPresetFixedSizeRelativePosition:(AMComponent *)component {
-
-    static CGFloat const centeringThreshold = .01f;
     
     if (component.parentComponent == nil) {
         return @[@(AMLayoutTypePosition)];
