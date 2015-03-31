@@ -54,6 +54,54 @@
     return nil;
 }
 
+- (AMLayoutType)horizontalLayoutTypeBasedOnPosition:(AMComponent *)component
+                                             center:(BOOL)center {
+    
+    static CGFloat const centeringThreshold = .01f;
+
+    CGFloat horizontalCenterPercent = 0.0f;
+    
+    if (CGRectGetWidth(component.parentComponent.frame) != 0.0f) {
+        
+        horizontalCenterPercent =
+        CGRectGetMidX(component.frame) / CGRectGetWidth(component.parentComponent.frame);
+    }
+    
+    if (center && ABS(horizontalCenterPercent - .5f) <= centeringThreshold) {
+        return AMLayoutTypeCenterHorizontally;
+    }
+
+    if (horizontalCenterPercent > .5f) {
+        return AMLayoutTypeAnchoredRight;
+    }
+    
+    return AMLayoutTypeAnchoredLeft;
+}
+
+- (AMLayoutType)verticalLayoutTypeBasedOnPosition:(AMComponent *)component
+                                           center:(BOOL)center {
+    
+    static CGFloat const centeringThreshold = .01f;
+
+    CGFloat verticalCenterPercent = 0.0f;
+    
+    if (CGRectGetHeight(component.parentComponent.frame) != 0.0f) {
+        
+        verticalCenterPercent =
+        CGRectGetMidY(component.frame) / CGRectGetHeight(component.parentComponent.frame);
+    }
+    
+    if (center && ABS(verticalCenterPercent - .5f) <= centeringThreshold) {
+        return AMLayoutTypeCenterVertically;
+    }
+    
+    if (verticalCenterPercent > .5f) {
+        return AMLayoutTypeAnchoredBottom;
+    }
+    
+    return AMLayoutTypeAnchoredTop;
+}
+
 //AMLayoutPresetFixedSizeNearestCorner = 0,
 - (NSArray *)layoutTypesForAMLayoutPresetFixedSizeNearestCorner:(AMComponent *)component {
     
@@ -65,39 +113,15 @@
     
     // horizontal
     
-    CGFloat horizontalCenterPercent = 0.0f;
-    
-    if (CGRectGetWidth(component.parentComponent.frame) != 0.0f) {
-        
-        horizontalCenterPercent =
-        CGRectGetMidX(component.frame) / CGRectGetWidth(component.parentComponent.frame);
-    }
-    
+    AMLayoutType leftOrRightLayout = [self horizontalLayoutTypeBasedOnPosition:component center:NO];
     [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
-    
-    if (horizontalCenterPercent > .5f) {
-        [layoutTypes addObject:@(AMLayoutTypeAnchoredRight)];
-    } else {
-        [layoutTypes addObject:@(AMLayoutTypeAnchoredLeft)];
-    }
+    [layoutTypes addObject:@(leftOrRightLayout)];
     
     // vertical
     
-    CGFloat verticalCenterPercent = 0.0f;
-    
-    if (CGRectGetHeight(component.parentComponent.frame) != 0.0f) {
-        
-        verticalCenterPercent =
-        CGRectGetMidY(component.frame) / CGRectGetHeight(component.parentComponent.frame);
-    }
-    
+    AMLayoutType topOrBottomLayout = [self verticalLayoutTypeBasedOnPosition:component center:NO];
     [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
-
-    if (verticalCenterPercent > .5f) {
-        [layoutTypes addObject:@(AMLayoutTypeAnchoredBottom)];
-    } else {
-        [layoutTypes addObject:@(AMLayoutTypeAnchoredTop)];
-    }
+    [layoutTypes addObject:@(topOrBottomLayout)];
     
     return layoutTypes;
 }
@@ -115,43 +139,15 @@
     
     // horizontal
     
-    CGFloat horizontalCenterPercent = 0.0f;
-    
-    if (CGRectGetWidth(component.parentComponent.frame) != 0.0f) {
-        
-        horizontalCenterPercent =
-        CGRectGetMidX(component.frame) / CGRectGetWidth(component.parentComponent.frame);
-    }
-
+    AMLayoutType leftOrRightLayout = [self horizontalLayoutTypeBasedOnPosition:component center:YES];
     [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
-
-    if (ABS(horizontalCenterPercent - .5f) <= centeringThreshold) {
-        [layoutTypes addObject:@(AMLayoutTypeCenterHorizontally)];
-    } else if (horizontalCenterPercent > .5f) {
-        [layoutTypes addObject:@(AMLayoutTypeProportionalRight)];
-    } else {
-        [layoutTypes addObject:@(AMLayoutTypeProportionalLeft)];
-    }
+    [layoutTypes addObject:@(leftOrRightLayout)];
     
     // vertical
     
-    CGFloat verticalCenterPercent = 0.0f;
-    
-    if (CGRectGetHeight(component.parentComponent.frame) != 0.0f) {
-        
-        verticalCenterPercent =
-        CGRectGetMidY(component.frame) / CGRectGetHeight(component.parentComponent.frame);
-    }
-
+    AMLayoutType topOrBottomLayout = [self verticalLayoutTypeBasedOnPosition:component center:YES];
     [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
-
-    if (ABS(verticalCenterPercent - .5f) <= centeringThreshold) {
-        [layoutTypes addObject:@(AMLayoutTypeCenterVertically)];
-    } else if (verticalCenterPercent > .5f) {
-        [layoutTypes addObject:@(AMLayoutTypeProportionalBottom)];
-    } else {
-        [layoutTypes addObject:@(AMLayoutTypeProportionalTop)];
-    }
+    [layoutTypes addObject:@(topOrBottomLayout)];
     
     return layoutTypes;
 }
@@ -172,9 +168,11 @@
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
+    AMLayoutType topOrBottomLayout = [self verticalLayoutTypeBasedOnPosition:component center:NO];
+    
     [layoutTypes addObject:@(AMLayoutTypeAnchoredLeft)];
     [layoutTypes addObject:@(AMLayoutTypeAnchoredRight)];
-    [layoutTypes addObject:@(AMLayoutTypeAnchoredTop)];
+    [layoutTypes addObject:@(topOrBottomLayout)];
     [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
     
     return layoutTypes;
@@ -191,9 +189,11 @@
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
+    AMLayoutType leftOrRightLayout = [self horizontalLayoutTypeBasedOnPosition:component center:YES];
+    
     [layoutTypes addObject:@(AMLayoutTypeAnchoredTop)];
     [layoutTypes addObject:@(AMLayoutTypeAnchoredBottom)];
-    [layoutTypes addObject:@(AMLayoutTypeAnchoredLeft)];
+    [layoutTypes addObject:@(leftOrRightLayout)];
     [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
     
     return layoutTypes;
