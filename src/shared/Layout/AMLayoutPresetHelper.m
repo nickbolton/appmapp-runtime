@@ -9,6 +9,20 @@
 #import "AMLayoutPresetHelper.h"
 #import "AMComponent.h"
 
+typedef NS_ENUM(NSInteger, AMLayoutHorizontalPosition) {
+    
+    AMLayoutHorizontalPositionLeft = 0,
+    AMLayoutHorizontalPositionRight,
+    AMLayoutHorizontalPositionCentered,
+};
+
+typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
+    
+    AMLayoutVerticalPositionTop = 0,
+    AMLayoutVerticalPositionBottom,
+    AMLayoutVerticalPositionCentered,
+};
+
 @interface AMLayoutPresetHelper()
 
 @property (nonatomic, strong) NSArray *selectors;
@@ -54,9 +68,9 @@
     return nil;
 }
 
-- (AMLayoutType)horizontalLayoutTypeBasedOnPosition:(AMComponent *)component
-                                             center:(BOOL)center {
-
+- (AMLayoutHorizontalPosition)horizontalLayoutTypePosition:(AMComponent *)component
+                                                    center:(BOOL)center {
+ 
     if (center) {
         static CGFloat const centeringThreshold = .01f;
         
@@ -69,25 +83,60 @@
         }
         
         if (ABS(horizontalCenterPercent - .5f) <= centeringThreshold) {
-            return AMLayoutTypeCenterHorizontally;
+            return AMLayoutHorizontalPositionCentered;
         }
     }
-
+    
     CGFloat leftDistance = ABS(CGRectGetMinX(component.frame));
     
     CGFloat rightDistance =
     ABS(CGRectGetWidth(component.parentComponent.frame) - CGRectGetMaxX(component.frame));
     
     if (rightDistance < leftDistance) {
-        return AMLayoutTypeAnchoredRight;
+        return AMLayoutHorizontalPositionRight;
+    }
+    
+    return AMLayoutHorizontalPositionLeft;
+}
+
+- (AMLayoutType)horizontalAnchoredLayoutTypeBasedOnPosition:(AMComponent *)component
+                                                     center:(BOOL)center {
+
+    AMLayoutHorizontalPosition position =
+    [self horizontalLayoutTypePosition:component center:center];
+    
+    switch (position) {
+        case AMLayoutHorizontalPositionLeft:
+            return AMLayoutTypeAnchoredLeft;
+            break;
+            
+        case AMLayoutHorizontalPositionRight:
+            return AMLayoutTypeAnchoredRight;
+            break;
+
+        case AMLayoutHorizontalPositionCentered:
+            return AMLayoutTypeCenterHorizontally;
+            break;
     }
     
     return AMLayoutTypeAnchoredLeft;
 }
 
-- (AMLayoutType)verticalLayoutTypeBasedOnPosition:(AMComponent *)component
-                                           center:(BOOL)center {
+- (AMLayoutType)horizontalProportionalLayoutTypeBasedOnPosition:(AMComponent *)component {
     
+    AMLayoutHorizontalPosition position =
+    [self horizontalLayoutTypePosition:component center:NO];
+    
+    if (position == AMLayoutHorizontalPositionRight) {
+        return AMLayoutTypeProportionalRight;
+    }
+    
+    return AMLayoutTypeProportionalLeft;
+}
+
+- (AMLayoutVerticalPosition)verticalLayoutTypePosition:(AMComponent *)component
+                                                center:(BOOL)center {
+
     if (center) {
         
         static CGFloat const centeringThreshold = .01f;
@@ -101,7 +150,7 @@
         }
         
         if (ABS(verticalCenterPercent - .5f) <= centeringThreshold) {
-            return AMLayoutTypeCenterVertically;
+            return AMLayoutVerticalPositionCentered;
         }
     }
     
@@ -111,10 +160,45 @@
     ABS(CGRectGetHeight(component.parentComponent.frame) - CGRectGetMaxY(component.frame));
     
     if (bottomDistance < topDistance) {
-        return AMLayoutTypeAnchoredBottom;
+        return AMLayoutVerticalPositionBottom;
+    }
+    
+    return AMLayoutVerticalPositionTop;
+}
+
+- (AMLayoutType)verticalAnchoredLayoutTypeBasedOnPosition:(AMComponent *)component
+                                                   center:(BOOL)center {
+    
+    AMLayoutVerticalPosition position =
+    [self verticalLayoutTypePosition:component center:center];
+    
+    switch (position) {
+        case AMLayoutVerticalPositionTop:
+            return AMLayoutTypeAnchoredTop;
+            break;
+            
+        case AMLayoutVerticalPositionBottom:
+            return AMLayoutTypeAnchoredBottom;
+            break;
+            
+        case AMLayoutVerticalPositionCentered:
+            return AMLayoutTypeCenterVertically;
+            break;
     }
     
     return AMLayoutTypeAnchoredTop;
+}
+
+- (AMLayoutType)verticalProportionalLayoutTypeBasedOnPosition:(AMComponent *)component {
+    
+    AMLayoutVerticalPosition position =
+    [self verticalLayoutTypePosition:component center:NO];
+    
+    if (position == AMLayoutVerticalPositionBottom) {
+        return AMLayoutTypeProportionalBottom;
+    }
+    
+    return AMLayoutTypeProportionalTop;
 }
 
 //AMLayoutPresetFixedSizeNearestCorner = 0,
@@ -128,13 +212,13 @@
     
     // horizontal
     
-    AMLayoutType leftOrRightLayout = [self horizontalLayoutTypeBasedOnPosition:component center:NO];
+    AMLayoutType leftOrRightLayout = [self horizontalAnchoredLayoutTypeBasedOnPosition:component center:NO];
     [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
     [layoutTypes addObject:@(leftOrRightLayout)];
     
     // vertical
     
-    AMLayoutType topOrBottomLayout = [self verticalLayoutTypeBasedOnPosition:component center:NO];
+    AMLayoutType topOrBottomLayout = [self verticalAnchoredLayoutTypeBasedOnPosition:component center:NO];
     [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
     [layoutTypes addObject:@(topOrBottomLayout)];
     
@@ -152,13 +236,13 @@
     
     // horizontal
     
-    AMLayoutType leftOrRightLayout = [self horizontalLayoutTypeBasedOnPosition:component center:YES];
+    AMLayoutType leftOrRightLayout = [self horizontalProportionalLayoutTypeBasedOnPosition:component];
     [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
     [layoutTypes addObject:@(leftOrRightLayout)];
     
     // vertical
     
-    AMLayoutType topOrBottomLayout = [self verticalLayoutTypeBasedOnPosition:component center:YES];
+    AMLayoutType topOrBottomLayout = [self verticalProportionalLayoutTypeBasedOnPosition:component];
     [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
     [layoutTypes addObject:@(topOrBottomLayout)];
     
@@ -181,7 +265,7 @@
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
-    AMLayoutType topOrBottomLayout = [self verticalLayoutTypeBasedOnPosition:component center:NO];
+    AMLayoutType topOrBottomLayout = [self verticalAnchoredLayoutTypeBasedOnPosition:component center:NO];
     
     [layoutTypes addObject:@(AMLayoutTypeAnchoredLeft)];
     [layoutTypes addObject:@(AMLayoutTypeAnchoredRight)];
@@ -202,7 +286,7 @@
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
-    AMLayoutType leftOrRightLayout = [self horizontalLayoutTypeBasedOnPosition:component center:YES];
+    AMLayoutType leftOrRightLayout = [self horizontalAnchoredLayoutTypeBasedOnPosition:component center:YES];
     
     [layoutTypes addObject:@(AMLayoutTypeAnchoredTop)];
     [layoutTypes addObject:@(AMLayoutTypeAnchoredBottom)];

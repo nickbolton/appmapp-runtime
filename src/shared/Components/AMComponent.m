@@ -463,7 +463,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
     _layoutPreset = MAX(0, _layoutPreset);
     _layoutPreset = MIN(AMLayoutPresetCustom, _layoutPreset);
-    
+
     if (_layoutPreset < AMLayoutPresetCustom) {
         
         AMLayoutPresetHelper *helper = [AMLayoutPresetHelper new];
