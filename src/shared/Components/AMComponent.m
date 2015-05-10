@@ -498,8 +498,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     for (AMLayout *layout in layoutObjects) {
         
-        if (layout.layoutType >= AMLayoutTypeProportionalTop &&
-            layout.layoutType <= AMLayoutTypeProportionalRight) {
+        if (layout.isProportional) {
             self.hasProportionalLayout = YES;
             break;
         }

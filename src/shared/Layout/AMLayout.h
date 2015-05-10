@@ -13,12 +13,15 @@
 @property (nonatomic, strong) NSLayoutConstraint *constraint;
 @property (nonatomic, readonly) AMLayoutType layoutType;
 @property (nonatomic) BOOL layoutApplied;
+@property (nonatomic, readonly) BOOL isProportional;
 
 @property (nonatomic, weak) AMView *view;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)layoutWithDictionary:(NSDictionary *)dict;
 - (NSDictionary *)exportComponent;
+
++ (BOOL)isProportionalLayoutType:(AMLayoutType)layoutType;
 
 - (void)clearLayout;
 - (void)updateLayoutWithFrame:(CGRect)frame

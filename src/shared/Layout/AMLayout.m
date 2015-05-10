@@ -65,6 +65,17 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 #pragma mark - Public
 
++ (BOOL)isProportionalLayoutType:(AMLayoutType)layoutType {
+    
+    return
+    layoutType >= AMLayoutTypeProportionalTop &&
+    layoutType <= AMLayoutTypeProportionalRight;
+}
+
+- (BOOL)isProportional {
+    return [self.class isProportionalLayoutType:self.layoutType];
+}
+
 - (void)clearLayout {
     self.constraint = nil;
     self.layoutApplied = NO;
