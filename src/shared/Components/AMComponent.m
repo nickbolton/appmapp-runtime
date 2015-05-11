@@ -429,6 +429,10 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     return self;
 }
 
+- (BOOL)isTopLevelComponent {
+    return self.topLevelComponent == self;
+}
+
 + (BOOL)doesHaveCommonTopLevelComponent:(NSArray *)components {
  
     NSMutableSet *topLevelComponents = [NSMutableSet set];

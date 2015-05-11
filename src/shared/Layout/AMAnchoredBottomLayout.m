@@ -99,4 +99,15 @@
     }
 }
 
+- (CGRect)applyConstraintToFrame:(CGRect)sourceFrame withComponent:(AMComponent *)component {
+
+    CGRect parentFrame = component.parentComponent.frame;
+
+    CGFloat bottomDistance = CGRectGetHeight(parentFrame) - CGRectGetMaxY(component.frame);
+    
+    CGRect frame = sourceFrame;
+    frame.size.height = CGRectGet - bottomDistance;
+    return frame;
+}
+
 @end

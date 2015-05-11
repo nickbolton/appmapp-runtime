@@ -118,6 +118,12 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 - (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
 }
 
+- (CGRect)applyConstraintToFrame:(CGRect)frame
+                       component:(AMComponent *)component
+                     parentFrame:(CGRect)parentFrame {
+    return component.frame;
+}
+
 - (void)applyConstraintIfNecessary {    
     [self doesNotRecognizeSelector:_cmd];
 }

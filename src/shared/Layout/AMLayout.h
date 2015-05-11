@@ -38,6 +38,10 @@
                          allLayoutObjects:(NSArray *)allLayoutObjects
                                    inView:(AMView *)view;
 
+- (CGRect)applyConstraintToFrame:(CGRect)frame
+                       component:(AMComponent *)component
+                     parentFrame:(CGRect)parentFrame;
+
 - (void)applyConstraintIfNecessary;
 - (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame;
 - (void)createConstraintsIfNecessaryWithMultiplier:(CGFloat)multiplier

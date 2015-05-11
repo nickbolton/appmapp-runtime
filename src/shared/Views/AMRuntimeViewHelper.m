@@ -57,11 +57,10 @@
 - (void)layoutView:(AMView<AMRuntimeView> *)view {
 #if TARGET_OS_IPHONE
     [view.superview layoutSubviews];
-    [view setNeedsUpdateConstraints];
 #else
     [view.superview layout];
-    [view setNeedsUpdateConstraints:YES];
 #endif
+    [view setNeedsLayout];
 }
 
 - (void)clearConstraints:(AMView<AMRuntimeView> *)view {
@@ -70,11 +69,7 @@
         [layoutObject clearLayout];
     }
     
-#if TARGET_OS_IPHONE
-    [view setNeedsUpdateConstraints];
-#else
-    [view setNeedsUpdateConstraints:YES];
-#endif
+    [view setNeedsLayout];
 }
 
 - (void)constraintsDidChange:(AMView<AMRuntimeView> *)runtimeView {
