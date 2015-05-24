@@ -1,29 +1,29 @@
 //
-//  AMCenterHorizontallyLayout.m
+//  AMProportionalHorizontalCenterLayout.m
 //  AppMap
 //
-//  Created by Nick Bolton on 3/21/15.
+//  Created by Nick Bolton on 5/24/15.
 //  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
 
-#import "AMCenterHorizontallyLayout.h"
+#import "AMProportionalHorizontalCenterLayout.h"
 
-@implementation AMCenterHorizontallyLayout
+@implementation AMProportionalHorizontalCenterLayout
 
 - (AMLayoutType)layoutType {
-    return AMLayoutTypeCenterHorizontally;
+    return AMLayoutTypeProportionalHorizontalCenter;
 }
 
 - (NSLayoutConstraint *)buildConstraintWithMultiplier:(CGFloat)multiplier {
-
+    
     return
     [NSLayoutConstraint
      constraintWithItem:self.view
      attribute:NSLayoutAttributeCenterX
      relatedBy:NSLayoutRelationEqual
      toItem:self.view.superview
-     attribute:NSLayoutAttributeCenterX
-     multiplier:1.0f
+     attribute:NSLayoutAttributeLeft
+     multiplier:multiplier
      constant:0.0f];
 }
 
@@ -41,9 +41,13 @@
      allLayoutObjects:allLayoutObjects
      inView:view];
     
-    self.constraint.constant = CGRectGetMidX(frame) - (CGRectGetWidth(parentFrame) / 2.0f);
-
+    CGFloat leftSpace = self.proportionalValue * CGRectGetWidth(parentFrame);
+    self.constraint.constant = leftSpace;
     [self applyConstraintIfNecessary];
+}
+
+- (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+    self.proportionalValue = CGRectGetMidX(frame) / CGRectGetWidth(parentFrame);
 }
 
 @end

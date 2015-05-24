@@ -40,6 +40,8 @@
      parentFrame:parentFrame
      allLayoutObjects:allLayoutObjects
      inView:view];
+    
+    self.constraint.constant = CGRectGetMidY(frame) - (CGRectGetHeight(parentFrame) / 2.0f);
 
     [self applyConstraintIfNecessary];
 }

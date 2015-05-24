@@ -40,6 +40,8 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
         @[
           [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedSizeNearestCorner:)],
           [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedSizeRelativePosition:)],
+          [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedSizeRelativeCenter:)],
+          [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedSizeFixedCenter:)],
           [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedSizeFixedPosition:)],
           [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedYPosHeightLeftRightMargins:)],
           [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedXPosWidthTopBottomMargins:)],
@@ -245,6 +247,42 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
     AMLayoutType topOrBottomLayout = [self verticalProportionalLayoutTypeBasedOnPosition:component];
     [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
     [layoutTypes addObject:@(topOrBottomLayout)];
+    
+    return layoutTypes;
+}
+
+//AMLayoutPresetFixedSizeRelativeCenter,
+- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeRelativeCenter:(AMComponent *)component {
+    
+    NSMutableArray *layoutTypes = [NSMutableArray array];
+    
+    // horizontal
+    
+    [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
+    [layoutTypes addObject:@(AMLayoutTypeProportionalHorizontalCenter)];
+    
+    // vertical
+    
+    [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
+    [layoutTypes addObject:@(AMLayoutTypeProportionalVerticalCenter)];
+    
+    return layoutTypes;
+}
+
+//AMLayoutPresetFixedSizeFixedCenter,
+- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeFixedCenter:(AMComponent *)component {
+    
+    NSMutableArray *layoutTypes = [NSMutableArray array];
+    
+    // horizontal
+    
+    [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
+    [layoutTypes addObject:@(AMLayoutTypeCenterHorizontally)];
+    
+    // vertical
+    
+    [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
+    [layoutTypes addObject:@(AMLayoutTypeCenterVertically)];
     
     return layoutTypes;
 }

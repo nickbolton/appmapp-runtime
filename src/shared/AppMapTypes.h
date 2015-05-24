@@ -33,11 +33,15 @@ typedef NS_ENUM(NSInteger, AMLayoutType) {
     AMLayoutTypeProportionalBottom,
     AMLayoutTypeProportionalLeft,
     AMLayoutTypeProportionalRight,
+    AMLayoutTypeProportionalHorizontalCenter,
+    AMLayoutTypeProportionalVerticalCenter,
 };
 
 typedef NS_ENUM(NSInteger, AMLayoutPreset) {
     AMLayoutPresetFixedSizeNearestCorner = 0,
-    AMLayoutPresetFixedSizeRelativePosition,
+    AMLayoutPresetFixedSizeRelativeCorner,
+    AMLayoutPresetFixedSizeRelativeCenter,
+    AMLayoutPresetFixedSizeFixedCenter,
     AMLayoutPresetFixedSizeFixedPosition,
     AMLayoutPresetFixedYPosHeightLeftRightMargins,
     AMLayoutPresetFixedXPosWidthTopBottomMargins,

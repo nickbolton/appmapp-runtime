@@ -69,7 +69,7 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
     return
     layoutType >= AMLayoutTypeProportionalTop &&
-    layoutType <= AMLayoutTypeProportionalRight;
+    layoutType <= AMLayoutTypeProportionalVerticalCenter;
 }
 
 - (BOOL)isProportional {
