@@ -39,6 +39,7 @@ extern NSString * kAMComponentLayoutPresetKey;
 @property (nonatomic, weak) AMComponent *parentComponent;
 @property (nonatomic, weak) AMComponent *lastParentComponent;
 @property (nonatomic, readonly) AMComponent *topLevelComponent;
+@property (nonatomic, readonly) BOOL isTopLevelComponent;
 
 @property (nonatomic) CGFloat cornerRadius;
 @property (nonatomic) CGFloat borderWidth;

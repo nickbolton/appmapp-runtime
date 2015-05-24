@@ -425,6 +425,10 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     return result;
 }
 
+- (BOOL)isTopLevelComponent {
+    return self.topLevelComponent == self;
+}
+
 - (AMComponent *)topLevelComponent {
     
     if (self.parentComponent != nil) {
