@@ -329,6 +329,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     _exportedName = nil;
 }
 
+- (void)setFrame:(CGRect)frame {
+    _frame = frame;
+    self.workingFrame = frame;
+}
+
 - (NSString *)exportedName {
     
     if (_exportedName == nil) {
