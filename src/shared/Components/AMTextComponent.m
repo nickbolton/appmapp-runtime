@@ -66,4 +66,8 @@ static NSString * kAMTextComponentTextDescriptorKey = @"textDescriptor";
     return AMComponentText;
 }
 
+- (NSArray *)sizePresets {
+    return nil;
+}
+
 @end

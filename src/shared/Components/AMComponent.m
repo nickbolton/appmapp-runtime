@@ -514,6 +514,26 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
+- (NSArray *)sizePresets {
+    
+    static NSArray *presets = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        presets =
+        @[
+          [NSValue valueWithCGSize:CGSizeMake(768.0f, 1024.0f)],
+          [NSValue valueWithCGSize:CGSizeMake(414.0f, 736.0f)],
+          [NSValue valueWithCGSize:CGSizeMake(375.0f, 667.0f)],
+          [NSValue valueWithCGSize:CGSizeMake(320.0f, 568.0f)],
+          [NSValue valueWithCGSize:CGSizeMake(320.0f, 480.0f)],
+          [NSValue valueWithCGSize:CGSizeMake(512.0f, 512.0f)],
+          ];
+    });
+    
+    return presets;
+}
+
 - (void)updateProportionalLayouts {
     
     for (AMLayout *layout in self.layoutObjects) {
