@@ -14,10 +14,10 @@
 
 @interface AMPositionLayout()
 
-@property (nonatomic, strong) AMAnchoredTopLayout *topLayout;
-@property (nonatomic, strong) AMAnchoredLeftLayout *leftLayout;
-@property (nonatomic, strong) AMFixedWidthLayout *widthLayout;
-@property (nonatomic, strong) AMFixedHeightLayout *heightLayout;
+@property (nonatomic, readwrite) AMAnchoredTopLayout *topLayout;
+@property (nonatomic, readwrite) AMAnchoredLeftLayout *leftLayout;
+@property (nonatomic, readwrite) AMFixedWidthLayout *widthLayout;
+@property (nonatomic, readwrite) AMFixedHeightLayout *heightLayout;
 
 @end
 

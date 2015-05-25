@@ -8,6 +8,16 @@
 
 #import "AMLayout.h"
 
+@class AMAnchoredTopLayout;
+@class AMAnchoredLeftLayout;
+@class AMFixedWidthLayout;
+@class AMFixedHeightLayout;
+
 @interface AMPositionLayout : AMLayout
+
+@property (nonatomic, readonly) AMAnchoredTopLayout *topLayout;
+@property (nonatomic, readonly) AMAnchoredLeftLayout *leftLayout;
+@property (nonatomic, readonly) AMFixedWidthLayout *widthLayout;
+@property (nonatomic, readonly) AMFixedHeightLayout *heightLayout;
 
 @end
