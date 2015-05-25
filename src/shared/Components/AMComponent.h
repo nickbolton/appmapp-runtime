@@ -37,7 +37,7 @@ extern NSString * kAMComponentLayoutPresetKey;
 @property (nonatomic, strong) NSArray *layoutObjects;
 @property (nonatomic, strong) NSArray *childComponents;
 @property (nonatomic, weak) AMComponent *parentComponent;
-@property (nonatomic, weak) AMComponent *lastParentComponent;
+@property (nonatomic, strong) NSString *lastParentComponentIdentifier;
 @property (nonatomic, readonly) AMComponent *topLevelComponent;
 @property (nonatomic, readonly) BOOL isTopLevelComponent;
 
