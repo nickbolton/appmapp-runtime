@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Pixelbleed LLC. All rights reserved.
 //
 #import "AppMap.h"
+#import "NSLayoutConstraint+Utilities.h"
 
 @interface AMLayout : NSObject
 
