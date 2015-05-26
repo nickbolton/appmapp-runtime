@@ -99,7 +99,8 @@
          priority:AMLayoutPriorityRequired
          parentFrame:parentFrame
          allLayoutObjects:view.component.layoutObjects
-         inView:view];
+         inView:view
+         animated:NO];
     }
     [self constraintsDidChange:view];
 }

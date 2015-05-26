@@ -86,7 +86,8 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
                      priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame
              allLayoutObjects:(NSArray *)allLayoutObjects
-                       inView:(AMView *)view {
+                       inView:(AMView *)view
+                     animated:(BOOL)animated {
     [self createConstraintsIfNecessaryWithMultiplier:multiplier priority:priority];
 }
 

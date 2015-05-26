@@ -29,7 +29,8 @@
                      priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame
              allLayoutObjects:(NSArray *)allLayoutObjects
-                       inView:(AMView *)view;
+                       inView:(AMView *)view
+                     animated:(BOOL)animated;
 
 - (void)adjustLayoutFromParentFrameChange:(CGRect)frame
                                multiplier:(CGFloat)multiplier

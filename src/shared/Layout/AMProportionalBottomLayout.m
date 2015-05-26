@@ -32,17 +32,26 @@
                      priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame
              allLayoutObjects:(NSArray *)allLayoutObjects
-                       inView:(AMView *)view {
+                       inView:(AMView *)view
+                     animated:(BOOL)animated {
+
     [super
      updateLayoutWithFrame:frame
      multiplier:multiplier
      priority:priority
      parentFrame:parentFrame
      allLayoutObjects:allLayoutObjects
-     inView:view];
+     inView:view
+     animated:animated];
     
     CGFloat bottomSpace = self.proportionalValue * CGRectGetHeight(parentFrame);
-    self.constraint.constant = -bottomSpace;
+    
+    if (animated) {
+        self.constraint.animator.constant = -bottomSpace;
+    } else {
+        self.constraint.constant = -bottomSpace;
+    }
+
     [self applyConstraintIfNecessary];
 }
 

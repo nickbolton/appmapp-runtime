@@ -32,17 +32,26 @@
                      priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame
              allLayoutObjects:(NSArray *)allLayoutObjects
-                       inView:(AMView *)view {
+                       inView:(AMView *)view
+                     animated:(BOOL)animated {
+
     [super
      updateLayoutWithFrame:frame
      multiplier:multiplier
      priority:priority
      parentFrame:parentFrame
      allLayoutObjects:allLayoutObjects
-     inView:view];
+     inView:view
+     animated:animated];
     
     CGFloat leftSpace = self.proportionalValue * CGRectGetWidth(parentFrame);
-    self.constraint.constant = leftSpace;
+    
+    if (animated) {
+        self.constraint.animator.constant = leftSpace;
+    } else {
+        self.constraint.constant = leftSpace;
+    }
+
     [self applyConstraintIfNecessary];
 }
 

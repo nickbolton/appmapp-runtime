@@ -36,16 +36,24 @@
                      priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame
              allLayoutObjects:(NSArray *)allLayoutObjects
-                       inView:(AMView *)view {
+                       inView:(AMView *)view
+                     animated:(BOOL)animated {
+
     [super
      updateLayoutWithFrame:frame
      multiplier:multiplier
      priority:priority
      parentFrame:parentFrame
      allLayoutObjects:allLayoutObjects
-     inView:view];
+     inView:view
+     animated:animated];
 
-    self.constraint.constant = CGRectGetMinY(frame);
+    if (animated) {
+        self.constraint.animator.constant = CGRectGetMinY(frame);
+    } else {
+        self.constraint.constant = CGRectGetMinY(frame);
+    }
+
     [self applyConstraintIfNecessary];
 }
 

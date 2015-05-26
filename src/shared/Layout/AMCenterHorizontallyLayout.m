@@ -32,16 +32,25 @@
                      priority:(AMLayoutPriority)priority
                   parentFrame:(CGRect)parentFrame
              allLayoutObjects:(NSArray *)allLayoutObjects
-                       inView:(AMView *)view {
+                       inView:(AMView *)view
+                     animated:(BOOL)animated {
+
     [super
      updateLayoutWithFrame:frame
      multiplier:multiplier
      priority:priority
      parentFrame:parentFrame
      allLayoutObjects:allLayoutObjects
-     inView:view];
+     inView:view
+     animated:animated];
     
-    self.constraint.constant = CGRectGetMidX(frame) - (CGRectGetWidth(parentFrame) / 2.0f);
+    CGFloat constant = CGRectGetMidX(frame) - (CGRectGetWidth(parentFrame) / 2.0f);
+    
+    if (animated) {
+        self.constraint.animator.constant = constant;
+    } else {
+        self.constraint.constant = constant;
+    }
 
     [self applyConstraintIfNecessary];
 }
