@@ -50,7 +50,7 @@
      inView:view];
     
     CGFloat rightDistance = CGRectGetWidth(parentFrame) - CGRectGetMaxX(frame);
-    
+
     self.originalConstant = -rightDistance;
     self.constraint.constant = self.originalConstant;
     [self applyConstraintIfNecessary];
