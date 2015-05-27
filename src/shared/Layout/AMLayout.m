@@ -100,6 +100,7 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 }
 
 - (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+    return frame;
 }
 
 - (void)createConstraintsIfNecessaryWithMultiplier:(CGFloat)multiplier
