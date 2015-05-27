@@ -55,4 +55,11 @@
     [self applyConstraintIfNecessary];
 }
 
+- (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+    
+    CGRect result = frame;
+    result.origin.y = (CGRectGetHeight(parentFrame)/2.0f) - (CGRectGetHeight(frame)/2.0f) + self.constraint.constant;
+    return result;
+}
+
 @end

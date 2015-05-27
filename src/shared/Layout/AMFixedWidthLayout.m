@@ -53,4 +53,11 @@
     [self applyConstraintIfNecessary];
 }
 
+- (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+    
+    CGRect result = frame;
+    result.size.width = self.constraint.constant;
+    return result;
+}
+
 @end

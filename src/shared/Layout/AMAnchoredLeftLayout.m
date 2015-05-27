@@ -57,4 +57,11 @@
     [self applyConstraintIfNecessary];
 }
 
+- (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+
+    CGRect result = frame;
+    result.origin.x = self.constraint.constant;
+    return result;
+}
+
 @end

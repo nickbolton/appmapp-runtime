@@ -330,8 +330,12 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (void)setFrame:(CGRect)frame {
+    
+    BOOL sizeChanged = (CGSizeEqualToSize(frame.size, self.frame.size) == NO);
     _frame = frame;
-    self.workingFrame = frame;
+    if (sizeChanged) {
+        [self updateChildFrames];
+    }
 }
 
 - (NSString *)exportedName {
@@ -548,6 +552,43 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
                 [childComponent updateProportionalLayouts];
             }
         }
+    }
+}
+
+- (void)updateChildFrames {
+    
+    for (AMComponent *childComponent in self.childComponents) {
+        [childComponent updateFrame];
+    }
+}
+
+- (void)updateFrame {
+    
+    UIEdgeInsets edges;
+    edges.left = CGRectGetMinX(self.frame);
+    edges.right = CGRectGetMaxX(self.frame);
+    edges.top = CGRectGetMinY(self.frame);
+    edges.bottom = CGRectGetMaxY(self.frame);
+    
+    for (AMLayout *layout in self.layoutObjects) {
+        
+        CGRect rect =
+        [layout adjustedFrame:self.frame parentFrame:self.parentComponent.frame];
+        
+        edges.left = CGRectGetMinX(rect);
+        edges.right = CGRectGetMaxX(rect);
+        edges.top = CGRectGetMinY(rect);
+        edges.bottom = CGRectGetMaxY(rect);
+    }
+    
+    self.frame =
+    CGRectMake(edges.left,
+               edges.top,
+               edges.right - edges.left,
+               edges.bottom - edges.top);
+    
+    for (AMComponent *childComponent in self.childComponents) {
+        [childComponent updateFrame];
     }
 }
 

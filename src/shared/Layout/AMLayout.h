@@ -33,6 +33,8 @@
                        inView:(AMView *)view
                      animated:(BOOL)animated;
 
+- (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame;
+
 - (void)adjustLayoutFromParentFrameChange:(CGRect)frame
                                multiplier:(CGFloat)multiplier
                                  priority:(AMLayoutPriority)priority

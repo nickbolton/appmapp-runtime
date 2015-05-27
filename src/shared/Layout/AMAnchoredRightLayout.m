@@ -108,4 +108,11 @@
     }
 }
 
+- (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+    
+    CGRect result = frame;
+    result.origin.x = CGRectGetWidth(parentFrame) - CGRectGetWidth(frame) + self.constraint.constant;
+    return result;
+}
+
 @end

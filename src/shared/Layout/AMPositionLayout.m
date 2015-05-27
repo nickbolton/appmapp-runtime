@@ -141,4 +141,13 @@
      animated:animated];
 }
 
+- (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+    
+    CGRect result = [self.widthLayout adjustedFrame:frame parentFrame:parentFrame];
+    result = [self.heightLayout adjustedFrame:result parentFrame:parentFrame];
+    result = [self.topLayout adjustedFrame:result parentFrame:parentFrame];
+    result = [self.leftLayout adjustedFrame:result parentFrame:parentFrame];
+    return result;
+}
+
 @end

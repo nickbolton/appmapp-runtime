@@ -59,4 +59,11 @@
     self.proportionalValue = CGRectGetMinY(frame) / CGRectGetHeight(parentFrame);
 }
 
+- (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+    
+    CGRect result = frame;
+    result.origin.y = self.proportionalValue * CGRectGetHeight(parentFrame);
+    return result;
+}
+
 @end

@@ -49,7 +49,6 @@ extern NSString * kAMComponentLayoutPresetKey;
 @property (nonatomic, readonly) BOOL hasProportionalLayout;
 @property (nonatomic) CGFloat alpha;
 @property (nonatomic) CGRect frame;
-@property (nonatomic) CGRect workingFrame;
 @property (nonatomic, readonly) BOOL isContainer;
 
 @property (nonatomic, strong) AMColor *borderColor;

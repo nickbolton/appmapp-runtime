@@ -75,4 +75,8 @@
     [self applyConstraintIfNecessary];
 }
 
+- (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+    return frame;
+}
+
 @end

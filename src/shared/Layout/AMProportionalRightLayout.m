@@ -59,4 +59,11 @@
     self.proportionalValue = (CGRectGetWidth(parentFrame) - CGRectGetMaxX(frame)) / CGRectGetWidth(parentFrame);
 }
 
+- (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+    
+    CGRect result = frame;
+    result.origin.x = CGRectGetWidth(parentFrame) - CGRectGetWidth(frame) + (self.proportionalValue * CGRectGetWidth(parentFrame));
+    return result;
+}
+
 @end
