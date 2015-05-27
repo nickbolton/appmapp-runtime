@@ -108,10 +108,14 @@
     }
 }
 
-- (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+- (CGRect)adjustedComponentFrame:(CGRect)frame
+            parentComponentFrame:(CGRect)parentFrame
+                           scale:(CGFloat)scale {
     
+    scale = MAX(scale, 1.0f);
+
     CGRect result = frame;
-    result.origin.x = CGRectGetWidth(parentFrame) - CGRectGetWidth(frame) + self.constraint.constant;
+    result.origin.x = CGRectGetWidth(parentFrame) - CGRectGetWidth(frame) + (self.constraint.constant/scale);
     return result;
 }
 

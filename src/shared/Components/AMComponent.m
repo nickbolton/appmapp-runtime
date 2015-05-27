@@ -518,6 +518,14 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
+- (void)setScale:(CGFloat)scale {
+    _scale = scale;
+    
+    for (AMComponent *component in self.childComponents) {
+        component.scale = scale;
+    }
+}
+
 - (NSArray *)sizePresets {
     
     static NSArray *presets = nil;
@@ -564,25 +572,25 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 - (void)updateFrame {
     
-    NSLog(@"startingFrame: %@", NSStringFromCGRect(self.frame));
-    NSLog(@"parentFrame: %@", NSStringFromCGRect(self.parentComponent.frame));
+//    NSLog(@"startingFrame: %@", NSStringFromCGRect(self.frame));
+//    NSLog(@"parentFrame: %@", NSStringFromCGRect(self.parentComponent.frame));
     
     CGRect updatedFrame = self.frame;
-    id view = nil;
     
     for (AMLayout *layout in self.layoutObjects) {
         
-        view = layout.view;
-        
         updatedFrame =
-        [layout adjustedFrame:updatedFrame parentFrame:self.parentComponent.frame];
+        [layout
+         adjustedComponentFrame:updatedFrame
+         parentComponentFrame:self.parentComponent.frame
+         scale:self.scale];
         
-        NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
+//        NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
     }
 
-    self.frame = AMPixelAlignedCGRect(updatedFrame, view);
+    self.frame = AMPixelAlignedCGRect(updatedFrame, nil);
     
-    NSLog(@"endingFrame: %@", NSStringFromCGRect(self.frame));
+//    NSLog(@"endingFrame: %@", NSStringFromCGRect(self.frame));
     
     for (AMComponent *childComponent in self.childComponents) {
         [childComponent updateFrame];

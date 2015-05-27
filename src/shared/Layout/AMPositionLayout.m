@@ -141,12 +141,14 @@
      animated:animated];
 }
 
-- (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+- (CGRect)adjustedComponentFrame:(CGRect)frame
+            parentComponentFrame:(CGRect)parentFrame
+                           scale:(CGFloat)scale {
     
-    CGRect result = [self.widthLayout adjustedFrame:frame parentFrame:parentFrame];
-    result = [self.heightLayout adjustedFrame:result parentFrame:parentFrame];
-    result = [self.topLayout adjustedFrame:result parentFrame:parentFrame];
-    result = [self.leftLayout adjustedFrame:result parentFrame:parentFrame];
+    CGRect result = [self.widthLayout adjustedComponentFrame:frame parentComponentFrame:parentFrame scale:scale];
+    result = [self.heightLayout adjustedComponentFrame:result parentComponentFrame:parentFrame scale:scale];
+    result = [self.topLayout adjustedComponentFrame:result parentComponentFrame:parentFrame scale:scale];
+    result = [self.leftLayout adjustedComponentFrame:result parentComponentFrame:parentFrame scale:scale];
     return result;
 }
 

@@ -59,7 +59,9 @@
     self.proportionalValue = (CGRectGetHeight(parentFrame) - CGRectGetMaxY(frame)) / CGRectGetHeight(parentFrame);
 }
 
-- (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+- (CGRect)adjustedComponentFrame:(CGRect)frame
+            parentComponentFrame:(CGRect)parentFrame
+                           scale:(CGFloat)scale {
     
     CGRect result = frame;
     result.origin.y = CGRectGetHeight(parentFrame) - CGRectGetHeight(frame) - (self.proportionalValue * CGRectGetHeight(parentFrame));

@@ -99,7 +99,9 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
                                    inView:(AMView *)view {
 }
 
-- (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
+- (CGRect)adjustedComponentFrame:(CGRect)frame
+            parentComponentFrame:(CGRect)parentFrame
+                           scale:(CGFloat)scale {
     return frame;
 }
 
