@@ -568,8 +568,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     NSLog(@"parentFrame: %@", NSStringFromCGRect(self.parentComponent.frame));
     
     CGRect updatedFrame = self.frame;
+    id view = nil;
     
     for (AMLayout *layout in self.layoutObjects) {
+        
+        view = layout.view;
         
         updatedFrame =
         [layout adjustedFrame:updatedFrame parentFrame:self.parentComponent.frame];
@@ -577,7 +580,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
     }
 
-    self.frame = updatedFrame;
+    self.frame = AMPixelAlignedCGRect(updatedFrame, view);
     
     NSLog(@"endingFrame: %@", NSStringFromCGRect(self.frame));
     
