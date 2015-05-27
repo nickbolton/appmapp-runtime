@@ -63,6 +63,8 @@
     
     CGRect result = frame;
     result.origin.x = self.proportionalValue * CGRectGetWidth(parentFrame) - (CGRectGetWidth(frame) / 2.0f);
+    [self.view setNeedsUpdateConstraints];
+
     return result;
 }
 

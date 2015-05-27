@@ -564,28 +564,22 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 - (void)updateFrame {
     
-    UIEdgeInsets edges;
-    edges.left = CGRectGetMinX(self.frame);
-    edges.right = CGRectGetMaxX(self.frame);
-    edges.top = CGRectGetMinY(self.frame);
-    edges.bottom = CGRectGetMaxY(self.frame);
+    NSLog(@"startingFrame: %@", NSStringFromCGRect(self.frame));
+    NSLog(@"parentFrame: %@", NSStringFromCGRect(self.parentComponent.frame));
+    
+    CGRect updatedFrame = self.frame;
     
     for (AMLayout *layout in self.layoutObjects) {
         
-        CGRect rect =
-        [layout adjustedFrame:self.frame parentFrame:self.parentComponent.frame];
+        updatedFrame =
+        [layout adjustedFrame:updatedFrame parentFrame:self.parentComponent.frame];
         
-        edges.left = CGRectGetMinX(rect);
-        edges.right = CGRectGetMaxX(rect);
-        edges.top = CGRectGetMinY(rect);
-        edges.bottom = CGRectGetMaxY(rect);
+        NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
     }
+
+    self.frame = updatedFrame;
     
-    self.frame =
-    CGRectMake(edges.left,
-               edges.top,
-               edges.right - edges.left,
-               edges.bottom - edges.top);
+    NSLog(@"endingFrame: %@", NSStringFromCGRect(self.frame));
     
     for (AMComponent *childComponent in self.childComponents) {
         [childComponent updateFrame];

@@ -62,7 +62,9 @@
 - (CGRect)adjustedFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
     
     CGRect result = frame;
-    result.origin.y = self.proportionalValue * CGRectGetHeight(parentFrame);
+    result.origin.y = self.proportionalValue * CGRectGetHeight(parentFrame);    
+    [self.view setNeedsUpdateConstraints];
+
     return result;
 }
 

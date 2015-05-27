@@ -63,6 +63,8 @@
     
     CGRect result = frame;
     result.origin.y = self.proportionalValue * CGRectGetHeight(parentFrame) - (CGRectGetHeight(frame) / 2.0f);
+    [self.view setNeedsUpdateConstraints];
+
     return result;
 }
 
