@@ -12,6 +12,7 @@
 #import "AMLayout.h"
 #import "AMLayoutPresetHelper.h"
 #import "AMLayoutFactory.h"
+#import "AMView+Geometry.h"
 
 NSString * const kAMComponentClassNameKey = @"class-name";
 NSString * const kAMComponentsKey = @"components";
@@ -197,6 +198,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     AMComponent *component = [[self.class alloc] init];
     component.name = self.name.copy;
+    component.defaultName = self.defaultName.copy;
     component.classPrefix = self.classPrefix.copy;
     component.identifier = self.identifier.copy;
     component.frame = self.frame;
@@ -230,6 +232,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     AMComponent *result = self.copy;
     result.identifier = [[NSUUID new] UUIDString];
+    result.defaultName = nil;
+    
+    if ([result.name hasPrefix:kAMComponentDefaultNamePrefix]) {
+        result.name = nil;
+    }
     
     NSMutableArray *children = [NSMutableArray array];
     
@@ -607,7 +614,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 //        NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
     }
 
-    updatedFrame = AMPixelAlignedCGRect(updatedFrame, nil);
+    updatedFrame = AMPixelAlignedCGRect(updatedFrame);
 //    NSLog(@"endingFrame: %@", NSStringFromCGRect(updatedFrame));
 
     self.frame = updatedFrame;

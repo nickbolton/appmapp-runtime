@@ -13,5 +13,6 @@
 + (NSString *)indentString:(NSInteger)level;
 + (NSString *)stringToken:(NSString *)string;
 + (NSString *)numberToken:(NSNumber *)string;
++ (NSString *)literalStringForObject:(id)object;
 
 @end

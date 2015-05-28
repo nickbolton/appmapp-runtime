@@ -46,13 +46,13 @@ NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeVi
 
 #pragma mark - Layout
 
-- (void)layout {
-    [self.helper layoutView:self];
-}
-
-- (void)layoutSubviews {
-    [self.helper layoutView:self];
-}
+//- (void)layout {
+//    [self.helper layoutView:self];
+//}
+//
+//- (void)layoutSubviews {
+//    [self.helper layoutView:self];
+//}
 
 #pragma mark - Constraints
 

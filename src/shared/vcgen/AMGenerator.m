@@ -9,6 +9,7 @@
 #import "AMGenerator.h"
 #import "AMViewGenerator.h"
 #import "AMComponent.h"
+#import "AMExpandingLayout.h"
 
 NSString * const kAMOSXFrameworkImport = @"#import <Cocoa/Cocoa.h>";
 NSString * const kAMIOSFrameworkImport = @"#import <UIKit/UIKit.h>";
@@ -42,11 +43,18 @@ NSString * const kAMIOSBaseViewClassName = @"UIView";
         return;
     }
     
+    AMExpandingLayout *expandingLayout = [AMExpandingLayout new];
+    
     [componentsArray enumerateObjectsUsingBlock:^(NSDictionary *componentDict, NSUInteger idx, BOOL *stop) {
+        
+        // replace the top level components with an expanding layout
+        
+        NSMutableDictionary *mutableDict = componentDict.mutableCopy;
+        mutableDict[@"layoutObjects"] = @[[expandingLayout exportLayout]];
         
         BOOL result =
         [self
-         buildClass:componentDict
+         buildClass:mutableDict
          targetDirectory:targetDirectory
          ios:ios
          classPrefix:classPrefix

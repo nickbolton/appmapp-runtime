@@ -19,9 +19,7 @@ MACHINE_PROPERTIES
     NSDictionary *componentDict =
     COMPONENT_DICTIONARY;
     
-    self.component =
-    [[AMAppMap sharedInstance]
-     loadComponentWithDictionary:componentDict];
+    self.component = [AMComponent componentWithDictionary:componentDict];
 }
 
 - (void)_setupRootView {

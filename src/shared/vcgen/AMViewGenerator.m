@@ -9,6 +9,8 @@
 #import "AMViewGenerator.h"
 #import "AMComponent.h"
 #import "NSString+AMGenerator.h"
+#import "AMViewHumanTemplate.h"
+#import "AMViewMachineTemplate.h"
 
 static NSString * const kAMViewNameToken = @"VIEW_NAME";
 static NSString * const kAMViewBaseClassToken = @"VIEW_BASE_CLASS";
@@ -150,29 +152,11 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
     NSFileManager *fm = [NSFileManager defaultManager];
     if ([fm fileExistsAtPath:url.path] == NO) {
         
-        static NSString * const filename = @"AMViewHumanTemplate";
-        
-        NSString *suffix = interface ? @"_h" : @"_m";
-        
-        NSURL *templateURL =
-        [[NSBundle mainBundle]
-         URLForResource:[filename stringByAppendingString:suffix]
-         withExtension:nil];
-        
         NSError *error = nil;
-        NSString *template =
-        [NSString
-         stringWithContentsOfURL:templateURL
-         encoding:NSUTF8StringEncoding
-         error:&error];
         
-        if (error != nil) {
-            
-            NSLog(@"Error reading human template '%@': %@",
-                  templateURL.path, error);
-            
-            return NO;
-        }
+        AMViewHumanTemplate *templateObject = [AMViewHumanTemplate new];
+        NSString *template =
+        interface ? templateObject.interfaceContents : templateObject.implementationContents;
         
         template =
         [template
@@ -221,29 +205,11 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
         }
     }
     
-    static NSString * const filename = @"AMViewMachineTemplate";
-    
-    NSString *suffix = interface ? @"_h" : @"_m";
-    
-    NSURL *templateURL =
-    [[NSBundle mainBundle]
-     URLForResource:[filename stringByAppendingString:suffix]
-     withExtension:nil];
-    
     NSError *error = nil;
-    NSString *template =
-    [NSString
-     stringWithContentsOfURL:templateURL
-     encoding:NSUTF8StringEncoding
-     error:&error];
     
-    if (error != nil) {
-        
-        NSLog(@"Error reading machine template '%@': %@",
-              templateURL.path, error);
-        
-        return NO;
-    }
+    AMViewMachineTemplate *templateObject = [AMViewMachineTemplate new];
+    NSString *template =
+    interface ? templateObject.interfaceContents : templateObject.implementationContents;
     
     NSString *frameworkImport =
     ios ? kAMIOSFrameworkImport : kAMOSXFrameworkImport;
@@ -263,6 +229,8 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
      stringByReplacingOccurrencesOfString:kAMComponentDictionaryToken
      withString:[self buildComponentReplacement:componentDictionary indentLevel:1 prefixIndent:0]];
     
+    NSLog(@"viewName: %@", viewName);
+
     template =
     [template
      stringByReplacingOccurrencesOfString:kAMMachinePropertiesToken

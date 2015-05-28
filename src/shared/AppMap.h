@@ -19,6 +19,7 @@
 #import "NSColor+AppMap.h"
 #endif
 
-#import "AMComponent.h"
-
 #endif
+
+#import "AMComponent.h"
+#import "AMLayout.h"

@@ -11,6 +11,7 @@
 #import "AMRuntimeView.h"
 #import "AMLayoutFactory.h"
 #import "AMLayout.h"
+#import "AMExpandingLayout.h"
 
 @implementation AMRuntimeViewHelper
 
@@ -88,6 +89,7 @@
 #pragma mark - Constraints
 
 - (void)updateConstraintsFromComponent:(AMView<AMRuntimeView> *)view {
+    
     CGRect frame = view.component.frame;
     CGRect parentFrame = view.component.parentComponent.frame;
     

@@ -6,10 +6,12 @@
 //  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
 
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+
 @interface NSLayoutConstraint (Utilities)
 
-#if TARGET_OS_IPHONE
 - (NSLayoutConstraint *)animator;
-#endif
 
 @end
+#endif

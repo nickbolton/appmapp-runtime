@@ -7,6 +7,9 @@
 //
 #import "AppMap.h"
 #import "NSLayoutConstraint+Utilities.h"
+#import "AppMapTypes.h"
+
+@class AMComponent;
 
 @interface AMLayout : NSObject
 
