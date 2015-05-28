@@ -10,6 +10,7 @@
 #import "AMViewGenerator.h"
 #import "AMComponent.h"
 #import "AMExpandingLayout.h"
+#import "NSString+NameUtilities.h"
 
 NSString * const kAMOSXFrameworkImport = @"#import <Cocoa/Cocoa.h>";
 NSString * const kAMIOSFrameworkImport = @"#import <UIKit/UIKit.h>";
@@ -123,9 +124,9 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
     NSString *className;
 
     if (classPrefix.length > 0) {
-        className = [classPrefix stringByAppendingString:component.exportedName.capitalizedString];
+        className = [classPrefix stringByAppendingString:component.exportedName.properName];
     } else {
-        className = component.exportedName.capitalizedString;
+        className = component.exportedName.properName;
     }
     
     return [className stringByAppendingString:suffix];

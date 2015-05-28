@@ -12,6 +12,7 @@
 #import "AMComponent.h"
 #import "AMViewControllerHumanTemplate.h"
 #import "AMViewControllerMachineTemplate.h"
+#import "NSString+NameUtilities.h"
 
 static NSString * const kAMViewControllerNameToken = @"VIEW_CONTROLLER_NAME";
 static NSString * const kAMViewControllerBaseClassToken = @"VIEW_CONTROLLER_BASE_CLASS";
@@ -143,9 +144,9 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
                    classPrefix:(NSString *)classPrefix {
 
     if (classPrefix.length > 0) {
-        return [classPrefix stringByAppendingString:name.capitalizedString];
+        return [classPrefix stringByAppendingString:name.properName];
     }
-    return name.capitalizedString;
+    return name.properName;
 }
 
 - (NSString *)buildBaseViewControllerName:(NSString *)name
