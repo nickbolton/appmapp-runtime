@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name      = 'AppMap'
-  s.version   = '0.0.1'
+  s.version   = '0.0.2'
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = '10.10'
   s.summary   = 'AppMap.'
