@@ -75,10 +75,4 @@
     [self applyConstraintIfNecessary];
 }
 
-- (CGRect)adjustedComponentFrame:(CGRect)frame
-            parentComponentFrame:(CGRect)parentFrame
-                           scale:(CGFloat)scale {
-    return frame;
-}
-
 @end

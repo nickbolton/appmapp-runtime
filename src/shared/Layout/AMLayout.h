@@ -20,7 +20,7 @@
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)layoutWithDictionary:(NSDictionary *)dict;
-- (NSDictionary *)exportComponent;
+- (NSDictionary *)exportLayout;
 
 + (BOOL)isProportionalLayoutType:(AMLayoutType)layoutType;
 
@@ -33,16 +33,9 @@
                        inView:(AMView *)view
                      animated:(BOOL)animated;
 
-- (CGRect)adjustedComponentFrame:(CGRect)frame
-            parentComponentFrame:(CGRect)parentFrame
-                           scale:(CGFloat)scale;
-
-- (void)adjustLayoutFromParentFrameChange:(CGRect)frame
-                               multiplier:(CGFloat)multiplier
-                                 priority:(AMLayoutPriority)priority
-                              parentFrame:(CGRect)parentFrame
-                         allLayoutObjects:(NSArray *)allLayoutObjects
-                                   inView:(AMView *)view;
+- (CGRect)adjustedFrame:(CGRect)frame
+           forComponent:(AMComponent *)component
+                  scale:(CGFloat)scale;
 
 - (void)applyConstraintIfNecessary;
 - (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame;

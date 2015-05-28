@@ -108,15 +108,35 @@
     }
 }
 
-- (CGRect)adjustedComponentFrame:(CGRect)frame
-            parentComponentFrame:(CGRect)parentFrame
-                           scale:(CGFloat)scale {
+- (CGRect)adjustedFrame:(CGRect)frame
+           forComponent:(AMComponent *)component
+                  scale:(CGFloat)scale {
     
-    scale = MAX(scale, 1.0f);
-
-    CGRect result = frame;
-    result.origin.x = CGRectGetWidth(parentFrame) - CGRectGetWidth(frame) + (self.constraint.constant/scale);
-    return result;
+    if (component.parentComponent != nil && scale > 0.0f) {
+                
+        CGFloat leftSpace = [self leftConstraintConstant:component.layoutObjects];
+        
+        CGRect result = frame;
+        
+        if (leftSpace > -MAXFLOAT) {
+            
+            result.size.width =
+            CGRectGetWidth(component.parentComponent.frame) -
+            leftSpace +
+            (self.constraint.constant/scale);
+            
+        } else {
+            
+            result.origin.x =
+            CGRectGetWidth(component.parentComponent.frame) -
+            CGRectGetWidth(frame) +
+            (self.constraint.constant/scale);
+        }
+        
+        return result;
+    }
+    
+    return frame;
 }
 
 @end

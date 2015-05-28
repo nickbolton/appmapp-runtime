@@ -53,15 +53,18 @@
     [self applyConstraintIfNecessary];
 }
 
-- (CGRect)adjustedComponentFrame:(CGRect)frame
-            parentComponentFrame:(CGRect)parentFrame
-                           scale:(CGFloat)scale {
+- (CGRect)adjustedFrame:(CGRect)frame
+           forComponent:(AMComponent *)component
+                  scale:(CGFloat)scale {
 
-    scale = MAX(scale, 1.0f);
+    if (component.parentComponent != nil && scale > 0.0f) {
 
-    CGRect result = frame;
-    result.size.height = self.constraint.constant/scale;
-    return result;
+        CGRect result = frame;
+        result.size.height = self.constraint.constant/scale;
+        return result;
+    }
+    
+    return frame;
 }
 
 @end

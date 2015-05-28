@@ -53,7 +53,7 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     return layout;
 }
 
-- (NSDictionary *)exportComponent {
+- (NSDictionary *)exportLayout {
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     
@@ -91,17 +91,9 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     [self createConstraintsIfNecessaryWithMultiplier:multiplier priority:priority];
 }
 
-- (void)adjustLayoutFromParentFrameChange:(CGRect)frame
-                               multiplier:(CGFloat)multiplier
-                                 priority:(AMLayoutPriority)priority
-                              parentFrame:(CGRect)parentFrame
-                         allLayoutObjects:(NSArray *)allLayoutObjects
-                                   inView:(AMView *)view {
-}
-
-- (CGRect)adjustedComponentFrame:(CGRect)frame
-            parentComponentFrame:(CGRect)parentFrame
-                           scale:(CGFloat)scale {
+- (CGRect)adjustedFrame:(CGRect)frame
+           forComponent:(AMComponent *)component
+                  scale:(CGFloat)scale {
     return frame;
 }
 

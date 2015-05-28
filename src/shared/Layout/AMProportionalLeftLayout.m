@@ -59,20 +59,25 @@
     self.proportionalValue = CGRectGetMinX(frame) / CGRectGetWidth(parentFrame);
 }
 
-- (CGRect)adjustedComponentFrame:(CGRect)frame
-            parentComponentFrame:(CGRect)parentFrame
-                           scale:(CGFloat)scale {
+- (CGRect)adjustedFrame:(CGRect)frame
+           forComponent:(AMComponent *)component
+                  scale:(CGFloat)scale {
     
-    CGRect result = frame;
-    result.origin.x = self.proportionalValue * CGRectGetWidth(parentFrame);
+    if (component.parentComponent != nil) {
     
+        CGRect result = frame;
+        result.origin.x = self.proportionalValue * CGRectGetWidth(component.parentComponent.frame);
+        
 #if TARGET_OS_IPHONE
-    [self.view setNeedsUpdateConstraints];
+        [self.view setNeedsUpdateConstraints];
 #else
-    [self.view setNeedsUpdateConstraints:YES];
+        [self.view setNeedsUpdateConstraints:YES];
 #endif
+        
+        return result;
+    }
     
-    return result;
+    return frame;
 }
 
 @end

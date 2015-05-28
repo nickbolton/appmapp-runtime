@@ -312,7 +312,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     NSMutableArray *layoutObjectDicts = [NSMutableArray array];
     
     for (AMLayout *layout in self.layoutObjects) {
-        NSDictionary *dict = [layout exportComponent];
+        NSDictionary *dict = [layout exportLayout];
         [layoutObjectDicts addObject:dict];
     }
     
@@ -600,16 +600,18 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         
         updatedFrame =
         [layout
-         adjustedComponentFrame:updatedFrame
-         parentComponentFrame:self.parentComponent.frame
+         adjustedFrame:updatedFrame
+         forComponent:self
          scale:self.scale];
         
 //        NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
     }
 
-    self.frame = AMPixelAlignedCGRect(updatedFrame, nil);
+    updatedFrame = AMPixelAlignedCGRect(updatedFrame, nil);
+//    NSLog(@"endingFrame: %@", NSStringFromCGRect(updatedFrame));
+
+    self.frame = updatedFrame;
     
-//    NSLog(@"endingFrame: %@", NSStringFromCGRect(self.frame));
     
     for (AMComponent *childComponent in self.childComponents) {
         [childComponent updateFrame];
