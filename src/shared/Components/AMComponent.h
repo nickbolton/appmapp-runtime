@@ -10,6 +10,7 @@
 #import "AppMapTypes.h"
 
 extern NSString * const kAMComponentClassNameKey;
+extern NSString * const kAMComponentsKey;
 extern NSString * kAMComponentNameKey;
 extern NSString * kAMComponentClassPrefixKey;
 extern NSString * kAMComponentIdentifierKey;
@@ -59,6 +60,7 @@ extern NSString * kAMComponentLayoutPresetKey;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)componentWithDictionary:(NSDictionary *)dict;
++ (NSDictionary *)exportComponents:(NSArray *)components;
 
 - (BOOL)isEqualToComponent:(AMComponent *)object;
 

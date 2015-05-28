@@ -9,7 +9,7 @@
 #import "AMViewControllerGenerator.h"
 #import "AMViewGenerator.h"
 #import "NSString+AMGenerator.h"
-#import "AMAppMap.h"
+#import "AMComponent.h"
 
 static NSString * const kAMViewControllerNameToken = @"VIEW_CONTROLLER_NAME";
 static NSString * const kAMViewControllerBaseClassToken = @"VIEW_CONTROLLER_BASE_CLASS";
@@ -43,8 +43,7 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
     NSFileManager *fm = [NSFileManager defaultManager];
     
     AMComponent *component =
-    [[AMAppMap sharedInstance]
-     loadComponentWithDictionary:componentDict];
+    [AMComponent componentWithDictionary:componentDict];
     
     NSString *humanViewControllerName =
     [self buildViewControllerName:component.exportedName classPrefix:classPrefix];

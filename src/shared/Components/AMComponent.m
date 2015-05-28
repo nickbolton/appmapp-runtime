@@ -9,11 +9,12 @@
 #import "AMComponent.h"
 #import "AppMap.h"
 #import "AMColor+AMColor.h"
-#import "AMLayoutPresetHelper.h"
 #import "AMLayout.h"
+#import "AMLayoutPresetHelper.h"
 #import "AMLayoutFactory.h"
 
 NSString * const kAMComponentClassNameKey = @"class-name";
+NSString * const kAMComponentsKey = @"components";
 
 NSString * kAMComponentNameKey = @"name";
 NSString * kAMComponentClassPrefixKey = @"classPrefix";
@@ -255,6 +256,24 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.layoutPreset = AMLayoutPresetFixedSizeNearestCorner;
 
     return component;
+}
+
++ (NSDictionary *)exportComponents:(NSArray *)components {
+    
+    NSMutableDictionary *componentDictionaries = [NSMutableDictionary dictionary];
+    
+    [components enumerateObjectsUsingBlock:^(AMComponent *component, NSUInteger idx, BOOL *stop) {
+        
+        NSDictionary *componentDict = [component exportComponent];
+        componentDictionaries[component.identifier] = componentDict;
+    }];
+    
+    NSDictionary *dict =
+    @{
+      kAMComponentsKey : componentDictionaries,
+      };
+    
+    return dict;
 }
 
 - (NSDictionary *)exportComponent {

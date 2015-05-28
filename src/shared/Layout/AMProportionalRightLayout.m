@@ -66,7 +66,11 @@
     CGRect result = frame;
     result.origin.x = CGRectGetWidth(parentFrame) - CGRectGetWidth(frame) - (self.proportionalValue * CGRectGetWidth(parentFrame));
     
+#if TARGET_OS_IPHONE
     [self.view setNeedsUpdateConstraints];
+#else
+    [self.view setNeedsUpdateConstraints:YES];
+#endif
     return result;
 }
 

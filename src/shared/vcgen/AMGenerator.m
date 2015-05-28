@@ -7,8 +7,8 @@
 //
 
 #import "AMGenerator.h"
-#import "AMAppMap.h"
 #import "AMViewGenerator.h"
+#import "AMComponent.h"
 
 NSString * const kAMOSXFrameworkImport = @"#import <Cocoa/Cocoa.h>";
 NSString * const kAMIOSFrameworkImport = @"#import <UIKit/UIKit.h>";

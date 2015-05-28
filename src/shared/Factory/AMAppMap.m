@@ -11,8 +11,6 @@
 #import "AMAppMapContainerFactory.h"
 #import "AMAppMapLabelFactory.h"
 
-NSString * const kAMComponentsKey = @"components";
-
 @interface AMAppMap()
 
 @property (nonatomic, strong) NSDictionary *factoryClasses;
@@ -59,14 +57,6 @@ NSString * const kAMComponentsKey = @"components";
     
     Class clazz = NSClassFromString(classString);
     return [[clazz new] buildViewFromComponent:component inContainer:container bindingObject:bindingObject];
-}
-
-- (AMComponent *)loadComponentWithDictionary:(NSDictionary *)componentDict {
-    
-    NSString *className = componentDict[kAMComponentClassNameKey];
-    AMComponent *component =
-    [[NSClassFromString(className) alloc] initWithDictionary:componentDict];
-    return component;
 }
 
 #pragma mark - Singleton Methods

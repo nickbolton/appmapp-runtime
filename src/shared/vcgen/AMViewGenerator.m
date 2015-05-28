@@ -7,7 +7,7 @@
 //
 
 #import "AMViewGenerator.h"
-#import "AMAppMap.h"
+#import "AMComponent.h"
 #import "NSString+AMGenerator.h"
 
 static NSString * const kAMViewNameToken = @"VIEW_NAME";
@@ -23,8 +23,7 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
  baseViewClassName:(NSString *)baseViewClassName {
     
     AMComponent *component =
-    [[AMAppMap sharedInstance]
-     loadComponentWithDictionary:componentDict];
+    [AMComponent componentWithDictionary:componentDict];
 
     NSDictionary *childComponentsDict = componentDict[kAMComponentChildComponentsKey];
     

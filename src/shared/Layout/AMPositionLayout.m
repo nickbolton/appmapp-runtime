@@ -57,7 +57,7 @@
     return AMLayoutTypePosition;
 }
 
-- (void)setView:(UIView *)view {
+- (void)setView:(AMView *)view {
     self.topLayout.view = view;
     self.leftLayout.view = view;
     self.widthLayout.view = view;
