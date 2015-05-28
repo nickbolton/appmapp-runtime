@@ -1,9 +1,0 @@
-#import "VIEW_CONTROLLER_NAME.h"
-
-@interface VIEW_CONTROLLER_NAME ()
-// Private interface goes here.
-@end
-
-@implementation VIEW_CONTROLLER_NAME
-// Custom logic goes here.
-@end

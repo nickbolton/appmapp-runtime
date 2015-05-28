@@ -1,8 +1,0 @@
-// DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to VIEW_CONTROLLER_NAME.h instead.
-FRAMEWORK_IMPORT
-CLASS_IMPORTS
-@interface _VIEW_CONTROLLER_NAME : VIEW_CONTROLLER_BASE_CLASS
-
-MACHINE_PROPERTIES
-@end
