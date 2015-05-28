@@ -9,6 +9,7 @@
 #import "AMAppMapViewFactory.h"
 #import "AMComponent.h"
 #import "AMAppMap.h"
+#import "NSString+NameUtilities.h"
 
 @implementation AMAppMapViewFactory
 
@@ -24,7 +25,7 @@
     
     NSString *viewName =
     [NSString stringWithFormat:@"%@View",
-     component.exportedName.capitalizedString];
+     component.exportedName.properName];
     
     NSString *viewClassName =
     [NSString stringWithFormat:@"%@%@",
