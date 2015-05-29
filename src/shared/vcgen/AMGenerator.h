@@ -16,6 +16,8 @@ extern NSString * const kAMClassImportsToken;
 extern NSString * const kAMFrameworkImportToken;
 extern NSString * const kAMOSXBaseViewClassName;
 extern NSString * const kAMIOSBaseViewClassName;
+extern NSString * const kAMViewNameToken;
+extern NSString * const kAMViewBaseClassToken;
 
 @class AMComponent;
 

@@ -12,9 +12,6 @@
 #import "AMViewHumanTemplate.h"
 #import "AMViewMachineTemplate.h"
 
-static NSString * const kAMViewNameToken = @"VIEW_NAME";
-static NSString * const kAMViewBaseClassToken = @"VIEW_BASE_CLASS";
-
 @implementation AMViewGenerator
 
 - (BOOL)buildClass:(NSDictionary *)componentDict
@@ -208,8 +205,15 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
     NSError *error = nil;
     
     AMViewMachineTemplate *templateObject = [AMViewMachineTemplate new];
-    NSString *template =
-    interface ? templateObject.interfaceContents : templateObject.implementationContents;
+    NSString *template;
+    
+    if (interface) {
+        template = templateObject.interfaceContents;
+    } else if ([componentDictionary[kAMComponentTopLevelComponentKey] boolValue]) {
+        template = templateObject.rootImplementationContents;
+    } else {
+        template = templateObject.implementationContents;
+    }
     
     NSString *frameworkImport =
     ios ? kAMIOSFrameworkImport : kAMOSXFrameworkImport;
@@ -227,9 +231,12 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
     template =
     [template
      stringByReplacingOccurrencesOfString:kAMComponentDictionaryToken
-     withString:[self buildComponentReplacement:componentDictionary indentLevel:1 prefixIndent:0]];
+     withString:[self buildComponentReplacement:componentDictionary indentLevel:1 prefixIndent:0 classPrefix:classPrefix]];
     
     NSLog(@"viewName: %@", viewName);
+    
+    template =
+    [template stringByReplacingOccurrencesOfString:kAMViewNameToken withString:viewName];
 
     template =
     [template
@@ -263,7 +270,10 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
     return YES;
 }
 
-- (NSString *)buildComponentReplacement:(NSDictionary *)dictionary indentLevel:(NSInteger)indentLevel prefixIndent:(NSInteger)prefixIndent {
+- (NSString *)buildComponentReplacement:(NSDictionary *)dictionary
+                            indentLevel:(NSInteger)indentLevel
+                           prefixIndent:(NSInteger)prefixIndent
+                            classPrefix:(NSString *)classPrefix {
     
     NSMutableString *result = [NSMutableString stringWithString:@""];
     [result appendString:[NSString indentString:prefixIndent]];
@@ -277,13 +287,7 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
             [result appendString:[NSString indentString:indentLevel]];
             
             NSString *keyToken = [NSString stringToken:key];
-            NSString *valueToken;
-            
-            if ([obj isKindOfClass:[NSString class]]) {
-                valueToken = [NSString stringToken:obj];
-            } else {
-                valueToken = [NSString numberToken:obj];
-            }
+            NSString *valueToken = [NSString literalStringForObject:obj];
             
             [result appendString:keyToken];
             [result appendString:@" : "];
@@ -291,6 +295,17 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
             [result appendString:@",\n"];
         }
     }];
+    
+    if (classPrefix != nil) {
+        
+        NSString *classPrefixKeyToken = [NSString stringToken:kAMComponentClassPrefixKey];
+        NSString *classPrefixValueToken = [NSString stringToken:classPrefix];
+        
+        [result appendString:classPrefixKeyToken];
+        [result appendString:@" : "];
+        [result appendString:classPrefixValueToken];
+        [result appendString:@",\n"];
+    }
     
     NSDictionary *childComponentsDictionary = dictionary[kAMComponentChildComponentsKey];
     
@@ -312,7 +327,7 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
         NSInteger prefixIndent = idx > 0 ? indentLevel : 0;
         
         NSString *child =
-        [self buildComponentReplacement:childDictionary indentLevel:indentLevel+1 prefixIndent:prefixIndent];
+        [self buildComponentReplacement:childDictionary indentLevel:indentLevel+1 prefixIndent:prefixIndent classPrefix:classPrefix];
         
         [childComponents appendString:child];
         

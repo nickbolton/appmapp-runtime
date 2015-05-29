@@ -12,6 +12,7 @@
 extern NSString * const kAMComponentClassNameKey;
 extern NSString * const kAMComponentsKey;
 extern NSString * kAMComponentNameKey;
+extern NSString * kAMComponentTopLevelComponentKey;
 extern NSString * kAMComponentClassPrefixKey;
 extern NSString * kAMComponentIdentifierKey;
 extern NSString * kAMComponentClippedKey;

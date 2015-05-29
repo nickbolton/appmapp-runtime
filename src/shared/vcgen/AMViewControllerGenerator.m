@@ -232,21 +232,22 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
     NSString *frameworkImport =
     ios ? kAMIOSFrameworkImport : kAMOSXFrameworkImport;
     
+    NSString *humanViewName =
+    [self buildViewName:component classPrefix:classPrefix];
+    
     template =
     [template
      stringByReplacingOccurrencesOfString:kAMViewControllerNameToken
      withString:viewControllerName];
+        
+    template =
+    [template stringByReplacingOccurrencesOfString:kAMViewNameToken withString:humanViewName];
     
     template =
     [template
      stringByReplacingOccurrencesOfString:kAMViewControllerBaseClassToken
      withString:viewControllerBaseClass];
-    
-    template =
-    [template
-     stringByReplacingOccurrencesOfString:kAMComponentDictionaryToken
-     withString:[self buildComponentReplacement:componentDictionary indentLevel:1 prefixIndent:0 classPrefix:classPrefix]];
-    
+
     template =
     [template
      stringByReplacingOccurrencesOfString:kAMMachinePropertiesToken
@@ -277,88 +278,6 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
     }
 
     return YES;
-}
-
-- (NSString *)buildComponentReplacement:(NSDictionary *)dictionary
-                            indentLevel:(NSInteger)indentLevel
-                           prefixIndent:(NSInteger)prefixIndent
-                            classPrefix:(NSString *)classPrefix {
-    
-    NSMutableString *result = [NSMutableString stringWithString:@""];
-    [result appendString:[NSString indentString:prefixIndent]];
-    [result appendString:@"@{\n"];
-    
-    [dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
-        
-        if ([key isEqualToString:kAMComponentChildComponentsKey] == NO) {
-            
-            [result appendString:@"    "];
-            [result appendString:[NSString indentString:indentLevel]];
-            
-            NSString *keyToken = [NSString stringToken:key];
-            NSString *valueToken = [NSString literalStringForObject:obj];
-                        
-            [result appendString:keyToken];
-            [result appendString:@" : "];
-            [result appendString:valueToken];
-            [result appendString:@",\n"];
-        }
-    }];
-    
-    if (classPrefix != nil) {
-        
-        NSString *classPrefixKeyToken = [NSString stringToken:kAMComponentClassPrefixKey];
-        NSString *classPrefixValueToken = [NSString stringToken:classPrefix];
-        
-        [result appendString:classPrefixKeyToken];
-        [result appendString:@" : "];
-        [result appendString:classPrefixValueToken];
-        [result appendString:@",\n"];
-    }
-    
-    NSDictionary *childComponentsDictionary = dictionary[kAMComponentChildComponentsKey];
-    
-    NSString *keyToken = [NSString stringToken:kAMComponentChildComponentsKey];
-    NSMutableString *childComponents = [NSMutableString stringWithString:@""];
-    [childComponents appendString:[NSString indentString:indentLevel+1]];
-    [childComponents appendString:keyToken];
-    [childComponents appendString:@" : @["];
-    
-    if (childComponentsDictionary.count > 0) {
-        [childComponents appendString:@"\n"];
-        [childComponents appendString:[NSString indentString:indentLevel+2]];
-    }
-    
-    NSArray *childComponentsArray = childComponentsDictionary.allValues;
-    
-    [childComponentsArray enumerateObjectsUsingBlock:^(NSDictionary *childDictionary, NSUInteger idx, BOOL *stop) {
-        
-        NSInteger prefixIndent = idx > 0 ? indentLevel : 0;
-        
-        NSString *child =
-        [self buildComponentReplacement:childDictionary indentLevel:indentLevel+1 prefixIndent:prefixIndent classPrefix:classPrefix];
-        
-        [childComponents appendString:child];
-        
-        [childComponents appendString:@",\n"];
-        
-        if (idx < (childComponentsArray.count-1)) {
-            [childComponents appendString:[NSString indentString:indentLevel+1]];
-        }
-    }];
-    
-    if (childComponentsDictionary.count > 0) {
-        [childComponents appendString:[NSString indentString:indentLevel+1]];
-    }
-    
-    [childComponents appendString:@"],\n"];
-    
-    [result appendString:childComponents];
-    
-    [result appendString:[NSString indentString:indentLevel+1]];
-    [result appendString:@"}"];
-    
-    return result;
 }
 
 @end

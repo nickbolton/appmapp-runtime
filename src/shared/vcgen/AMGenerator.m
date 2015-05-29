@@ -20,6 +20,8 @@ NSString * const kAMFrameworkImportToken = @"FRAMEWORK_IMPORT";
 NSString * const kAMClassImportsToken = @"CLASS_IMPORTS";
 NSString * const kAMOSXBaseViewClassName = @"NSView";
 NSString * const kAMIOSBaseViewClassName = @"UIView";
+NSString * const kAMViewNameToken = @"VIEW_NAME";
+NSString * const kAMViewBaseClassToken = @"VIEW_BASE_CLASS";
 
 @implementation AMGenerator
 

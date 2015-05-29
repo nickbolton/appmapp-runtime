@@ -18,6 +18,7 @@ NSString * const kAMComponentClassNameKey = @"class-name";
 NSString * const kAMComponentsKey = @"components";
 
 NSString * kAMComponentNameKey = @"name";
+NSString * kAMComponentTopLevelComponentKey = @"tlc";
 NSString * kAMComponentClassPrefixKey = @"classPrefix";
 NSString * kAMComponentIdentifierKey = @"identifier";
 NSString * kAMComponentClippedKey = @"clipped";
@@ -289,6 +290,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     dict[kAMComponentClassNameKey] = NSStringFromClass(self.class);
     dict[kAMComponentNameKey] = self.name;
+    dict[kAMComponentTopLevelComponentKey] = @(self.isTopLevelComponent);
     dict[kAMComponentIdentifierKey] = self.identifier;
     dict[kAMComponentClippedKey] = @(self.isClipped);
     dict[kAMComponentBackgroundColorKey] = [self.backgroundColor hexcodePlusAlpha];

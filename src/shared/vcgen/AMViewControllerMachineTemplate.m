@@ -34,7 +34,6 @@ MACHINE_PROPERTIES\n\
 \n\
 @interface _VIEW_CONTROLLER_NAME ()\n\
 \n\
-@property (nonatomic, strong) AMComponent *component;\n\
 MACHINE_PROPERTIES\n\
 @end\n\
 \n\
@@ -42,28 +41,15 @@ MACHINE_PROPERTIES\n\
 \n\
 #pragma mark - Setup\n\
 \n\
-- (void)_setupComponent {\n\
-\n\
-    NSDictionary *componentDict =\n\
-    COMPONENT_DICTIONARY;\n\
-\n\
-    self.component = [AMComponent componentWithDictionary:componentDict];\n\
-}\n\
-\n\
-- (void)_setupRootView {\n\
-\n\
-    [[AMAppMap sharedInstance]\n\
-     buildViewFromComponent:self.component\n\
-     inContainer:self.view\n\
-     bindingObject:self];\n\
-}\n\
-\n\
 #pragma mark - View Controller Lifecycle\n\
+\n\
+- (void)loadView {\n\
+    self.rootViewView = [VIEW_NAME new];\n\
+    self.view = self.rootViewView;\n\
+}\n\
 \n\
 - (void)viewDidLoad {\n\
     [super viewDidLoad];\n\
-    [self _setupComponent];\n\
-    [self _setupRootView];\n\
 }\n\
 @end\n\
 ";
