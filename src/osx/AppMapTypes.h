@@ -21,6 +21,7 @@
 #define AMLabel NSTextField
 #define AMViewController NSViewController
 #define AMLayoutPriority NSLayoutPriority
+#define AMEdgeInsets NSEdgeInsets
 
 static const AMLayoutPriority AMLayoutPriorityRequired = NSLayoutPriorityRequired;
 static const AMLayoutPriority AMLayoutPriorityDefaultHigh = NSLayoutPriorityDefaultHigh;
