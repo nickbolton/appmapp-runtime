@@ -409,7 +409,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
                 [exportedName appendString:firstCharacter];
 
                 if (component.length > 1) {
-                    [exportedName appendString:[component substringFromIndex:1]];
+                    [exportedName appendString:[[component substringFromIndex:1] lowercaseString]];
                 }
             }
         }];
