@@ -258,7 +258,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     AMComponent *component = [[self.class alloc] init];
     component.identifier = [[NSUUID new] UUIDString];
-//    component.cornerRadius = 2.0f;
+    component.cornerRadius = 2.0f;
     component.borderWidth = 1.0f;
     component.alpha = 1.0f;
     component.layoutPreset = AMLayoutPresetFixedSizeNearestCorner;
