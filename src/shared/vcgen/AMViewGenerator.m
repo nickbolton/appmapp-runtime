@@ -12,6 +12,8 @@
 #import "AMViewHumanTemplate.h"
 #import "AMViewMachineTemplate.h"
 
+static NSString * const kAMBaseViewClassNameToken = @"BASE_VIEW_CLASS_NAME";
+
 @implementation AMViewGenerator
 
 - (BOOL)buildClass:(NSDictionary *)componentDict
@@ -256,8 +258,11 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     [template
      stringByReplacingOccurrencesOfString:kAMComponentDictionaryToken
      withString:[self buildComponentReplacement:componentDictionary indentLevel:1 prefixIndent:0 classPrefix:classPrefix]];
-    
-    NSLog(@"viewName: %@", viewName);
+
+    template =
+    [template
+     stringByReplacingOccurrencesOfString:kAMBaseViewClassNameToken
+     withString:[self baseViewClassForType:component.componentType]];
     
     template =
     [template stringByReplacingOccurrencesOfString:kAMViewNameToken withString:viewName];
@@ -292,6 +297,22 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     }
     
     return YES;
+}
+
+- (NSString *)baseViewClassForType:(AMComponentType)type {
+    
+    NSDictionary *dictionary =
+    @{
+      @(AMComponentContainer) : @"AMRuntimeView",
+      @(AMComponentButton) : @"AMRuntimeButton",
+      };
+    
+    NSString *className = dictionary[@(type)];
+    
+    if (className == nil) {
+        className = dictionary[@(AMComponentContainer)];
+    }
+    return className;
 }
 
 - (NSString *)buildComponentReplacement:(NSDictionary *)dictionary

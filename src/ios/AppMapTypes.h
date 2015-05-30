@@ -16,6 +16,7 @@
 
 #define AMImage UIImage
 #define AMView UIView
+#define AMButton UIButton
 #define AMImageView UIImageView
 #define AMColor UIColor
 #define AMFont UIFont

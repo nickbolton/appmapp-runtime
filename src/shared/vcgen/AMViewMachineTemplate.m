@@ -15,9 +15,9 @@
     return @"// DO NOT EDIT. This file is machine-generated and constantly overwritten.\n\
 // Make changes to VIEW_NAME.h instead.\n\
 FRAMEWORK_IMPORT\n\
-#import \"AMRuntimeView.h\"\n\
+#import \"BASE_VIEW_CLASS_NAME.h\"\n\
 CLASS_IMPORTS\n\
-@interface _VIEW_NAME : AMRuntimeView\n\
+@interface _VIEW_NAME : BASE_VIEW_CLASS_NAME\n\
 \n\
 MACHINE_PROPERTIES\n\
 @end\n\

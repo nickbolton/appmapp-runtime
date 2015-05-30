@@ -15,6 +15,7 @@
 #define AMColorType NSColor
 #define AMImage NSImage
 #define AMView NSView
+#define AMButton NSButton
 #define AMImageView NSImageView
 #define AMColor NSColor
 #define AMFont NSFont
