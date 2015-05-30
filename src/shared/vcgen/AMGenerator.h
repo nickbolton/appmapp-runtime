@@ -14,8 +14,6 @@ extern NSString * const kAMComponentDictionaryToken;
 extern NSString * const kAMMachinePropertiesToken;
 extern NSString * const kAMClassImportsToken;
 extern NSString * const kAMFrameworkImportToken;
-extern NSString * const kAMOSXBaseViewClassName;
-extern NSString * const kAMIOSBaseViewClassName;
 extern NSString * const kAMViewNameToken;
 extern NSString * const kAMViewBaseClassToken;
 
@@ -28,14 +26,14 @@ extern NSString * const kAMViewBaseClassToken;
                                             ios:(BOOL)ios
                                     classPrefix:(NSString *)classPrefix
                     baseViewControllerClassName:(NSString *)baseViewControllerClassName
-                              baseViewClassName:(NSString *)baseViewClassName;
+                             baseViewClassNames:(NSDictionary *)baseViewClassNames;
 
 - (BOOL)buildClass:(NSDictionary *)componentDict
    targetDirectory:(NSURL *)targetDirectory
                ios:(BOOL)ios
        classPrefix:(NSString *)classPrefix
 baseViewControllerClassName:(NSString *)baseViewControllerClassName
- baseViewClassName:(NSString *)baseViewClassName;
+baseViewClassNames:(NSDictionary *)baseViewClassNames;
 
 - (NSString *)buildViewName:(AMComponent *)component
                 classPrefix:(NSString *)classPrefix;

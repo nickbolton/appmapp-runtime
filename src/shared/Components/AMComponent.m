@@ -13,11 +13,13 @@
 #import "AMLayoutPresetHelper.h"
 #import "AMLayoutFactory.h"
 #import "AMView+Geometry.h"
+#import "AMCompositeTextDescriptor.h"
 
 NSString * const kAMComponentClassNameKey = @"class-name";
 NSString * const kAMComponentsKey = @"components";
 
 NSString * kAMComponentNameKey = @"name";
+NSString * kAMComponentTypeKey = @"type";
 NSString * kAMComponentTopLevelComponentKey = @"tlc";
 NSString * kAMComponentClassPrefixKey = @"classPrefix";
 NSString * kAMComponentIdentifierKey = @"identifier";
@@ -31,6 +33,7 @@ NSString * kAMComponentCornerRadiusKey = @"cornerRadius";
 NSString * kAMComponentChildComponentsKey = @"childComponents";
 NSString * kAMComponentLayoutObjectsKey = @"layoutObjects";
 NSString * kAMComponentLayoutPresetKey = @"layoutPreset";
+NSString * kAMComponentTextDescriptorKey = @"textDescriptor";
 
 static NSString * kAMComponentDefaultNamePrefix = @"Container-";
 
@@ -52,6 +55,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 - (void)encodeWithCoder:(NSCoder *)coder {
     
     [coder encodeObject:self.name forKey:kAMComponentNameKey];
+    [coder encodeInteger:self.componentType forKey:kAMComponentTypeKey];
     [coder encodeObject:self.classPrefix forKey:kAMComponentClassPrefixKey];
     [coder encodeObject:self.identifier forKey:kAMComponentIdentifierKey];
     [coder encodeBool:self.isClipped forKey:kAMComponentClippedKey];
@@ -63,6 +67,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [coder encodeObject:self.childComponents forKey:kAMComponentChildComponentsKey];
     [coder encodeInteger:self.layoutPreset forKey:kAMComponentLayoutPresetKey];
     [coder encodeObject:self.layoutObjects forKey:kAMComponentLayoutObjectsKey];
+    [coder encodeObject:self.textDescriptor forKey:kAMComponentTextDescriptorKey];
     
 #if TARGET_OS_IPHONE
     [coder encodeObject:NSStringFromCGRect(self.frame) forKey:kAMComponentFrameKey];
@@ -78,6 +83,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     if (self != nil) {
 
         self.name = [decoder decodeObjectForKey:kAMComponentNameKey];
+        self.componentType = [decoder decodeIntegerForKey:kAMComponentTypeKey];
         self.classPrefix = [decoder decodeObjectForKey:kAMComponentClassPrefixKey];
         self.identifier = [decoder decodeObjectForKey:kAMComponentIdentifierKey];
         self.clipped = [decoder decodeBoolForKey:kAMComponentClippedKey];
@@ -88,6 +94,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         self.borderColor = [decoder decodeObjectForKey:kAMComponentBorderColorWidthKey];
         self.layoutPreset = [decoder decodeIntegerForKey:kAMComponentLayoutPresetKey];
         self.layoutObjects = [decoder decodeObjectForKey:kAMComponentLayoutObjectsKey];
+        self.textDescriptor = [decoder decodeObjectForKey:kAMComponentTextDescriptorKey];
         
 #if TARGET_OS_IPHONE
         self.frame = CGRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
@@ -116,6 +123,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         NSString *borderColorString = dict[kAMComponentBorderColorWidthKey];
 
         self.name = dict[kAMComponentNameKey];
+        self.componentType = [dict[kAMComponentTypeKey] integerValue];
         self.classPrefix = dict[kAMComponentClassPrefixKey];
         self.identifier = dict[kAMComponentIdentifierKey];
         self.clipped = [dict[kAMComponentClippedKey] boolValue];
@@ -125,6 +133,12 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         self.borderColor = [AMColor colorWithHexcodePlusAlpha:borderColorString];
         self.backgroundColor = [AMColor colorWithHexcodePlusAlpha:backgroundColorString];
         self.layoutPreset = [dict[kAMComponentLayoutPresetKey] integerValue];
+        
+        NSDictionary *descriptorDict = dict[kAMComponentTextDescriptorKey];
+        
+        if (descriptorDict != nil) {
+            self.textDescriptor = [[AMCompositeTextDescriptor alloc] initWithDictionary:descriptorDict];
+        }
 
 #if TARGET_OS_IPHONE
         self.frame = CGRectFromString(dict[kAMComponentFrameKey]);
@@ -199,6 +213,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     AMComponent *component = [[self.class alloc] init];
     component.name = self.name.copy;
+    component.componentType = self.componentType;
     component.defaultName = self.defaultName.copy;
     component.classPrefix = self.classPrefix.copy;
     component.identifier = self.identifier.copy;
@@ -210,7 +225,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.borderColor = self.borderColor;
     component.layoutPreset = self.layoutPreset;
     component.layoutObjects = self.layoutObjects.copy;
-    
+    component.textDescriptor = self.textDescriptor.copy;
+
     // only used to refer back to original parent
     // children will have this reset with the next loop
     component.parentComponent = self.parentComponent;
@@ -290,6 +306,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     dict[kAMComponentClassNameKey] = NSStringFromClass(self.class);
     dict[kAMComponentNameKey] = self.name;
+    dict[kAMComponentTypeKey] = @(self.componentType);
     dict[kAMComponentTopLevelComponentKey] = @(self.isTopLevelComponent);
     dict[kAMComponentIdentifierKey] = self.identifier;
     dict[kAMComponentClippedKey] = @(self.isClipped);
@@ -300,6 +317,10 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     dict[kAMComponentBorderWidthKey] = @(self.borderWidth);
     dict[kAMComponentLayoutPresetKey] = @(self.layoutPreset);
     
+    if (self.textDescriptor != nil) {
+        dict[kAMComponentTextDescriptorKey] = [self.textDescriptor exportTextDescriptor];
+    }
+
     if (self.classPrefix != nil) {
         dict[kAMComponentClassPrefixKey] = self.classPrefix;
     }
@@ -331,18 +352,14 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"Component: %p %@, LayoutPreset: %ld, %@ (parent: %@), %d, frame: %@", self, self.name, self.layoutPreset, self.identifier, self.parentComponent.identifier, (int)self.componentType, NSStringFromCGRect(self.frame)];
-//    return [NSString stringWithFormat:@"Component: %p %@, LayoutPreset: %ld, %@ (parent: %@), %d, frame: %@, children: %@", self, self.name, self.layoutPreset, self.identifier, self.parentComponent.identifier, (int)self.componentType, NSStringFromCGRect(self.frame), self.childComponents];
+    return [NSString stringWithFormat:@"Component(%d): %p %@, LayoutPreset: %ld, %@ (parent: %@), frame: %@", (int)self.componentType, self, self.name, self.layoutPreset, self.identifier, self.parentComponent.identifier, NSStringFromCGRect(self.frame)];
+//    return [NSString stringWithFormat:@"Component(%d): %p %@, LayoutPreset: %ld, %@ (parent: %@), frame: %@, children: %@", (int)self.componentType, self, self.name, self.layoutPreset, self.identifier, self.parentComponent.identifier, NSStringFromCGRect(self.frame), self.childComponents];
 }
 
 #pragma mark - Getters and Setters
 
 - (BOOL)isContainer {
     return self.componentType == AMComponentContainer;
-}
-
-- (AMComponentType)componentType {
-    return AMComponentContainer;
 }
 
 - (NSString *)name {

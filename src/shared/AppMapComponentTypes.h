@@ -12,9 +12,9 @@
 typedef NS_ENUM(NSInteger, AMComponentType) {
     
     AMComponentContainer = 0,
+    AMComponentButton,
     AMComponentText,
     AMComponentTextField,
-    AMComponentButton,
 };
 
 typedef NS_ENUM(NSInteger, AMLayoutType) {

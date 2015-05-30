@@ -19,7 +19,7 @@
                ios:(BOOL)ios
        classPrefix:(NSString *)classPrefix
 baseViewControllerClassName:(NSString *)baseViewControllerClassName
- baseViewClassName:(NSString *)baseViewClassName {
+baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     AMComponent *component =
     [AMComponent componentWithDictionary:componentDict];
@@ -43,7 +43,7 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
          ios:ios
          classPrefix:classPrefix
          baseViewControllerClassName:baseViewControllerClassName
-         baseViewClassName:baseViewClassName];
+         baseViewClassNames:baseViewClassNames];
     }
 
     NSFileManager *fm = [NSFileManager defaultManager];
@@ -55,7 +55,10 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
     [@"_" stringByAppendingString:humanViewName];
     
     NSString *baseViewName =
-    [self buildBaseViewName:baseViewClassName ios:ios];
+    [self
+     buildBaseViewNameForComponentType:component.componentType
+     baseViewClassNames:baseViewClassNames
+     ios:ios];
 
     NSURL *componentDirectoryURL =
     [targetDirectory URLByAppendingPathComponent:component.exportedName];
@@ -129,17 +132,38 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
     return YES;
 }
 
-- (NSString *)buildBaseViewName:(NSString *)name
-                            ios:(BOOL)ios {
+- (NSString *)buildBaseViewNameForComponentType:(AMComponentType)componentType
+                             baseViewClassNames:(NSDictionary *)baseViewClassNames
+                                            ios:(BOOL)ios {
+    
+    NSString *name = baseViewClassNames[@(componentType)];
+    
     if (name.length > 0) {
         return name;
     }
     
+    NSDictionary *defaultClassNameDictionary =
+    @{
+      @(AMComponentContainer) : @"NSView",
+      @(AMComponentButton) : @"NSButton",
+      };
+    
     if (ios) {
-        return kAMIOSBaseViewClassName;
+
+        defaultClassNameDictionary =
+        @{
+          @(AMComponentContainer) : @"UIView",
+          @(AMComponentButton) : @"UIButton",
+          };
     }
     
-    return kAMOSXBaseViewClassName;
+    name = defaultClassNameDictionary[@(componentType)];
+    
+    if (name == nil) {
+        name = defaultClassNameDictionary[@(AMComponentContainer)];
+    }
+    
+    return name;
 }
 
 - (BOOL)generateHumanFileIfNeeded:(NSURL *)url

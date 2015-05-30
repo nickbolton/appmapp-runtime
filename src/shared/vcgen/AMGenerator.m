@@ -18,8 +18,6 @@ NSString * const kAMComponentDictionaryToken = @"COMPONENT_DICTIONARY";
 NSString * const kAMMachinePropertiesToken = @"MACHINE_PROPERTIES";
 NSString * const kAMFrameworkImportToken = @"FRAMEWORK_IMPORT";
 NSString * const kAMClassImportsToken = @"CLASS_IMPORTS";
-NSString * const kAMOSXBaseViewClassName = @"NSView";
-NSString * const kAMIOSBaseViewClassName = @"UIView";
 NSString * const kAMViewNameToken = @"VIEW_NAME";
 NSString * const kAMViewBaseClassToken = @"VIEW_BASE_CLASS";
 
@@ -32,7 +30,7 @@ NSString * const kAMViewBaseClassToken = @"VIEW_BASE_CLASS";
                                             ios:(BOOL)ios
                                     classPrefix:(NSString *)classPrefix
                     baseViewControllerClassName:(NSString *)baseViewControllerClassName
-                              baseViewClassName:(NSString *)baseViewClassName {
+                             baseViewClassNames:(NSDictionary *)baseViewClassNames {
 
     id components = componentsDictionary[kAMComponentsKey];
     NSArray *componentsArray = components;
@@ -62,7 +60,7 @@ NSString * const kAMViewBaseClassToken = @"VIEW_BASE_CLASS";
          ios:ios
          classPrefix:classPrefix
          baseViewControllerClassName:baseViewControllerClassName
-         baseViewClassName:baseViewClassName];
+         baseViewClassNames:baseViewClassNames];
         
         *stop = (result == NO);
     }];
@@ -73,7 +71,7 @@ NSString * const kAMViewBaseClassToken = @"VIEW_BASE_CLASS";
                ios:(BOOL)ios
        classPrefix:(NSString *)classPrefix
 baseViewControllerClassName:(NSString *)baseViewControllerClassName
- baseViewClassName:(NSString *)baseViewClassName {
+baseViewClassNames:(NSDictionary *)baseViewClassNames {
     [self doesNotRecognizeSelector:_cmd];
     return NO;
 }

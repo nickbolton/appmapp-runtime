@@ -25,6 +25,9 @@ extern NSString * kAMComponentCornerRadiusKey;
 extern NSString * kAMComponentChildComponentsKey;
 extern NSString * kAMComponentLayoutObjectsKey;
 extern NSString * kAMComponentLayoutPresetKey;
+extern NSString * kAMComponentTextDescriptorKey;
+
+@class AMCompositeTextDescriptor;
 
 @interface AMComponent : NSObject <NSCoding, NSCopying>
 
@@ -35,7 +38,7 @@ extern NSString * kAMComponentLayoutPresetKey;
 @property (nonatomic, readonly) NSString *defaultName;
 @property (nonatomic, readonly) NSInteger depth;
 @property (nonatomic, readonly) NSInteger childIndex;
-@property (nonatomic, readonly) AMComponentType componentType;
+@property (nonatomic) AMComponentType componentType;
 @property (nonatomic, strong) NSArray *layoutObjects;
 @property (nonatomic, strong) NSArray *childComponents;
 @property (nonatomic, weak) AMComponent *parentComponent;
@@ -58,6 +61,8 @@ extern NSString * kAMComponentLayoutPresetKey;
 @property (nonatomic, strong) AMColor *backgroundColor;
 
 @property (nonatomic) AMLayoutPreset layoutPreset;
+
+@property (nonatomic, strong) AMCompositeTextDescriptor *textDescriptor;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)componentWithDictionary:(NSDictionary *)dict;

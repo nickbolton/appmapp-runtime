@@ -23,12 +23,12 @@ static NSString * const kAMIOSBaseViewControllerClassName = @"UIViewController";
 @implementation AMViewControllerGenerator
 
 - (BOOL)buildClass:(NSDictionary *)componentDict
-            targetDirectory:(NSURL *)targetDirectory
-                        ios:(BOOL)ios
-                classPrefix:(NSString *)classPrefix
+   targetDirectory:(NSURL *)targetDirectory
+               ios:(BOOL)ios
+       classPrefix:(NSString *)classPrefix
 baseViewControllerClassName:(NSString *)baseViewControllerClassName
- baseViewClassName:(NSString *)baseViewClassName {
-
+baseViewClassNames:(NSDictionary *)baseViewClassNames {
+    
     NSDictionary *viewComponentsDict =
     @{
       kAMComponentsKey : @[componentDict],
@@ -41,7 +41,7 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
      ios:ios
      classPrefix:classPrefix
      baseViewControllerClassName:baseViewControllerClassName
-     baseViewClassName:baseViewClassName];
+     baseViewClassNames:baseViewClassNames];
     
     NSFileManager *fm = [NSFileManager defaultManager];
     

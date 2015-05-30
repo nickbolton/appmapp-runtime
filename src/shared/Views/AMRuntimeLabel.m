@@ -9,14 +9,12 @@
 #import "AMRuntimeLabel.h"
 #import "AMRuntimeViewHelper.h"
 #import "AMComponent.h"
-#import "AMTextComponent.h"
 #import "AMCompositeTextDescriptor.h"
 
 @interface AMRuntimeLabel()
 
 @property (nonatomic, strong) AMLayout *layoutObject;
 @property (nonatomic, strong) AMComponent *component;
-@property (nonatomic, strong) AMTextComponent *textComponent;
 @property (nonatomic, strong) AMRuntimeViewHelper *helper;
 
 @end
@@ -27,13 +25,9 @@
 
 - (void)setComponent:(AMComponent *)component {
     _component = component;
+    NSAssert(component.componentType == AMComponentText,
+             @"component not an AMComponentText");
     [self.helper setComponent:component forView:self];
-}
-
-- (AMTextComponent *)textComponent {
-    NSAssert([self.component isKindOfClass:[AMTextComponent class]],
-             @"component not an AMTextComponent");
-    return (id)self.component;
 }
 
 - (AMRuntimeViewHelper *)helper {
@@ -55,7 +49,7 @@
 - (void)updateFromTextDescriptor {
     
     NSAttributedString *attributedString =
-    self.textComponent.textDescriptor.attributedString;
+    self.component.textDescriptor.attributedString;
     
 #if TARGET_OS_IPHONE
     self.attributedText = attributedString;
