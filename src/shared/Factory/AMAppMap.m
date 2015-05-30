@@ -33,6 +33,7 @@
     @{
       @(AMComponentContainer) : NSStringFromClass([AMAppMapContainerFactory class]),
       @(AMComponentText) : NSStringFromClass([AMAppMapLabelFactory class]),
+      @(AMComponentButton) : NSStringFromClass([AMAppMapContainerFactory class]),
       };
 }
 
