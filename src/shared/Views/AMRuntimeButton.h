@@ -7,7 +7,8 @@
 //
 
 #import "AppMapTypes.h"
+#import "AMRuntimeView.h"
 
-@interface AMRuntimeButton : AMButton
+@interface AMRuntimeButton : AMButton<AMRuntimeView>
 
 @end
