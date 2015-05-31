@@ -140,15 +140,6 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     return YES;
 }
 
-- (NSString *)buildViewControllerName:(NSString *)name
-                   classPrefix:(NSString *)classPrefix {
-
-    if (classPrefix.length > 0) {
-        return [classPrefix stringByAppendingString:name.properName];
-    }
-    return name.properName;
-}
-
 - (NSString *)buildBaseViewControllerName:(NSString *)name
                                       ios:(BOOL)ios {
     if (name.length > 0) {

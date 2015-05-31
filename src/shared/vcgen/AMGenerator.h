@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AppMapComponentTypes.h"
 
 extern NSString * const kAMOSXFrameworkImport;
 extern NSString * const kAMIOSFrameworkImport;
@@ -37,6 +38,13 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames;
 
 - (NSString *)buildViewName:(AMComponent *)component
                 classPrefix:(NSString *)classPrefix;
+
+- (NSString *)buildViewControllerName:(NSString *)name
+                          classPrefix:(NSString *)classPrefix;
+
+- (NSString *)buildBaseViewNameForComponentType:(AMComponentType)componentType
+                             baseViewClassNames:(NSDictionary *)baseViewClassNames
+                                            ios:(BOOL)ios;
 
 - (NSString *)buildMachineProperties:(AMComponent *)component
                                  ios:(BOOL)ios

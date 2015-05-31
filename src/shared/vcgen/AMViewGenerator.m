@@ -134,40 +134,6 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     return YES;
 }
 
-- (NSString *)buildBaseViewNameForComponentType:(AMComponentType)componentType
-                             baseViewClassNames:(NSDictionary *)baseViewClassNames
-                                            ios:(BOOL)ios {
-    
-    NSString *name = baseViewClassNames[@(componentType)];
-    
-    if (name.length > 0) {
-        return name;
-    }
-    
-    NSDictionary *defaultClassNameDictionary =
-    @{
-      @(AMComponentContainer) : @"NSView",
-      @(AMComponentButton) : @"NSButton",
-      };
-    
-    if (ios) {
-
-        defaultClassNameDictionary =
-        @{
-          @(AMComponentContainer) : @"UIView",
-          @(AMComponentButton) : @"UIButton",
-          };
-    }
-    
-    name = defaultClassNameDictionary[@(componentType)];
-    
-    if (name == nil) {
-        name = defaultClassNameDictionary[@(AMComponentContainer)];
-    }
-    
-    return name;
-}
-
 - (BOOL)generateHumanFileIfNeeded:(NSURL *)url
                         interface:(BOOL)interface
                          viewName:(NSString *)viewName {

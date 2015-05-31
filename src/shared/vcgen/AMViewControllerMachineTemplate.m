@@ -31,6 +31,7 @@ MACHINE_PROPERTIES\n\
 #import \"_VIEW_CONTROLLER_NAME.h\"\n\
 #import \"AMAppMap.h\"\n\
 #import \"AMLayouts.h\"\n\
+#import \"AMComponentManager.h\"\n\
 \n\
 @interface _VIEW_CONTROLLER_NAME ()\n\
 \n\
@@ -50,6 +51,41 @@ MACHINE_PROPERTIES\n\
 \n\
 - (void)viewDidLoad {\n\
     [super viewDidLoad];\n\
+}\n\
+\n\
+#pragma mark - AMRuntimeDelegate Conformance\n\
+\n\
+- (void)navigateToComponent:(AMComponent *)component\n\
+navigationType:(AMNavigationType)navigationType {\n\
+\n\
+    Class viewControllerClass =\n\
+    [[AMComponentManager sharedInstance]\n\
+     viewControllerClassForComponent:component];\n\
+\n\
+    if (viewControllerClass != Nil) {\n\
+\n\
+        UIViewController *viewController = [viewControllerClass new];\n\
+\n\
+        switch (navigationType) {\n\
+\n\
+            case AMNavigationTypePush:\n\
+\n\
+                [self.navigationController\n\
+                 pushViewController:viewController\n\
+                 animated:YES];\n\
+\n\
+                break;\n\
+\n\
+            case AMNavigationTypePresent:\n\
+\n\
+                [self presentViewController:viewController animated:YES completion:nil];\n\
+\n\
+                break;\n\
+\n\
+            default:\n\
+                break;\n\
+        }\n\
+    }\n\
 }\n\
 @end\n\
 ";

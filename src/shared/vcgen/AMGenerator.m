@@ -11,6 +11,7 @@
 #import "AMComponent.h"
 #import "AMExpandingLayout.h"
 #import "NSString+NameUtilities.h"
+#import "AMComponentManagerTemplate.h"
 
 NSString * const kAMOSXFrameworkImport = @"#import <Cocoa/Cocoa.h>";
 NSString * const kAMIOSFrameworkImport = @"#import <UIKit/UIKit.h>";
@@ -20,6 +21,7 @@ NSString * const kAMFrameworkImportToken = @"FRAMEWORK_IMPORT";
 NSString * const kAMClassImportsToken = @"CLASS_IMPORTS";
 NSString * const kAMViewNameToken = @"VIEW_NAME";
 NSString * const kAMViewBaseClassToken = @"VIEW_BASE_CLASS";
+NSString * const kAMComponentManagerClassName = @"AMComponentManager";
 
 @implementation AMGenerator
 
@@ -64,6 +66,140 @@ NSString * const kAMViewBaseClassToken = @"VIEW_BASE_CLASS";
         
         *stop = (result == NO);
     }];
+    
+    [self
+     buildComponentManagerInterface:componentsArray
+     targetDirectory:targetDirectory
+     ios:ios];
+    
+    [self
+     buildComponentManagerImplementation:componentsArray
+     targetDirectory:targetDirectory
+     classPrefix:classPrefix
+     ios:ios];
+}
+
+- (void)buildComponentManagerInterface:(NSArray *)components
+                       targetDirectory:(NSURL *)targetDirectory
+                                   ios:(BOOL)ios {
+
+    NSURL *url = [targetDirectory URLByAppendingPathComponent:kAMComponentManagerClassName];
+    url = [url URLByAppendingPathExtension:@"h"];
+    
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if ([fm fileExistsAtPath:url.path]) {
+        
+        NSError *error = nil;
+        [fm removeItemAtURL:url error:&error];
+        
+        if (error != nil) {
+            
+            NSLog(@"Error occurred removing file '%@': %@",
+                  url.path, error);
+        }
+    }
+    
+    NSError *error = nil;
+    
+    AMComponentManagerTemplate *templateObject = [AMComponentManagerTemplate new];
+    NSString *template = templateObject.interfaceContents;
+    
+    [template
+     writeToURL:url
+     atomically:YES
+     encoding:NSUTF8StringEncoding
+     error:&error];
+    
+    if (error != nil) {
+        
+        NSLog(@"Error writing human '%@': %@",
+              url.path, error);
+    }
+}
+
+- (void)buildComponentManagerImplementation:(NSArray *)components
+                            targetDirectory:(NSURL *)targetDirectory
+                                classPrefix:(NSString *)classPrefix
+                                        ios:(BOOL)ios {
+
+    static NSString * const componentRootViewKey = @"TOP_LEVEL_COMPONENT_TO_ROOT_VIEW_DICTIONARY";
+    static NSString * const componentViewControllerKey = @"COMPONENT_TO_VIEW_CONTROLLER_DICTIONARY";
+    
+    NSMutableString *componentRootViews = [NSMutableString string];
+    [componentRootViews appendString:@"@{"];
+    
+    for (NSDictionary *componentDict in components) {
+        
+        AMComponent *component =
+        [AMComponent componentWithDictionary:componentDict];
+        
+        NSString *viewName = [self buildViewName:component classPrefix:classPrefix];
+
+        [componentRootViews appendFormat:@"@\"%@\" : @\"%@\", ", component.identifier, viewName];
+    }
+    
+    [componentRootViews appendString:@"}"];
+
+    NSMutableString *componentViewControllers = [NSMutableString string];
+    [componentViewControllers appendString:@"@{"];
+    
+    for (NSDictionary *componentDict in components) {
+        
+        AMComponent *component =
+        [AMComponent componentWithDictionary:componentDict];
+        
+        NSString *viewControllerName = [self buildViewControllerName:component.exportedName classPrefix:classPrefix];
+        
+        NSString *viewControllerClassName =
+        [NSString stringWithFormat:@"%@ViewController", viewControllerName];
+        
+        [componentViewControllers appendFormat:@"@\"%@\" : @\"%@\", ", component.identifier, viewControllerClassName];
+    }
+    
+    [componentViewControllers appendString:@"}"];
+    
+    NSURL *url = [targetDirectory URLByAppendingPathComponent:kAMComponentManagerClassName];
+    url = [url URLByAppendingPathExtension:@"m"];
+    
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if ([fm fileExistsAtPath:url.path]) {
+        
+        NSError *error = nil;
+        [fm removeItemAtURL:url error:&error];
+        
+        if (error != nil) {
+            
+            NSLog(@"Error occurred removing file '%@': %@",
+                  url.path, error);
+        }
+    }
+    
+    NSError *error = nil;
+    
+    AMComponentManagerTemplate *templateObject = [AMComponentManagerTemplate new];
+    NSString *template = templateObject.implementationContents;
+    
+    template =
+    [template
+     stringByReplacingOccurrencesOfString:componentRootViewKey
+     withString:componentRootViews];
+
+    template =
+    [template
+     stringByReplacingOccurrencesOfString:componentViewControllerKey
+     withString:componentViewControllers];
+
+    [template
+     writeToURL:url
+     atomically:YES
+     encoding:NSUTF8StringEncoding
+     error:&error];
+    
+    if (error != nil) {
+        
+        NSLog(@"Error writing human '%@': %@",
+              url.path, error);
+    }
 }
 
 - (BOOL)buildClass:(NSDictionary *)componentDict
@@ -74,6 +210,40 @@ baseViewControllerClassName:(NSString *)baseViewControllerClassName
 baseViewClassNames:(NSDictionary *)baseViewClassNames {
     [self doesNotRecognizeSelector:_cmd];
     return NO;
+}
+
+- (NSString *)buildBaseViewNameForComponentType:(AMComponentType)componentType
+                             baseViewClassNames:(NSDictionary *)baseViewClassNames
+                                            ios:(BOOL)ios {
+    
+    NSString *name = baseViewClassNames[@(componentType)];
+    
+    if (name.length > 0) {
+        return name;
+    }
+    
+    NSDictionary *defaultClassNameDictionary =
+    @{
+      @(AMComponentContainer) : @"NSView",
+      @(AMComponentButton) : @"NSButton",
+      };
+    
+    if (ios) {
+        
+        defaultClassNameDictionary =
+        @{
+          @(AMComponentContainer) : @"UIView",
+          @(AMComponentButton) : @"UIButton",
+          };
+    }
+    
+    name = defaultClassNameDictionary[@(componentType)];
+    
+    if (name == nil) {
+        name = defaultClassNameDictionary[@(AMComponentContainer)];
+    }
+    
+    return name;
 }
 
 - (NSString *)buildMachineProperties:(AMComponent *)component
@@ -130,6 +300,15 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     }
     
     return [className stringByAppendingString:suffix];
+}
+
+- (NSString *)buildViewControllerName:(NSString *)name
+                          classPrefix:(NSString *)classPrefix {
+    
+    if (classPrefix.length > 0) {
+        return [classPrefix stringByAppendingString:name.properName];
+    }
+    return name.properName;
 }
 
 - (NSString *)buildClassImports:(NSArray *)components
