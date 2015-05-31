@@ -16,6 +16,7 @@
 
 static NSString * const kAMViewControllerNameToken = @"VIEW_CONTROLLER_NAME";
 static NSString * const kAMViewControllerBaseClassToken = @"VIEW_CONTROLLER_BASE_CLASS";
+static NSString * const kAMViewControllerRootViewNameToken = @"ROOT_VIEW_NAME";
 
 static NSString * const kAMOSXBaseViewControllerClassName = @"NSViewController";
 static NSString * const kAMIOSBaseViewControllerClassName = @"UIViewController";
@@ -226,6 +227,11 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     NSString *humanViewName =
     [self buildViewName:component classPrefix:classPrefix];
     
+    template =
+    [template
+     stringByReplacingOccurrencesOfString:kAMViewControllerRootViewNameToken
+     withString:[self buildRootViewName:component]];
+
     template =
     [template
      stringByReplacingOccurrencesOfString:kAMViewControllerNameToken

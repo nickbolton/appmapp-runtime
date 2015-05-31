@@ -1,16 +1,16 @@
 //
-//  AMNavigationBehavior.m
+//  AMNavigatingButtonBehavior.m
 //  AppMap
 //
 //  Created by Nick Bolton on 5/31/15.
 //  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
 
-#import "AMNavigationBehavior.h"
+#import "AMNavigatingButtonBehavior.h"
 
 static NSString * const kAMNavigationBehaviorTypeKey = @"navigationType";
 
-@implementation AMNavigationBehavior
+@implementation AMNavigatingButtonBehavior
 
 - (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeInteger:self.navigationType forKey:kAMNavigationBehaviorTypeKey];

@@ -22,6 +22,11 @@ extern NSString * const kAMViewBaseClassToken;
 
 @interface AMGenerator : NSObject
 
+- (void)generateComponentManagerWithComponentsDictionary:(NSDictionary *)componentsDictionary
+                                         targetDirectory:(NSURL *)targetDirectory
+                                                     ios:(BOOL)ios
+                                             classPrefix:(NSString *)classPrefix;
+
 - (void)generateClassesWithComponentsDictionary:(NSDictionary *)componentsDictionary
                                 targetDirectory:(NSURL *)targetDirectory
                                             ios:(BOOL)ios
@@ -45,6 +50,8 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames;
 - (NSString *)buildBaseViewNameForComponentType:(AMComponentType)componentType
                              baseViewClassNames:(NSDictionary *)baseViewClassNames
                                             ios:(BOOL)ios;
+
+- (NSString *)buildRootViewName:(AMComponent *)component;
 
 - (NSString *)buildMachineProperties:(AMComponent *)component
                                  ios:(BOOL)ios

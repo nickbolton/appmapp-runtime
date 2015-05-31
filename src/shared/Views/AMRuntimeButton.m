@@ -54,8 +54,8 @@
 
 - (void)buttonTriggered {
     
-    AMNavigationBehavior *behavior = (id)self.component.behavor;
-    if ([behavior isKindOfClass:[AMNavigationBehavior class]]) {
+    AMNavigatingButtonBehavior *behavior = (id)self.component.behavor;
+    if ([behavior isKindOfClass:[AMNavigatingButtonBehavior class]]) {
         
         if ([self.runtimeDelegate respondsToSelector:@selector(navigateToComponent:navigationType:)]) {
             [self.runtimeDelegate navigateToComponent:self.component navigationType:behavior.navigationType];

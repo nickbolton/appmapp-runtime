@@ -45,8 +45,8 @@ MACHINE_PROPERTIES\n\
 #pragma mark - View Controller Lifecycle\n\
 \n\
 - (void)loadView {\n\
-    self.rootViewView = [VIEW_NAME new];\n\
-    self.view = self.rootViewView;\n\
+    self.ROOT_VIEW_NAME = [VIEW_NAME new];\n\
+    self.view = self.ROOT_VIEW_NAME;\n\
 }\n\
 \n\
 - (void)viewDidLoad {\n\

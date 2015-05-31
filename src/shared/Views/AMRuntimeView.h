@@ -8,7 +8,7 @@
 
 #import "AppMap.h"
 #import "AppMapTypes.h"
-#import "AMNavigationBehavior.h"
+#import "AMNavigatingButtonBehavior.h"
 
 @class AMLayout;
 @class AMComponent;

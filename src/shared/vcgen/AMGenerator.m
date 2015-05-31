@@ -66,7 +66,25 @@ NSString * const kAMComponentManagerClassName = @"AMComponentManager";
         
         *stop = (result == NO);
     }];
+}
+
+- (void)generateComponentManagerWithComponentsDictionary:(NSDictionary *)componentsDictionary
+                                         targetDirectory:(NSURL *)targetDirectory
+                                                     ios:(BOOL)ios
+                                             classPrefix:(NSString *)classPrefix {
+
+    id components = componentsDictionary[kAMComponentsKey];
+    NSArray *componentsArray = components;
     
+    if ([components isKindOfClass:[NSArray class]]) {
+        componentsArray = components;
+    } else if ([components isKindOfClass:[NSDictionary class]]) {
+        componentsArray = ((NSDictionary *)components).allValues;
+    } else {
+        NSLog(@"couldn't find components array in components dictionary");
+        return;
+    }
+
     [self
      buildComponentManagerInterface:componentsArray
      targetDirectory:targetDirectory
@@ -271,6 +289,12 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     return  result;
 }
 
+- (NSString *)buildRootViewName:(AMComponent *)component {
+    
+    NSString *name = [component.exportedName stringByAppendingString:@"View"];
+    return name;
+}
+
 - (NSString *)buildMachineProperty:(AMComponent *)childComponent
                                ios:(BOOL)ios
                          interface:(BOOL)interface
@@ -278,7 +302,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
                        classPrefix:(NSString *)classPrefix {
     
     NSString *viewClass = [self buildViewName:childComponent classPrefix:classPrefix];
-    NSString *propertyName = [childComponent.exportedName stringByAppendingString:@"View"];
+    NSString *propertyName = [self buildRootViewName:childComponent];
     NSString *readQualifier = interface ? @"readonly" : @"readwrite";
     
     return
