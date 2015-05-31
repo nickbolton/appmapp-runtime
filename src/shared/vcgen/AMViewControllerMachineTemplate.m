@@ -32,8 +32,9 @@ MACHINE_PROPERTIES\n\
 #import \"AMAppMap.h\"\n\
 #import \"AMLayouts.h\"\n\
 #import \"AMComponentManager.h\"\n\
+#import \"AMRuntimeView.h\"\n\
 \n\
-@interface _VIEW_CONTROLLER_NAME ()\n\
+@interface _VIEW_CONTROLLER_NAME ()<AMRuntimeDelegate>\n\
 \n\
 MACHINE_PROPERTIES\n\
 @end\n\

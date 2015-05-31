@@ -21,7 +21,7 @@
 
 @end
 
-@protocol AMRuntimeView <NSObject>
+@protocol AMRuntimeView <AMRuntimeDelegate>
 
 @property (nonatomic, weak) id <AMRuntimeDelegate> runtimeDelegate;
 
