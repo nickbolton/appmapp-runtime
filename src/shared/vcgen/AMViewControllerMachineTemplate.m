@@ -47,6 +47,7 @@ MACHINE_PROPERTIES\n\
 \n\
 - (void)loadView {\n\
     self.ROOT_VIEW_NAME = [VIEW_NAME new];\n\
+    self.ROOT_VIEW_NAME.runtimeDelegate = self;\n\
     self.view = self.ROOT_VIEW_NAME;\n\
 }\n\
 \n\
