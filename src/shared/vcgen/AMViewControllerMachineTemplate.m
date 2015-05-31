@@ -57,12 +57,12 @@ MACHINE_PROPERTIES\n\
 \n\
 #pragma mark - AMRuntimeDelegate Conformance\n\
 \n\
-- (void)navigateToComponent:(AMComponent *)component\n\
-navigationType:(AMNavigationType)navigationType {\n\
+- (void)navigateToComponentWithIdentifier:(NSString *)componentIdentifier\n\
+                           navigationType:(AMNavigationType)navigationType {\n\
 \n\
     Class viewControllerClass =\n\
     [[AMComponentManager sharedInstance]\n\
-     viewControllerClassForComponent:component];\n\
+     viewControllerClassForComponentIdentifier:componentIdentifier];\n\
 \n\
     if (viewControllerClass != Nil) {\n\
 \n\

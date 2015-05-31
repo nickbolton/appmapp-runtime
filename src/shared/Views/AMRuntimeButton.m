@@ -57,11 +57,11 @@
     AMNavigatingButtonBehavior *behavior = (id)self.component.behavor;
     if ([behavior isKindOfClass:[AMNavigatingButtonBehavior class]]) {
         
-        if ([self.runtimeDelegate respondsToSelector:@selector(navigateToComponent:navigationType:)]) {
+        if ([self.runtimeDelegate respondsToSelector:@selector(navigateToComponentWithIdentifier:navigationType:)]) {
             
             if (self.component.linkedComponent != nil) {
                 [self.runtimeDelegate
-                 navigateToComponent:self.component.linkedComponent
+                 navigateToComponentWithIdentifier:self.component.linkedComponentIdentifier
                  navigationType:behavior.navigationType];
             }
         }

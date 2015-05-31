@@ -40,13 +40,15 @@ NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeVi
 
 #pragma mark - AMRuntimeDelegate Conformance
 
-- (void)navigateToComponent:(AMComponent *)component
-             navigationType:(AMNavigationType)navigationType {
+- (void)navigateToComponentWithIdentifier:(NSString *)componentIdentifier
+                           navigationType:(AMNavigationType)navigationType {
 
     // just delegate on up the chain
     // it will eventually be handled by the view controller
     
-    [self.runtimeDelegate navigateToComponent:component navigationType:navigationType];
+    [self.runtimeDelegate
+     navigateToComponentWithIdentifier:componentIdentifier
+     navigationType:navigationType];
 }
 
 #pragma mark - Private

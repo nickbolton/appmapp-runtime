@@ -16,8 +16,8 @@
 @protocol AMRuntimeDelegate <NSObject>
 
 @optional
-- (void)navigateToComponent:(AMComponent *)component
-             navigationType:(AMNavigationType)navigationType;
+- (void)navigateToComponentWithIdentifier:(NSString *)componentIdentifier
+                           navigationType:(AMNavigationType)navigationType;
 
 @end
 

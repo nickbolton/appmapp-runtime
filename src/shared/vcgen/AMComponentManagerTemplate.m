@@ -21,8 +21,8 @@
 \n\
 + (instancetype)sharedInstance;\n\
 \n\
-- (Class)rootClassForComponent:(AMComponent *)component;\n\
-- (Class)viewControllerClassForComponent:(AMComponent *)component;\n\
+- (Class)rootClassForComponentIdentifier:(NSString *)componentIdentifier;\n\
+- (Class)viewControllerClassForComponentIdentifier:(NSString *)componentIdentifier;\n\
 \n\
 @end\n\
 ";
@@ -42,28 +42,34 @@
 \n\
 #pragma mark - Public\n\
 \n\
-- (Class)rootClassForComponent:(AMComponent *)component {\n\
+- (Class)rootClassForComponentIdentifier:(NSString *)componentIdentifier {\n\
 \n\
     NSDictionary * const dictionary =\n\
     TOP_LEVEL_COMPONENT_TO_ROOT_VIEW_DICTIONARY;\n\
 \n\
-    NSString *className = dictionary[component.identifier];\n\
+    if (componentIdentifier != nil) {\n\
 \n\
-    if (className != nil) {\n\
-        return NSClassFromString(className);\n\
+        NSString *className = dictionary[componentIdentifier];\n\
+\n\
+        if (className != nil) {\n\
+            return NSClassFromString(className);\n\
+        }\n\
     }\n\
     return Nil;\n\
 }\n\
 \n\
-- (Class)viewControllerClassForComponent:(AMComponent *)component {\n\
+- (Class)viewControllerClassForComponentIdentifier:(NSString *)componentIdentifier {\n\
 \n\
     NSDictionary * const dictionary =\n\
     COMPONENT_TO_VIEW_CONTROLLER_DICTIONARY;\n\
 \n\
-    NSString *className = dictionary[component.identifier];\n\
+    if (componentIdentifier != nil) {\n\
 \n\
-    if (className != nil) {\n\
-        return NSClassFromString(className);\n\
+        NSString *className = dictionary[componentIdentifier];\n\
+\n\
+        if (className != nil) {\n\
+            return NSClassFromString(className);\n\
+        }\n\
     }\n\
     return Nil;\n\
 }\n\
