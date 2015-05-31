@@ -58,7 +58,12 @@
     if ([behavior isKindOfClass:[AMNavigatingButtonBehavior class]]) {
         
         if ([self.runtimeDelegate respondsToSelector:@selector(navigateToComponent:navigationType:)]) {
-            [self.runtimeDelegate navigateToComponent:self.component navigationType:behavior.navigationType];
+            
+            if (self.component.linkedComponent != nil) {
+                [self.runtimeDelegate
+                 navigateToComponent:self.component.linkedComponent
+                 navigationType:behavior.navigationType];
+            }
         }
     }
 }
