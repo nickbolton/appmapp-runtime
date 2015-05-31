@@ -34,6 +34,7 @@ NSString * kAMComponentChildComponentsKey = @"childComponents";
 NSString * kAMComponentLayoutObjectsKey = @"layoutObjects";
 NSString * kAMComponentLayoutPresetKey = @"layoutPreset";
 NSString * kAMComponentTextDescriptorKey = @"textDescriptor";
+NSString * kAMComponentLinkedComponentKey = @"linkedComponent";
 
 static NSString * kAMComponentDefaultNamePrefix = @"Container-";
 
@@ -45,6 +46,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 @property (nonatomic, readwrite) NSString *defaultName;
 @property (nonatomic, readwrite) NSString *exportedName;
 @property (nonatomic, readwrite) BOOL hasProportionalLayout;
+@property (nonatomic, readwrite) NSString *linkedComponentIdentifier;
 
 @end
 
@@ -68,6 +70,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [coder encodeInteger:self.layoutPreset forKey:kAMComponentLayoutPresetKey];
     [coder encodeObject:self.layoutObjects forKey:kAMComponentLayoutObjectsKey];
     [coder encodeObject:self.textDescriptor forKey:kAMComponentTextDescriptorKey];
+    [coder encodeObject:self.linkedComponent.identifier forKey:kAMComponentLinkedComponentKey];
     
 #if TARGET_OS_IPHONE
     [coder encodeObject:NSStringFromCGRect(self.frame) forKey:kAMComponentFrameKey];
@@ -95,6 +98,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         self.layoutPreset = [decoder decodeIntegerForKey:kAMComponentLayoutPresetKey];
         self.layoutObjects = [decoder decodeObjectForKey:kAMComponentLayoutObjectsKey];
         self.textDescriptor = [decoder decodeObjectForKey:kAMComponentTextDescriptorKey];
+        self.linkedComponentIdentifier = [decoder decodeObjectForKey:kAMComponentLinkedComponentKey];
         
 #if TARGET_OS_IPHONE
         self.frame = CGRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
@@ -133,6 +137,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         self.borderColor = [AMColor colorWithHexcodePlusAlpha:borderColorString];
         self.backgroundColor = [AMColor colorWithHexcodePlusAlpha:backgroundColorString];
         self.layoutPreset = [dict[kAMComponentLayoutPresetKey] integerValue];
+        self.linkedComponentIdentifier = dict[kAMComponentLinkedComponentKey];
         
         NSDictionary *descriptorDict = dict[kAMComponentTextDescriptorKey];
         
@@ -226,6 +231,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.layoutPreset = self.layoutPreset;
     component.layoutObjects = self.layoutObjects.copy;
     component.textDescriptor = self.textDescriptor.copy;
+    component.linkedComponent = self.linkedComponent;
 
     // only used to refer back to original parent
     // children will have this reset with the next loop
@@ -317,6 +323,10 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     dict[kAMComponentBorderWidthKey] = @(self.borderWidth);
     dict[kAMComponentLayoutPresetKey] = @(self.layoutPreset);
     
+    if (self.linkedComponent != nil) {
+        dict[kAMComponentLinkedComponentKey] = self.linkedComponent.identifier;
+    }
+    
     if (self.textDescriptor != nil) {
         dict[kAMComponentTextDescriptorKey] = [self.textDescriptor exportTextDescriptor];
     }
@@ -352,8 +362,22 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"Component(%d): %p %@, LayoutPreset: %ld, %@ (parent: %@), frame: %@", (int)self.componentType, self, self.name, self.layoutPreset, self.identifier, self.parentComponent.identifier, NSStringFromCGRect(self.frame)];
-//    return [NSString stringWithFormat:@"Component(%d): %p %@, LayoutPreset: %ld, %@ (parent: %@), frame: %@, children: %@", (int)self.componentType, self, self.name, self.layoutPreset, self.identifier, self.parentComponent.identifier, NSStringFromCGRect(self.frame), self.childComponents];
+    return [NSString stringWithFormat:@"\
+Component(%d): %p %@ %@\
+    Parent: %@\
+    Link: %@\
+    LayoutPreset: %ld\
+    frame: %@",
+    (int)self.componentType, self, self.name, self.identifier, self.parentComponent.identifier, self.linkedComponent.identifier, self.layoutPreset, NSStringFromCGRect(self.frame)];
+//    return [NSString stringWithFormat:@"\
+//Component(%d): %p %@ %@\
+//    Parent: %@\
+//    Link: %@\
+//    LayoutPreset: %ld\
+//    frame: %@\
+//    children:\
+//%@",
+//    (int)self.componentType, self, self.name, self.identifier, self.parentComponent.identifier, self.linkedComponent.identifier, self.layoutPreset, NSStringFromCGRect(self.frame), self.childComponents];
 }
 
 #pragma mark - Getters and Setters
@@ -381,6 +405,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     if (sizeChanged) {
         [self updateChildFrames];
     }
+}
+
+- (void)setLinkedComponent:(AMComponent *)linkedComponent {
+    _linkedComponent = linkedComponent;
+    self.linkedComponentIdentifier = linkedComponent.identifier;
 }
 
 - (NSString *)exportedName {

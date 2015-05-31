@@ -26,6 +26,7 @@ extern NSString * kAMComponentChildComponentsKey;
 extern NSString * kAMComponentLayoutObjectsKey;
 extern NSString * kAMComponentLayoutPresetKey;
 extern NSString * kAMComponentTextDescriptorKey;
+extern NSString * kAMComponentLinkedComponentKey;
 
 @class AMCompositeTextDescriptor;
 
@@ -44,6 +45,8 @@ extern NSString * kAMComponentTextDescriptorKey;
 @property (nonatomic, weak) AMComponent *parentComponent;
 @property (nonatomic, strong) NSString *lastParentComponentIdentifier;
 @property (nonatomic, readonly) AMComponent *topLevelComponent;
+@property (nonatomic, weak) AMComponent *linkedComponent;
+@property (nonatomic, readonly) NSString *linkedComponentIdentifier;
 @property (nonatomic, readonly) BOOL isTopLevelComponent;
 @property (nonatomic, readonly) NSArray *sizePresets;
 @property (nonatomic) CGFloat scale; // canvas scale
