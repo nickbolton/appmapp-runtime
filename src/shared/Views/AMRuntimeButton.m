@@ -59,7 +59,7 @@
         
         if ([self.runtimeDelegate respondsToSelector:@selector(navigateToComponentWithIdentifier:navigationType:)]) {
             
-            if (self.component.linkedComponent != nil) {
+            if (self.component.linkedComponentIdentifier != nil) {
                 [self.runtimeDelegate
                  navigateToComponentWithIdentifier:self.component.linkedComponentIdentifier
                  navigationType:behavior.navigationType];
