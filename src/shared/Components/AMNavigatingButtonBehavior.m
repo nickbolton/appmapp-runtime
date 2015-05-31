@@ -38,7 +38,11 @@ static NSString * const kAMNavigationBehaviorTypeKey = @"navigationType";
 }
 
 - (NSDictionary *)exportBehavior {
-    return @{kAMNavigationBehaviorTypeKey : @(self.navigationType)};
+    
+    NSMutableDictionary *dict = [[super exportBehavior] mutableCopy];
+    dict[kAMNavigationBehaviorTypeKey] = @(self.navigationType);
+    
+    return dict;
 }
 
 - (AMComponentType)componentType {

@@ -8,6 +8,8 @@
 
 #import "AMComponent.h"
 
+extern NSString * const kAMComponentBehaviorClassKey;
+
 @interface AMComponentBehavior : NSObject
 
 @property (nonatomic, readonly) AMComponentType componentType;

@@ -19,10 +19,6 @@
     return self;
 }
 
-- (NSDictionary *)exportBehavior {
-    return @{};
-}
-
 - (AMComponentType)componentType {
     return AMComponentButton;
 }

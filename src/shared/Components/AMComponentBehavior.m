@@ -8,6 +8,8 @@
 
 #import "AMComponentBehavior.h"
 
+NSString * const kAMComponentBehaviorClassKey = @"class";
+
 @implementation AMComponentBehavior
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary {
@@ -24,7 +26,7 @@
 }
 
 - (NSDictionary *)exportBehavior {
-    return @{};
+    return @{kAMComponentBehaviorClassKey : NSStringFromClass(self.class)};
 }
 
 @end

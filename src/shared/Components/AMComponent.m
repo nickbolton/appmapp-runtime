@@ -197,10 +197,22 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         
         if (behaviorDict != nil) {
             
-            AMComponentBehavior *behavior =
-            [[AMComponentBehavior alloc] initWithDictionary:behaviorDict];
+            NSString *behaviorClassName = behaviorDict[kAMComponentBehaviorClassKey];
             
-            [self addBehavor:behavior];
+            if (behaviorClassName != nil) {
+                
+                Class behaviorClass = NSClassFromString(behaviorClassName);
+            
+                if (behaviorClass != Nil) {
+                    
+                    AMComponentBehavior *behavior =
+                    [[behaviorClass alloc] initWithDictionary:behaviorDict];
+                    
+                    if (behavior != nil) {
+                        [self addBehavor:behavior];
+                    }
+                }
+            }
         }
     }
     
