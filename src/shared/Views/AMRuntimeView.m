@@ -38,6 +38,17 @@ NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeVi
     [self.helper setComponent:component forView:self];
 }
 
+#pragma mark - AMRuntimeDelegate Conformance
+
+- (void)navigateToComponent:(AMComponent *)component
+             navigationType:(AMNavigationType)navigationType {
+
+    // just delegate on up the chain
+    // it will eventually be handled by the view controller
+    
+    [self.runtimeDelegate navigateToComponent:component navigationType:navigationType];
+}
+
 #pragma mark - Private
 
 - (void)setBaseAttributes {
