@@ -52,6 +52,10 @@
 #pragma clang diagnostic pop
     }
     
+    if ([bindingObject conformsToProtocol:@protocol(AMRuntimeDelegate)]) {
+        view.runtimeDelegate = bindingObject;
+    }
+    
     [component.childComponents enumerateObjectsUsingBlock:^(AMComponent *childComponent, NSUInteger idx, BOOL *stop) {
         
         [[AMAppMap sharedInstance]
