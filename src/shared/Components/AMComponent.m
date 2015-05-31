@@ -14,6 +14,7 @@
 #import "AMLayoutFactory.h"
 #import "AMView+Geometry.h"
 #import "AMCompositeTextDescriptor.h"
+#import "AMComponentBehavior.h"
 
 NSString * const kAMComponentClassNameKey = @"class-name";
 NSString * const kAMComponentsKey = @"components";
@@ -31,6 +32,7 @@ NSString * kAMComponentAlphaKey = @"alpha";
 NSString * kAMComponentFrameKey = @"frame";
 NSString * kAMComponentCornerRadiusKey = @"cornerRadius";
 NSString * kAMComponentChildComponentsKey = @"childComponents";
+NSString * kAMComponentBehavorKey = @"behavior";
 NSString * kAMComponentLayoutObjectsKey = @"layoutObjects";
 NSString * kAMComponentLayoutPresetKey = @"layoutPreset";
 NSString * kAMComponentTextDescriptorKey = @"textDescriptor";
@@ -47,6 +49,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 @property (nonatomic, readwrite) NSString *exportedName;
 @property (nonatomic, readwrite) BOOL hasProportionalLayout;
 @property (nonatomic, readwrite) NSString *linkedComponentIdentifier;
+@property (nonatomic, strong) NSMutableDictionary *behavors;
 
 @end
 
@@ -67,6 +70,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [coder encodeFloat:self.cornerRadius forKey:kAMComponentCornerRadiusKey];
     [coder encodeFloat:self.borderWidth forKey:kAMComponentBorderWidthKey];
     [coder encodeObject:self.childComponents forKey:kAMComponentChildComponentsKey];
+    [coder encodeObject:self.behavor forKey:kAMComponentBehavorKey];
     [coder encodeInteger:self.layoutPreset forKey:kAMComponentLayoutPresetKey];
     [coder encodeObject:self.layoutObjects forKey:kAMComponentLayoutObjectsKey];
     [coder encodeObject:self.textDescriptor forKey:kAMComponentTextDescriptorKey];
@@ -112,6 +116,12 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         [self addChildComponents:childComponents];
         
         [self updateComponentMaxDefaultComponentNumber];
+        
+        AMComponentBehavior *behavior = [decoder decodeObjectForKey:kAMComponentBehavorKey];
+        
+        if (behavior != nil) {
+            [self addBehavor:behavior];
+        }
     }
     
     return self;
@@ -182,6 +192,16 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         [self addChildComponents:childComponents];
         
         [self updateComponentMaxDefaultComponentNumber];
+        
+        NSDictionary *behaviorDict = dict[kAMComponentBehavorKey];
+        
+        if (behaviorDict != nil) {
+            
+            AMComponentBehavior *behavior =
+            [[AMComponentBehavior alloc] initWithDictionary:behaviorDict];
+            
+            [self addBehavor:behavior];
+        }
     }
     
     return self;
@@ -247,6 +267,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         [children addObject:component.copy];
     }
     component.childComponents = children;
+    
+    component.behavors = self.behavors.mutableCopy;
 
     return component;
 }
@@ -357,6 +379,10 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
     
     dict[kAMComponentLayoutObjectsKey] = layoutObjectDicts;
+    
+    if (self.behavor != nil) {
+        dict[kAMComponentBehavorKey] = [self.behavor exportBehavior];
+    }
     
     return dict;
 }
@@ -473,6 +499,14 @@ Component(%d): %p %@ %@\
     NSMutableArray *primComponents = self.primChildComponents;
     [primComponents removeAllObjects];
     [primComponents addObjectsFromArray:childComponents];
+}
+
+- (NSMutableDictionary *)behavors {
+    
+    if (_behavors == nil) {
+        _behavors = [NSMutableDictionary dictionary];
+    }
+    return _behavors;
 }
 
 - (NSMutableArray *)primChildComponents {
@@ -673,7 +707,27 @@ Component(%d): %p %@ %@\
     }
 }
 
+- (AMComponentBehavior *)behavor {
+    
+    AMComponentBehavior *result = self.behavors[@(self.componentType)];
+    return result;
+}
+
 #pragma mark - Public
+
+- (void)addBehavor:(AMComponentBehavior *)behavior {
+    
+    if (behavior != nil) {
+        self.behavors[@(behavior.componentType)] = behavior;
+    }
+}
+
+- (void)removeBehavior:(AMComponentBehavior *)behavior {
+    
+    if (behavior != nil) {
+        [self.behavors removeObjectForKey:@(behavior.componentType)];
+    }
+}
 
 - (AMComponent *)ancestorBefore:(AMComponent *)component {
     

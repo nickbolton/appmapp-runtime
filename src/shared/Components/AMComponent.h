@@ -23,12 +23,14 @@ extern NSString * kAMComponentAlphaKey;
 extern NSString * kAMComponentFrameKey;
 extern NSString * kAMComponentCornerRadiusKey;
 extern NSString * kAMComponentChildComponentsKey;
+extern NSString * kAMComponentBehavorKey;
 extern NSString * kAMComponentLayoutObjectsKey;
 extern NSString * kAMComponentLayoutPresetKey;
 extern NSString * kAMComponentTextDescriptorKey;
 extern NSString * kAMComponentLinkedComponentKey;
 
 @class AMCompositeTextDescriptor;
+@class AMComponentBehavior;
 
 @interface AMComponent : NSObject <NSCoding, NSCopying>
 
@@ -65,6 +67,7 @@ extern NSString * kAMComponentLinkedComponentKey;
 
 @property (nonatomic) AMLayoutPreset layoutPreset;
 
+@property (nonatomic, readonly) AMComponentBehavior *behavor;
 @property (nonatomic, strong) AMCompositeTextDescriptor *textDescriptor;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
@@ -85,6 +88,9 @@ extern NSString * kAMComponentLinkedComponentKey;
 - (void)updateProportionalLayouts;
 
 - (NSDictionary *)exportComponent;
+
+- (void)addBehavor:(AMComponentBehavior *)behavior;
+- (void)removeBehavior:(AMComponentBehavior *)behavior;
 
 + (instancetype)buildComponent;
 

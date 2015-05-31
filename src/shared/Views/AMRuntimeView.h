@@ -8,11 +8,22 @@
 
 #import "AppMap.h"
 #import "AppMapTypes.h"
+#import "AMNavigationBehavior.h"
 
 @class AMLayout;
 @class AMComponent;
 
+@protocol AMRuntimeDelegate <NSObject>
+
+@optional
+- (void)navigateToComponent:(AMComponent *)component
+             navigationType:(AMNavigationType)navigationType;
+
+@end
+
 @protocol AMRuntimeView <NSObject>
+
+@property (nonatomic, weak) id <AMRuntimeDelegate> runtimeDelegate;
 
 - (AMComponent *)component;
 - (void)setComponent:(AMComponent *)component;
@@ -25,5 +36,7 @@
 extern NSString * const kAMRuntimeViewConstraintsDidChangeNotification;
 
 @interface AMRuntimeView : AMView<AMRuntimeView>
+
+@property (nonatomic, weak) id <AMRuntimeDelegate> runtimeDelegate;
 
 @end

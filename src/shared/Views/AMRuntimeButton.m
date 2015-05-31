@@ -16,8 +16,22 @@
 
 @end
 
-
 @implementation AMRuntimeButton
+
+#pragma mark - Setup
+
+- (void)setupAction {
+    
+    id target = self;
+    SEL action = @selector(buttonTriggered);
+
+#if TARGET_OS_IPHONE
+    [self addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+#else
+    self.target = target;
+    self.action = action;
+#endif
+}
 
 #pragma mark - Getters and Setters
 
@@ -33,6 +47,20 @@
 - (void)setComponent:(AMComponent *)component {
     _component = component;
     [self.helper setComponent:component forView:self];
+    [self setupAction];
+}
+
+#pragma mark - Actions
+
+- (void)buttonTriggered {
+    
+    AMNavigationBehavior *behavior = (id)self.component.behavor;
+    if ([behavior isKindOfClass:[AMNavigationBehavior class]]) {
+        
+        if ([self.runtimeDelegate respondsToSelector:@selector(navigateToComponent:navigationType:)]) {
+            [self.runtimeDelegate navigateToComponent:self.component navigationType:behavior.navigationType];
+        }
+    }
 }
 
 #pragma mark - Private

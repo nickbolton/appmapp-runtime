@@ -11,4 +11,6 @@
 
 @interface AMRuntimeButton : AMButton<AMRuntimeView>
 
+@property (nonatomic, weak) id <AMRuntimeDelegate> runtimeDelegate;
+
 @end
