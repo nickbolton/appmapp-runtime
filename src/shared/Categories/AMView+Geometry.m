@@ -43,8 +43,8 @@ CGRect AMPixelAlignedCGRect(CGRect frame) {
     CGRect result;// = CGRectIntegral(frame);
     result.origin.x = AMPixelAlignedValue(frame.origin.x);
     result.origin.y = AMPixelAlignedValue(frame.origin.y);
-    result.size.width = AMPixelAlignedValue(frame.size.width);
-    result.size.height = AMPixelAlignedValue(frame.size.height);
+    result.size.width = roundf(frame.size.width);
+    result.size.height = roundf(frame.size.height);
     
     return result;
 }
