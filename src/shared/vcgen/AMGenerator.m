@@ -120,7 +120,7 @@ NSString * const kAMComponentManagerClassName = @"AMComponentManager";
     NSError *error = nil;
     
     AMComponentManagerTemplate *templateObject = [AMComponentManagerTemplate new];
-    NSString *template = templateObject.interfaceContents;
+    NSString *template = [templateObject interfaceContents:ios];
     
     [template
      writeToURL:url
@@ -195,7 +195,7 @@ NSString * const kAMComponentManagerClassName = @"AMComponentManager";
     NSError *error = nil;
     
     AMComponentManagerTemplate *templateObject = [AMComponentManagerTemplate new];
-    NSString *template = templateObject.implementationContents;
+    NSString *template = [templateObject implementationContents:ios];
     
     template =
     [template

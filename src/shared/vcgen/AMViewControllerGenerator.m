@@ -109,12 +109,14 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     [self
      generateHumanFileIfNeeded:humanInterfaceURL
      interface:YES
-     viewControllerName:humanViewControllerClassName];
+     viewControllerName:humanViewControllerClassName
+     ios:ios];
 
     [self
      generateHumanFileIfNeeded:humanImplementationURL
      interface:NO
-     viewControllerName:humanViewControllerClassName];
+     viewControllerName:humanViewControllerClassName
+     ios:ios];
     
     [self
      generateMachineFile:machineInterfaceURL
@@ -156,7 +158,8 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
 
 - (BOOL)generateHumanFileIfNeeded:(NSURL *)url
                         interface:(BOOL)interface
-           viewControllerName:(NSString *)viewControllerName {
+               viewControllerName:(NSString *)viewControllerName
+                              ios:(BOOL)ios {
 
     NSFileManager *fm = [NSFileManager defaultManager];
     if ([fm fileExistsAtPath:url.path] == NO) {
@@ -165,7 +168,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
         
         AMViewControllerHumanTemplate *templateObject = [AMViewControllerHumanTemplate new];
         NSString *template =
-        interface ? templateObject.interfaceContents : templateObject.implementationContents;
+        interface ? [templateObject interfaceContents:ios] : [templateObject implementationContents:ios];
 
         template =
         [template
@@ -219,7 +222,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     AMViewControllerMachineTemplate *templateObject = [AMViewControllerMachineTemplate new];
     NSString *template =
-    interface ? templateObject.interfaceContents : templateObject.implementationContents;
+    interface ? [templateObject interfaceContents:ios] : [templateObject implementationContents:ios];
     
     NSString *frameworkImport =
     ios ? kAMIOSFrameworkImport : kAMOSXFrameworkImport;

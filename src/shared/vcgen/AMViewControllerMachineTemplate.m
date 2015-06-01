@@ -10,7 +10,7 @@
 
 @implementation AMViewControllerMachineTemplate
 
-- (NSString *)interfaceContents {
+- (NSString *)interfaceContents:(BOOL)ios {
     
     return @"// DO NOT EDIT. This file is machine-generated and constantly overwritten.\n\
 // Make changes to VIEW_CONTROLLER_NAME.h instead.\n\
@@ -23,7 +23,9 @@ MACHINE_PROPERTIES\n\
 ";
 }
 
-- (NSString *)implementationContents {
+- (NSString *)implementationContents:(BOOL)ios {
+    
+    if (ios) {
     
     return @"// DO NOT EDIT. This file is machine-generated and constantly overwritten.\n\
 // Make changes to VIEW_CONTROLLER_NAME.m instead.\n\
@@ -91,6 +93,48 @@ MACHINE_PROPERTIES\n\
 }\n\
 @end\n\
 ";
+    } else {
+        
+        return @"// DO NOT EDIT. This file is machine-generated and constantly overwritten.\n\
+// Make changes to VIEW_CONTROLLER_NAME.m instead.\n\
+\n\
+#import \"_VIEW_CONTROLLER_NAME.h\"\n\
+#import \"AMAppMap.h\"\n\
+#import \"AMLayouts.h\"\n\
+#import \"AMComponentManager.h\"\n\
+#import \"AMRuntimeView.h\"\n\
+\n\
+@interface _VIEW_CONTROLLER_NAME ()<AMRuntimeDelegate>\n\
+\n\
+MACHINE_PROPERTIES\n\
+@end\n\
+\n\
+@implementation _VIEW_CONTROLLER_NAME\n\
+\n\
+#pragma mark - Setup\n\
+\n\
+#pragma mark - View Controller Lifecycle\n\
+\n\
+- (void)loadView {\n\
+    self.ROOT_VIEW_NAME = [VIEW_NAME new];\n\
+    self.ROOT_VIEW_NAME.runtimeDelegate = self;\n\
+    self.view = self.ROOT_VIEW_NAME;\n\
+}\n\
+\n\
+- (void)viewDidLoad {\n\
+    [super viewDidLoad];\n\
+}\n\
+\n\
+#pragma mark - AMRuntimeDelegate Conformance\n\
+\n\
+- (void)navigateToComponentWithIdentifier:(NSString *)componentIdentifier\n\
+navigationType:(AMNavigationType)navigationType {\n\
+\n\
+}\n\
+@end\n\
+";
+
+    }
 }
 
 @end

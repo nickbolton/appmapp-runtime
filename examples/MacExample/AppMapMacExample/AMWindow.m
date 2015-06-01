@@ -8,6 +8,7 @@
 
 #import "AMWindow.h"
 #import "AMAppMap.h"
+#import "RootViewView.h"
 
 @implementation AMWindow
 
@@ -27,15 +28,11 @@
 
 - (void)loadRootView {
     
-    [[AMAppMap sharedInstance]
-     buildViewFromResourceName:@"rootView"
-     componentName:@"container0"
-     inContainer:self.contentView];
-
-    [[AMAppMap sharedInstance]
-     buildViewFromResourceName:@"rootView"
-     componentName:@"container1"
-     inContainer:self.contentView];
+    RootViewView *view = [RootViewView new];
+    view.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    
+    [self.contentView addSubview:view];
+    view.frame = [self.contentView bounds];
 }
 
 @end

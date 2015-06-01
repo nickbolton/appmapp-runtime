@@ -10,7 +10,7 @@
 
 @implementation AMViewMachineTemplate
 
-- (NSString *)interfaceContents {
+- (NSString *)interfaceContents:(BOOL)ios {
     
     return @"// DO NOT EDIT. This file is machine-generated and constantly overwritten.\n\
 // Make changes to VIEW_NAME.h instead.\n\
@@ -24,7 +24,7 @@ MACHINE_PROPERTIES\n\
 ";
 }
 
-- (NSString *)implementationContents {
+- (NSString *)implementationContents:(BOOL)ios {
     
     return @"// DO NOT EDIT. This file is machine-generated and constantly overwritten.\n\
 // Make changes to VIEW_NAME.m instead.\n\
@@ -47,7 +47,7 @@ MACHINE_PROPERTIES\n\
 ";
 }
 
-- (NSString *)rootImplementationContents {
+- (NSString *)rootImplementationContents:(BOOL)ios {
     
     return @"// DO NOT EDIT. This file is machine-generated and constantly overwritten.\n\
 // Make changes to VIEW_NAME.m instead.\n\

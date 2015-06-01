@@ -104,12 +104,14 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     [self
      generateHumanFileIfNeeded:humanInterfaceURL
      interface:YES
-     viewName:humanViewName];
+     viewName:humanViewName
+     ios:ios];
     
     [self
      generateHumanFileIfNeeded:humanImplementationURL
      interface:NO
-     viewName:humanViewName];
+     viewName:humanViewName
+     ios:ios];
     
     [self
      generateMachineFile:machineInterfaceURL
@@ -136,7 +138,8 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
 
 - (BOOL)generateHumanFileIfNeeded:(NSURL *)url
                         interface:(BOOL)interface
-                         viewName:(NSString *)viewName {
+                         viewName:(NSString *)viewName
+                              ios:(BOOL)ios {
     
     NSFileManager *fm = [NSFileManager defaultManager];
     if ([fm fileExistsAtPath:url.path] == NO) {
@@ -145,7 +148,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
         
         AMViewHumanTemplate *templateObject = [AMViewHumanTemplate new];
         NSString *template =
-        interface ? templateObject.interfaceContents : templateObject.implementationContents;
+        interface ? [templateObject interfaceContents:ios] : [templateObject implementationContents:ios];
         
         template =
         [template
@@ -200,11 +203,11 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     NSString *template;
     
     if (interface) {
-        template = templateObject.interfaceContents;
+        template = [templateObject interfaceContents:ios];
     } else if ([componentDictionary[kAMComponentTopLevelComponentKey] boolValue]) {
-        template = templateObject.rootImplementationContents;
+        template = [templateObject rootImplementationContents:ios];
     } else {
-        template = templateObject.implementationContents;
+        template = [templateObject implementationContents:ios];
     }
     
     NSString *frameworkImport =

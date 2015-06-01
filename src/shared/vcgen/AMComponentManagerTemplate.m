@@ -10,8 +10,8 @@
 
 @implementation AMComponentManagerTemplate
 
-- (NSString *)interfaceContents {
-    
+- (NSString *)interfaceContents:(BOOL)ios {
+
     return @"// DO NOT EDIT. This file is machine-generated and constantly overwritten.\n\
 #import <Foundation/Foundation.h>\n\
 \n\
@@ -28,8 +28,8 @@
 ";
 }
 
-- (NSString *)implementationContents {
-    
+- (NSString *)implementationContents:(BOOL)ios {
+
     return @"// DO NOT EDIT. This file is machine-generated and constantly overwritten.\n\
 #import \"AMComponentManager.h\"\n\
 #import \"AMComponent.h\"\n\

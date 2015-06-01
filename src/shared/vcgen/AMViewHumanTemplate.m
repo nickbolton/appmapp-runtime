@@ -10,7 +10,7 @@
 
 @implementation AMViewHumanTemplate
 
-- (NSString *)interfaceContents {
+- (NSString *)interfaceContents:(BOOL)ios {
     
     return @"#import \"_VIEW_NAME.h\"\n\
 \n\
@@ -20,7 +20,7 @@
 ";
 }
 
-- (NSString *)implementationContents {
+- (NSString *)implementationContents:(BOOL)ios {
     
     return @"#import \"VIEW_NAME.h\"\n\
 \n\

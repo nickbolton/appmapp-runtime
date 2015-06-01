@@ -11,6 +11,6 @@
 
 @interface AMViewMachineTemplate : NSObject<AMTemplateProtocol>
 
-@property (nonatomic, readonly) NSString *rootImplementationContents;
+- (NSString *)rootImplementationContents:(BOOL)ios;
 
 @end

@@ -400,13 +400,18 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (NSString *)description {
+#if TARGET_OS_IPHONE
+    NSString *frameString = NSStringFromCGRect(self.frame);
+#else
+    NSString *frameString = NSStringFromRect(self.frame);
+#endif
     return [NSString stringWithFormat:@"\
 Component(%d): %p %@ %@\
     Parent: %@\
     Link: %@\
     LayoutPreset: %ld\
     frame: %@",
-    (int)self.componentType, self, self.name, self.identifier, self.parentComponent.identifier, self.linkedComponent.identifier, self.layoutPreset, NSStringFromCGRect(self.frame)];
+    (int)self.componentType, self, self.name, self.identifier, self.parentComponent.identifier, self.linkedComponent.identifier, self.layoutPreset, frameString];
 //    return [NSString stringWithFormat:@"\
 //Component(%d): %p %@ %@\
 //    Parent: %@\
@@ -654,6 +659,9 @@ Component(%d): %p %@ %@\
     dispatch_once(&onceToken, ^{
         presets =
         @[
+#if !TARGET_OS_IPHONE
+#define valueWithCGSize valueWithSize
+#endif
           [NSValue valueWithCGSize:CGSizeMake(768.0f, 1024.0f)],
           [NSValue valueWithCGSize:CGSizeMake(414.0f, 736.0f)],
           [NSValue valueWithCGSize:CGSizeMake(375.0f, 667.0f)],

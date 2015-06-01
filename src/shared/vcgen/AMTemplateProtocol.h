@@ -10,7 +10,7 @@
 
 @protocol AMTemplateProtocol <NSObject>
 
-@property (nonatomic, readonly) NSString *interfaceContents;
-@property (nonatomic, readonly) NSString *implementationContents;
+- (NSString *)interfaceContents:(BOOL)ios;
+- (NSString *)implementationContents:(BOOL)ios;
 
 @end
