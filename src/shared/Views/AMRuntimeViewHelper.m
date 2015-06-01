@@ -12,6 +12,7 @@
 #import "AMLayoutFactory.h"
 #import "AMLayout.h"
 #import "AMExpandingLayout.h"
+#import "AMView+Geometry.h"
 
 @implementation AMRuntimeViewHelper
 
