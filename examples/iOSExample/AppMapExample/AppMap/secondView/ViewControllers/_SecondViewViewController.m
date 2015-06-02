@@ -1,27 +1,29 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to PBRootViewViewController.m instead.
+// Make changes to SecondViewViewController.m instead.
 
-#import "_PBRootViewViewController.h"
+#import "_SecondViewViewController.h"
 #import "AMAppMap.h"
 #import "AMLayouts.h"
 #import "AMComponentManager.h"
 #import "AMRuntimeView.h"
+#import "SecondViewView.h"
 
-@interface _PBRootViewViewController ()<AMRuntimeDelegate>
 
-@property (nonatomic, readwrite) PBRootViewView *rootViewView;
+@interface _SecondViewViewController ()<AMRuntimeDelegate>
+
+@property (nonatomic, readwrite) SecondViewView *secondViewView;
 @end
 
-@implementation _PBRootViewViewController
+@implementation _SecondViewViewController
 
 #pragma mark - Setup
 
 #pragma mark - View Controller Lifecycle
 
 - (void)loadView {
-    self.rootViewView = [PBRootViewView new];
-    self.rootViewView.runtimeDelegate = self;
-    self.view = self.rootViewView;
+    self.secondViewView = [SecondViewView new];
+    self.secondViewView.runtimeDelegate = self;
+    self.view = self.secondViewView;
 }
 
 - (void)viewDidLoad {

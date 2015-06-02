@@ -47,91 +47,96 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
          baseViewControllerClassName:baseViewControllerClassName
          baseViewClassNames:baseViewClassNames];
     }
+    
+    if (component.useCustomViewClass) {
 
-    NSFileManager *fm = [NSFileManager defaultManager];
-    
-    NSString *humanViewName =
-    [self buildViewName:component classPrefix:classPrefix];
-    
-    NSString *machineViewName =
-    [@"_" stringByAppendingString:humanViewName];
-    
-    NSString *baseViewName =
-    [self
-     buildBaseViewNameForComponentType:component.componentType
-     baseViewClassNames:baseViewClassNames
-     ios:ios];
-
-    NSURL *componentDirectoryURL =
-    [targetDirectory URLByAppendingPathComponent:component.exportedName];
-    
-    componentDirectoryURL =
-    [componentDirectoryURL URLByAppendingPathComponent:@"Views"];
-    
-    if ([fm fileExistsAtPath:componentDirectoryURL.path] == NO) {
+        NSFileManager *fm = [NSFileManager defaultManager];
         
-        NSError *error = nil;
+        NSString *humanViewName =
+        [self buildViewName:component classPrefix:classPrefix];
         
-        [fm
-         createDirectoryAtURL:componentDirectoryURL
-         withIntermediateDirectories:YES
-         attributes:nil
-         error:&error];
+        NSString *machineViewName =
+        [@"_" stringByAppendingString:humanViewName];
         
-        if (error != nil) {
-            NSLog(@"Failed to create component directory '%@': %@",
-                  componentDirectoryURL.path, error);
-            return NO;
+        NSString *baseViewName =
+        [self
+         buildBaseViewNameForComponentType:component.componentType
+         baseViewClassNames:baseViewClassNames
+         ios:ios];
+        
+        NSURL *componentDirectoryURL =
+        [targetDirectory URLByAppendingPathComponent:component.exportedName];
+        
+        componentDirectoryURL =
+        [componentDirectoryURL URLByAppendingPathComponent:@"Views"];
+        
+        if ([fm fileExistsAtPath:componentDirectoryURL.path] == NO) {
+            
+            NSError *error = nil;
+            
+            [fm
+             createDirectoryAtURL:componentDirectoryURL
+             withIntermediateDirectories:YES
+             attributes:nil
+             error:&error];
+            
+            if (error != nil) {
+                NSLog(@"Failed to create component directory '%@': %@",
+                      componentDirectoryURL.path, error);
+                return NO;
+            }
         }
+        
+        NSURL *humanInterfaceURL =
+        [componentDirectoryURL URLByAppendingPathComponent:humanViewName];
+        humanInterfaceURL = [humanInterfaceURL URLByAppendingPathExtension:@"h"];
+        
+        NSURL *humanImplementationURL =
+        [componentDirectoryURL URLByAppendingPathComponent:humanViewName];
+        humanImplementationURL = [humanImplementationURL URLByAppendingPathExtension:@"m"];
+        
+        NSURL *machineInterfaceURL =
+        [componentDirectoryURL URLByAppendingPathComponent:machineViewName];
+        machineInterfaceURL = [machineInterfaceURL URLByAppendingPathExtension:@"h"];
+        
+        NSURL *machineImplementationURL =
+        [componentDirectoryURL URLByAppendingPathComponent:machineViewName];
+        machineImplementationURL = [machineImplementationURL URLByAppendingPathExtension:@"m"];
+        
+        [self
+         generateHumanFileIfNeeded:humanInterfaceURL
+         interface:YES
+         viewName:humanViewName
+         ios:ios];
+        
+        [self
+         generateHumanFileIfNeeded:humanImplementationURL
+         interface:NO
+         viewName:humanViewName
+         ios:ios];
+        
+        [self
+         generateMachineFile:machineInterfaceURL
+         interface:YES
+         ios:ios
+         viewName:humanViewName
+         viewBaseClass:baseViewName
+         classPrefix:classPrefix
+         baseViewClassNames:baseViewClassNames
+         componentDictionary:componentDict
+         component:component];
+        
+        [self
+         generateMachineFile:machineImplementationURL
+         interface:NO
+         ios:ios
+         viewName:humanViewName
+         viewBaseClass:baseViewName
+         classPrefix:classPrefix
+         baseViewClassNames:baseViewClassNames
+         componentDictionary:componentDict
+         component:component];
     }
-    
-    NSURL *humanInterfaceURL =
-    [componentDirectoryURL URLByAppendingPathComponent:humanViewName];
-    humanInterfaceURL = [humanInterfaceURL URLByAppendingPathExtension:@"h"];
-    
-    NSURL *humanImplementationURL =
-    [componentDirectoryURL URLByAppendingPathComponent:humanViewName];
-    humanImplementationURL = [humanImplementationURL URLByAppendingPathExtension:@"m"];
-    
-    NSURL *machineInterfaceURL =
-    [componentDirectoryURL URLByAppendingPathComponent:machineViewName];
-    machineInterfaceURL = [machineInterfaceURL URLByAppendingPathExtension:@"h"];
-    
-    NSURL *machineImplementationURL =
-    [componentDirectoryURL URLByAppendingPathComponent:machineViewName];
-    machineImplementationURL = [machineImplementationURL URLByAppendingPathExtension:@"m"];
-    
-    [self
-     generateHumanFileIfNeeded:humanInterfaceURL
-     interface:YES
-     viewName:humanViewName
-     ios:ios];
-    
-    [self
-     generateHumanFileIfNeeded:humanImplementationURL
-     interface:NO
-     viewName:humanViewName
-     ios:ios];
-    
-    [self
-     generateMachineFile:machineInterfaceURL
-     interface:YES
-     ios:ios
-     viewName:humanViewName
-     viewBaseClass:baseViewName
-     classPrefix:classPrefix
-     componentDictionary:componentDict
-     component:component];
-    
-    [self
-     generateMachineFile:machineImplementationURL
-     interface:NO
-     ios:ios
-     viewName:humanViewName
-     viewBaseClass:baseViewName
-     classPrefix:classPrefix
-     componentDictionary:componentDict
-     component:component];
     
     return YES;
 }
@@ -179,6 +184,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
                    viewName:(NSString *)viewName
               viewBaseClass:(NSString *)viewBaseClass
                 classPrefix:(NSString *)classPrefix
+         baseViewClassNames:(NSDictionary *)baseViewClassNames
         componentDictionary:(NSDictionary *)componentDictionary
                   component:(AMComponent *)component {
     
@@ -239,7 +245,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     template =
     [template
      stringByReplacingOccurrencesOfString:kAMMachinePropertiesToken
-     withString:[self buildMachineProperties:component ios:ios interface:interface viewBaseClass:viewBaseClass classPrefix:classPrefix]];
+     withString:[self buildMachineProperties:component ios:ios interface:interface viewBaseClass:viewBaseClass classPrefix:classPrefix baseViewClassNames:baseViewClassNames]];
     
     template =
     [template
@@ -248,9 +254,14 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     template =
     [template
-     stringByReplacingOccurrencesOfString:kAMClassImportsToken
-     withString:[self buildClassImports:component.childComponents classPrefix:classPrefix]];
+     stringByReplacingOccurrencesOfString:kAMClassDeclarationsToken
+     withString:[self buildClassDeclarations:component.childComponents ios:ios classPrefix:classPrefix baseViewClassNames:baseViewClassNames]];
     
+    template =
+    [template
+     stringByReplacingOccurrencesOfString:kAMClassImportsToken
+     withString:[self buildClassImports:component.childComponents ios:ios classPrefix:classPrefix baseViewClassNames:baseViewClassNames]];
+
     [template
      writeToURL:url
      atomically:YES

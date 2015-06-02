@@ -126,6 +126,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
      viewControllerBaseClass:baseViewControllerName
      viewBaseClass:viewSubClassName
      classPrefix:classPrefix
+     baseViewClassNames:baseViewClassNames
      componentDictionary:componentDict
      component:component];
 
@@ -137,6 +138,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
      viewControllerBaseClass:baseViewControllerName
      viewBaseClass:viewSubClassName
      classPrefix:classPrefix
+     baseViewClassNames:baseViewClassNames
      componentDictionary:componentDict
      component:component];
 
@@ -200,6 +202,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     viewControllerBaseClass:(NSString *)viewControllerBaseClass
               viewBaseClass:(NSString *)viewBaseClass
                 classPrefix:(NSString *)classPrefix
+         baseViewClassNames:(NSDictionary *)baseViewClassNames
         componentDictionary:(NSDictionary *)componentDictionary
                   component:(AMComponent *)component {
     
@@ -251,7 +254,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     template =
     [template
      stringByReplacingOccurrencesOfString:kAMMachinePropertiesToken
-     withString:[self buildMachineProperty:component ios:ios interface:interface viewBaseClass:viewBaseClass classPrefix:classPrefix]];
+     withString:[self buildMachineProperty:component ios:ios interface:interface viewBaseClass:viewBaseClass classPrefix:classPrefix baseViewClassNames:baseViewClassNames]];
     
     template =
     [template
@@ -260,9 +263,14 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
 
     template =
     [template
-     stringByReplacingOccurrencesOfString:kAMClassImportsToken
-     withString:[self buildClassImport:component classPrefix:classPrefix]];
+     stringByReplacingOccurrencesOfString:kAMClassDeclarationsToken
+     withString:[self buildClassDeclaration:component ios:ios classPrefix:classPrefix baseViewClassNames:baseViewClassNames]];
     
+    template =
+    [template
+     stringByReplacingOccurrencesOfString:kAMClassImportsToken
+     withString:[self buildClassImport:component ios:ios classPrefix:classPrefix baseViewClassNames:baseViewClassNames]];
+
     [template
      writeToURL:url
      atomically:YES

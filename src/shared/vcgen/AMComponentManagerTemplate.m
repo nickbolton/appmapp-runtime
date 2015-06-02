@@ -14,15 +14,17 @@
 
     return @"// DO NOT EDIT. This file is machine-generated and constantly overwritten.\n\
 #import <Foundation/Foundation.h>\n\
+#import \"AMComponentManagerProtocol.h\"\n\
 \n\
 @class AMComponent;\n\
 \n\
-@interface AMComponentManager : NSObject\n\
+@interface AMComponentManager : NSObject<AMComponentManager>\n\
 \n\
 + (instancetype)sharedInstance;\n\
 \n\
 - (Class)rootClassForComponentIdentifier:(NSString *)componentIdentifier;\n\
 - (Class)viewControllerClassForComponentIdentifier:(NSString *)componentIdentifier;\n\
+- (Class)defaultClassNameForComponentType:(AMComponentType)componentType;\n\
 \n\
 @end\n\
 ";
@@ -70,6 +72,18 @@
         if (className != nil) {\n\
             return NSClassFromString(className);\n\
         }\n\
+    }\n\
+    return Nil;\n\
+}\n\
+\n\
+- (Class)defaultClassNameForComponentType:(AMComponentType)componentType {\n\
+    NSDictionary * const dictionary =\n\
+    COMPONENT_TYPE_TO_DEFAULT_CLASS_DICTIONARY;\n\
+\n\
+    NSString *className = dictionary[@(componentType)];\n\
+\n\
+    if (className != nil) {\n\
+        return NSClassFromString(className);\n\
     }\n\
     return Nil;\n\
 }\n\

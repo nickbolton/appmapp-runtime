@@ -10,6 +10,7 @@
 #import "AMComponent.h"
 #import "AMAppMap.h"
 #import "NSString+NameUtilities.h"
+#import "AMComponentManagerProtocol.h"
 
 @implementation AMAppMapViewFactory
 
@@ -23,17 +24,36 @@
     NSString *classPrefix =
     component.classPrefix != nil ? component.classPrefix : @"";
     
+    Class viewClass;
+    
     NSString *viewName =
     [NSString stringWithFormat:@"%@View",
      component.exportedName.properName];
-    
-    NSString *viewClassName =
-    [NSString stringWithFormat:@"%@%@",
-     classPrefix, viewName];
 
-    Class clazz = NSClassFromString(viewClassName);
+    if (component.useCustomViewClass) {
+        
+        NSString *viewClassName =
+        [NSString stringWithFormat:@"%@%@",
+         classPrefix, viewName];
+        
+        viewClass = NSClassFromString(viewClassName);
+        
+    } else {
+        
+        static NSString * const componentManagerClassName = @"AMComponentManager";
+        
+        Class componentManagerClass = NSClassFromString(componentManagerClassName);
+        
+        NSAssert(componentManagerClass != Nil, @"no %@ class found", componentManagerClassName);
+        
+        id<AMComponentManager> componentManager = [componentManagerClass performSelector:@selector(sharedInstance)];
+        
+        viewClass = [componentManager defaultClassNameForComponentType:component.componentType];
+        
+        NSAssert(viewClass != Nil, @"no default class found for component type '%ld'", component.componentType);
+    }
     
-    AMView <AMRuntimeView> *view = [clazz new];
+    AMView <AMRuntimeView> *view = [viewClass new];
     view.translatesAutoresizingMaskIntoConstraints = NO;
     
     [container addSubview:view];

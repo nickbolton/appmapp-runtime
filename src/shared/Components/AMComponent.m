@@ -37,6 +37,7 @@ NSString * kAMComponentLayoutObjectsKey = @"layoutObjects";
 NSString * kAMComponentLayoutPresetKey = @"layoutPreset";
 NSString * kAMComponentTextDescriptorKey = @"textDescriptor";
 NSString * kAMComponentLinkedComponentKey = @"linkedComponent";
+NSString * kAMComponentUseCustomViewClassKey = @"useCustomViewClass";
 
 static NSString * kAMComponentDefaultNamePrefix = @"Container-";
 
@@ -64,6 +65,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [coder encodeObject:self.classPrefix forKey:kAMComponentClassPrefixKey];
     [coder encodeObject:self.identifier forKey:kAMComponentIdentifierKey];
     [coder encodeBool:self.isClipped forKey:kAMComponentClippedKey];
+    [coder encodeBool:self.useCustomViewClass forKey:kAMComponentUseCustomViewClassKey];
     [coder encodeObject:self.backgroundColor forKey:kAMComponentBackgroundColorKey];
     [coder encodeObject:self.borderColor forKey:kAMComponentBorderColorWidthKey];
     [coder encodeFloat:self.alpha forKey:kAMComponentAlphaKey];
@@ -94,6 +96,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         self.classPrefix = [decoder decodeObjectForKey:kAMComponentClassPrefixKey];
         self.identifier = [decoder decodeObjectForKey:kAMComponentIdentifierKey];
         self.clipped = [decoder decodeBoolForKey:kAMComponentClippedKey];
+        self.useCustomViewClass = [decoder decodeBoolForKey:kAMComponentUseCustomViewClassKey];
         self.backgroundColor = [decoder decodeObjectForKey:kAMComponentBackgroundColorKey];
         self.alpha = [decoder decodeFloatForKey:kAMComponentAlphaKey];
         self.cornerRadius = [decoder decodeFloatForKey:kAMComponentCornerRadiusKey];
@@ -141,6 +144,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         self.classPrefix = dict[kAMComponentClassPrefixKey];
         self.identifier = dict[kAMComponentIdentifierKey];
         self.clipped = [dict[kAMComponentClippedKey] boolValue];
+        self.useCustomViewClass = [dict[kAMComponentUseCustomViewClassKey] boolValue];
         self.alpha = [dict[kAMComponentAlphaKey] floatValue];
         self.cornerRadius = [dict[kAMComponentCornerRadiusKey] floatValue];
         self.borderWidth = [dict[kAMComponentBorderWidthKey] floatValue];
@@ -256,6 +260,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.identifier = self.identifier.copy;
     component.frame = self.frame;
     component.clipped = self.isClipped;
+    component.useCustomViewClass = self.useCustomViewClass;
     component.backgroundColor = self.backgroundColor;
     component.alpha = self.alpha;
     component.borderWidth = self.borderWidth;
@@ -350,6 +355,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     dict[kAMComponentTopLevelComponentKey] = @(self.isTopLevelComponent);
     dict[kAMComponentIdentifierKey] = self.identifier;
     dict[kAMComponentClippedKey] = @(self.isClipped);
+    dict[kAMComponentUseCustomViewClassKey] = @(self.useCustomViewClass);
     dict[kAMComponentBackgroundColorKey] = [self.backgroundColor hexcodePlusAlpha];
     dict[kAMComponentBorderColorWidthKey] = [self.borderColor hexcodePlusAlpha];
     dict[kAMComponentAlphaKey] = @(self.alpha);
@@ -447,6 +453,14 @@ Component(%d): %p %@ %@\
     _frame = frame;
     if (sizeChanged) {
         [self updateChildFrames];
+    }
+}
+
+- (void)setParentComponent:(AMComponent *)parentComponent {
+    _parentComponent = parentComponent;
+    
+    if (parentComponent == nil) {
+        self.useCustomViewClass = YES;
     }
 }
 

@@ -15,7 +15,8 @@
     return @"// DO NOT EDIT. This file is machine-generated and constantly overwritten.\n\
 // Make changes to VIEW_CONTROLLER_NAME.h instead.\n\
 FRAMEWORK_IMPORT\n\
-CLASS_IMPORTS\n\
+\n\
+CLASS_DECLARATIONS\n\
 @interface _VIEW_CONTROLLER_NAME : VIEW_CONTROLLER_BASE_CLASS\n\
 \n\
 MACHINE_PROPERTIES\n\
@@ -35,6 +36,7 @@ MACHINE_PROPERTIES\n\
 #import \"AMLayouts.h\"\n\
 #import \"AMComponentManager.h\"\n\
 #import \"AMRuntimeView.h\"\n\
+CLASS_IMPORTS\n\
 \n\
 @interface _VIEW_CONTROLLER_NAME ()<AMRuntimeDelegate>\n\
 \n\
@@ -103,6 +105,7 @@ MACHINE_PROPERTIES\n\
 #import \"AMLayouts.h\"\n\
 #import \"AMComponentManager.h\"\n\
 #import \"AMRuntimeView.h\"\n\
+CLASS_IMPORTS\n\
 \n\
 @interface _VIEW_CONTROLLER_NAME ()<AMRuntimeDelegate>\n\
 \n\

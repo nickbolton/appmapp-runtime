@@ -1,9 +1,0 @@
-// DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to VIEW_NAME.h instead.
-FRAMEWORK_IMPORT
-#import "AMRuntimeView.h"
-CLASS_IMPORTS
-@interface _VIEW_NAME : AMRuntimeView
-
-MACHINE_PROPERTIES
-@end

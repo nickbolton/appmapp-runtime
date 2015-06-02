@@ -52,6 +52,7 @@ extern NSString * kAMComponentLinkedComponentKey;
 @property (nonatomic, readonly) BOOL isTopLevelComponent;
 @property (nonatomic, readonly) NSArray *sizePresets;
 @property (nonatomic) CGFloat scale; // canvas scale
+@property (nonatomic) BOOL useCustomViewClass;
 
 @property (nonatomic) CGFloat cornerRadius;
 @property (nonatomic) CGFloat borderWidth;

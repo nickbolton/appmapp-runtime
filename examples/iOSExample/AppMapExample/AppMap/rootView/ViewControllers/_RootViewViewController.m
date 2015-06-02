@@ -1,27 +1,29 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to PBThirdViewViewController.m instead.
+// Make changes to RootViewViewController.m instead.
 
-#import "_PBThirdViewViewController.h"
+#import "_RootViewViewController.h"
 #import "AMAppMap.h"
 #import "AMLayouts.h"
 #import "AMComponentManager.h"
 #import "AMRuntimeView.h"
+#import "RootViewView.h"
 
-@interface _PBThirdViewViewController ()<AMRuntimeDelegate>
 
-@property (nonatomic, readwrite) PBThirdViewView *thirdViewView;
+@interface _RootViewViewController ()<AMRuntimeDelegate>
+
+@property (nonatomic, readwrite) RootViewView *rootViewView;
 @end
 
-@implementation _PBThirdViewViewController
+@implementation _RootViewViewController
 
 #pragma mark - Setup
 
 #pragma mark - View Controller Lifecycle
 
 - (void)loadView {
-    self.thirdViewView = [PBThirdViewView new];
-    self.thirdViewView.runtimeDelegate = self;
-    self.view = self.thirdViewView;
+    self.rootViewView = [RootViewView new];
+    self.rootViewView.runtimeDelegate = self;
+    self.view = self.rootViewView;
 }
 
 - (void)viewDidLoad {

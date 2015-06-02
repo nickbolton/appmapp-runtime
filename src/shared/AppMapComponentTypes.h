@@ -15,6 +15,7 @@ typedef NS_ENUM(NSInteger, AMComponentType) {
     AMComponentButton,
     AMComponentText,
     AMComponentTextField,
+    AMComponentTypeCount,
 };
 
 typedef NS_ENUM(NSInteger, AMLayoutType) {

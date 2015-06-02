@@ -8,8 +8,8 @@
 
 #import "ViewController.h"
 #import "AppMap.h"
-#import "PBRootViewViewController.h"
-#import "PBRootViewView.h"
+#import "RootViewViewController.h"
+#import "RootViewView.h"
 
 @interface ViewController ()
 
@@ -22,7 +22,7 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     
-    PBRootViewViewController *viewController = [PBRootViewViewController new];
+    RootViewViewController *viewController = [RootViewViewController new];
     
     UINavigationController *navigationController =
     [[UINavigationController alloc]

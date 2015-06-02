@@ -1,5 +1,0 @@
-#import "_VIEW_NAME.h"
-
-@interface VIEW_NAME : _VIEW_NAME
-// Custom interface goes here.
-@end

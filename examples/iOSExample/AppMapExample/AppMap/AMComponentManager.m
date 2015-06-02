@@ -13,7 +13,7 @@
 - (Class)rootClassForComponentIdentifier:(NSString *)componentIdentifier {
 
     NSDictionary * const dictionary =
-    @{@"323839F4-E33A-48CA-A298-7958DCEBE130" : @"PBThirdViewView", @"944E8B5D-D3D9-4CC2-9D88-F9FE4AB84AC7" : @"PBRootViewView", };
+    @{@"53104E62-C773-4F9D-8A81-8374C62E0C4D" : @"RootViewView", @"E4E7099D-0BD7-42C4-AAD1-B9A536F5F4A2" : @"SecondViewView", };
 
     if (componentIdentifier != nil) {
 
@@ -29,7 +29,7 @@
 - (Class)viewControllerClassForComponentIdentifier:(NSString *)componentIdentifier {
 
     NSDictionary * const dictionary =
-    @{@"323839F4-E33A-48CA-A298-7958DCEBE130" : @"PBThirdViewViewController", @"944E8B5D-D3D9-4CC2-9D88-F9FE4AB84AC7" : @"PBRootViewViewController", };
+    @{@"53104E62-C773-4F9D-8A81-8374C62E0C4D" : @"RootViewViewController", @"E4E7099D-0BD7-42C4-AAD1-B9A536F5F4A2" : @"SecondViewViewController", };
 
     if (componentIdentifier != nil) {
 
@@ -38,6 +38,18 @@
         if (className != nil) {
             return NSClassFromString(className);
         }
+    }
+    return Nil;
+}
+
+- (Class)defaultClassNameForComponentType:(AMComponentType)componentType {
+    NSDictionary * const dictionary =
+    @{@(0) : @"AMRuntimeView", @(1) : @"AMRuntimeButton", @(2) : @"AMRuntimeView", @(3) : @"AMRuntimeView", };
+
+    NSString *className = dictionary[@(componentType)];
+
+    if (className != nil) {
+        return NSClassFromString(className);
     }
     return Nil;
 }
