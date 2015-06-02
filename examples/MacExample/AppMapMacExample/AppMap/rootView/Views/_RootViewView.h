@@ -2,10 +2,11 @@
 // Make changes to RootViewView.h instead.
 #import <Cocoa/Cocoa.h>
 #import "AMRuntimeView.h"
-#import "Container155View.h"
+
+@class AMRuntimeButton;
 
 @interface _RootViewView : AMRuntimeView
 
-@property (nonatomic, readonly) Container155View *container155View;
+@property (nonatomic, readonly) AMRuntimeButton *buttonView;
 
 @end

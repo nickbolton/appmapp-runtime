@@ -6,6 +6,8 @@
 #import "AMLayouts.h"
 #import "AMComponentManager.h"
 #import "AMRuntimeView.h"
+#import "RootViewView.h"
+
 
 @interface _RootViewViewController ()<AMRuntimeDelegate>
 

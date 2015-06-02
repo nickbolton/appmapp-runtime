@@ -57,27 +57,21 @@
 		FCB821191B1C0D040030B0AE /* AMViewControllerMachineTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB820D91B1C0D040030B0AE /* AMViewControllerMachineTemplate.m */; };
 		FCB8211A1B1C0D040030B0AE /* AMViewGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB820DB1B1C0D040030B0AE /* AMViewGenerator.m */; };
 		FCB8211B1B1C0D040030B0AE /* AMViewHumanTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB820DD1B1C0D040030B0AE /* AMViewHumanTemplate.m */; };
-		FCB8211C1B1C0D040030B0AE /* AMViewHumanTemplate_h in Resources */ = {isa = PBXBuildFile; fileRef = FCB820DE1B1C0D040030B0AE /* AMViewHumanTemplate_h */; };
-		FCB8211D1B1C0D040030B0AE /* AMViewHumanTemplate_m in Resources */ = {isa = PBXBuildFile; fileRef = FCB820DF1B1C0D040030B0AE /* AMViewHumanTemplate_m */; };
 		FCB8211E1B1C0D040030B0AE /* AMViewMachineTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB820E11B1C0D040030B0AE /* AMViewMachineTemplate.m */; };
-		FCB8211F1B1C0D040030B0AE /* AMViewMachineTemplate_h in Resources */ = {isa = PBXBuildFile; fileRef = FCB820E21B1C0D040030B0AE /* AMViewMachineTemplate_h */; };
-		FCB821201B1C0D040030B0AE /* AMViewMachineTemplate_m in Resources */ = {isa = PBXBuildFile; fileRef = FCB820E31B1C0D040030B0AE /* AMViewMachineTemplate_m */; };
 		FCB821211B1C0D040030B0AE /* NSString+AMGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB820E51B1C0D040030B0AE /* NSString+AMGenerator.m */; };
 		FCB821221B1C0D040030B0AE /* AMRuntimeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB820E81B1C0D040030B0AE /* AMRuntimeButton.m */; };
 		FCB821231B1C0D040030B0AE /* AMRuntimeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB820EA1B1C0D040030B0AE /* AMRuntimeLabel.m */; };
 		FCB821241B1C0D040030B0AE /* AMRuntimeView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB820EC1B1C0D040030B0AE /* AMRuntimeView.m */; };
 		FCB821251B1C0D040030B0AE /* AMRuntimeViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB820EE1B1C0D040030B0AE /* AMRuntimeViewHelper.m */; };
-		FCB821851B1C95D30030B0AE /* AMComponentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB821681B1C95D30030B0AE /* AMComponentManager.m */; };
-		FCB821861B1C95D30030B0AE /* _Container155View.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB8216D1B1C95D30030B0AE /* _Container155View.m */; };
-		FCB821871B1C95D30030B0AE /* Container155View.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB8216F1B1C95D30030B0AE /* Container155View.m */; };
-		FCB821881B1C95D30030B0AE /* _RootViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB821721B1C95D30030B0AE /* _RootViewViewController.m */; };
-		FCB821891B1C95D30030B0AE /* RootViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB821741B1C95D30030B0AE /* RootViewViewController.m */; };
-		FCB8218A1B1C95D30030B0AE /* _RootViewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB821771B1C95D30030B0AE /* _RootViewView.m */; };
-		FCB8218B1B1C95D30030B0AE /* RootViewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB821791B1C95D30030B0AE /* RootViewView.m */; };
-		FCB8218C1B1C95D30030B0AE /* _ThirdViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB8217D1B1C95D30030B0AE /* _ThirdViewViewController.m */; };
-		FCB8218D1B1C95D30030B0AE /* ThirdViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB8217F1B1C95D30030B0AE /* ThirdViewViewController.m */; };
-		FCB8218E1B1C95D30030B0AE /* _ThirdViewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB821821B1C95D30030B0AE /* _ThirdViewView.m */; };
-		FCB8218F1B1C95D30030B0AE /* ThirdViewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB821841B1C95D30030B0AE /* ThirdViewView.m */; };
+		FCB8220D1B1D556F0030B0AE /* AMComponentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB821F61B1D556F0030B0AE /* AMComponentManager.m */; };
+		FCB8220E1B1D556F0030B0AE /* _RootViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB821FA1B1D556F0030B0AE /* _RootViewViewController.m */; };
+		FCB8220F1B1D556F0030B0AE /* RootViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB821FC1B1D556F0030B0AE /* RootViewViewController.m */; };
+		FCB822101B1D556F0030B0AE /* _RootViewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB821FF1B1D556F0030B0AE /* _RootViewView.m */; };
+		FCB822111B1D556F0030B0AE /* RootViewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB822011B1D556F0030B0AE /* RootViewView.m */; };
+		FCB822121B1D556F0030B0AE /* _SecondViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB822051B1D556F0030B0AE /* _SecondViewViewController.m */; };
+		FCB822131B1D556F0030B0AE /* SecondViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB822071B1D556F0030B0AE /* SecondViewViewController.m */; };
+		FCB822141B1D556F0030B0AE /* _SecondViewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB8220A1B1D556F0030B0AE /* _SecondViewView.m */; };
+		FCB822151B1D556F0030B0AE /* SecondViewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB8220C1B1D556F0030B0AE /* SecondViewView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -196,12 +190,8 @@
 		FCB820DB1B1C0D040030B0AE /* AMViewGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMViewGenerator.m; sourceTree = "<group>"; };
 		FCB820DC1B1C0D040030B0AE /* AMViewHumanTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMViewHumanTemplate.h; sourceTree = "<group>"; };
 		FCB820DD1B1C0D040030B0AE /* AMViewHumanTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMViewHumanTemplate.m; sourceTree = "<group>"; };
-		FCB820DE1B1C0D040030B0AE /* AMViewHumanTemplate_h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AMViewHumanTemplate_h; sourceTree = "<group>"; };
-		FCB820DF1B1C0D040030B0AE /* AMViewHumanTemplate_m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AMViewHumanTemplate_m; sourceTree = "<group>"; };
 		FCB820E01B1C0D040030B0AE /* AMViewMachineTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMViewMachineTemplate.h; sourceTree = "<group>"; };
 		FCB820E11B1C0D040030B0AE /* AMViewMachineTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMViewMachineTemplate.m; sourceTree = "<group>"; };
-		FCB820E21B1C0D040030B0AE /* AMViewMachineTemplate_h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AMViewMachineTemplate_h; sourceTree = "<group>"; };
-		FCB820E31B1C0D040030B0AE /* AMViewMachineTemplate_m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AMViewMachineTemplate_m; sourceTree = "<group>"; };
 		FCB820E41B1C0D040030B0AE /* NSString+AMGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+AMGenerator.h"; sourceTree = "<group>"; };
 		FCB820E51B1C0D040030B0AE /* NSString+AMGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+AMGenerator.m"; sourceTree = "<group>"; };
 		FCB820E71B1C0D040030B0AE /* AMRuntimeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMRuntimeButton.h; sourceTree = "<group>"; };
@@ -212,28 +202,25 @@
 		FCB820EC1B1C0D040030B0AE /* AMRuntimeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMRuntimeView.m; sourceTree = "<group>"; };
 		FCB820ED1B1C0D040030B0AE /* AMRuntimeViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMRuntimeViewHelper.h; sourceTree = "<group>"; };
 		FCB820EE1B1C0D040030B0AE /* AMRuntimeViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMRuntimeViewHelper.m; sourceTree = "<group>"; };
-		FCB821671B1C95D30030B0AE /* AMComponentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMComponentManager.h; sourceTree = "<group>"; };
-		FCB821681B1C95D30030B0AE /* AMComponentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMComponentManager.m; sourceTree = "<group>"; };
-		FCB8216C1B1C95D30030B0AE /* _Container155View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _Container155View.h; sourceTree = "<group>"; };
-		FCB8216D1B1C95D30030B0AE /* _Container155View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _Container155View.m; sourceTree = "<group>"; };
-		FCB8216E1B1C95D30030B0AE /* Container155View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Container155View.h; sourceTree = "<group>"; };
-		FCB8216F1B1C95D30030B0AE /* Container155View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Container155View.m; sourceTree = "<group>"; };
-		FCB821711B1C95D30030B0AE /* _RootViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _RootViewViewController.h; sourceTree = "<group>"; };
-		FCB821721B1C95D30030B0AE /* _RootViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _RootViewViewController.m; sourceTree = "<group>"; };
-		FCB821731B1C95D30030B0AE /* RootViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewViewController.h; sourceTree = "<group>"; };
-		FCB821741B1C95D30030B0AE /* RootViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewViewController.m; sourceTree = "<group>"; };
-		FCB821761B1C95D30030B0AE /* _RootViewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _RootViewView.h; sourceTree = "<group>"; };
-		FCB821771B1C95D30030B0AE /* _RootViewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _RootViewView.m; sourceTree = "<group>"; };
-		FCB821781B1C95D30030B0AE /* RootViewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewView.h; sourceTree = "<group>"; };
-		FCB821791B1C95D30030B0AE /* RootViewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewView.m; sourceTree = "<group>"; };
-		FCB8217C1B1C95D30030B0AE /* _ThirdViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _ThirdViewViewController.h; sourceTree = "<group>"; };
-		FCB8217D1B1C95D30030B0AE /* _ThirdViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _ThirdViewViewController.m; sourceTree = "<group>"; };
-		FCB8217E1B1C95D30030B0AE /* ThirdViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThirdViewViewController.h; sourceTree = "<group>"; };
-		FCB8217F1B1C95D30030B0AE /* ThirdViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThirdViewViewController.m; sourceTree = "<group>"; };
-		FCB821811B1C95D30030B0AE /* _ThirdViewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _ThirdViewView.h; sourceTree = "<group>"; };
-		FCB821821B1C95D30030B0AE /* _ThirdViewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _ThirdViewView.m; sourceTree = "<group>"; };
-		FCB821831B1C95D30030B0AE /* ThirdViewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThirdViewView.h; sourceTree = "<group>"; };
-		FCB821841B1C95D30030B0AE /* ThirdViewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThirdViewView.m; sourceTree = "<group>"; };
+		FCB821F51B1D556F0030B0AE /* AMComponentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMComponentManager.h; sourceTree = "<group>"; };
+		FCB821F61B1D556F0030B0AE /* AMComponentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMComponentManager.m; sourceTree = "<group>"; };
+		FCB821F91B1D556F0030B0AE /* _RootViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _RootViewViewController.h; sourceTree = "<group>"; };
+		FCB821FA1B1D556F0030B0AE /* _RootViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _RootViewViewController.m; sourceTree = "<group>"; };
+		FCB821FB1B1D556F0030B0AE /* RootViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewViewController.h; sourceTree = "<group>"; };
+		FCB821FC1B1D556F0030B0AE /* RootViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewViewController.m; sourceTree = "<group>"; };
+		FCB821FE1B1D556F0030B0AE /* _RootViewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _RootViewView.h; sourceTree = "<group>"; };
+		FCB821FF1B1D556F0030B0AE /* _RootViewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _RootViewView.m; sourceTree = "<group>"; };
+		FCB822001B1D556F0030B0AE /* RootViewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewView.h; sourceTree = "<group>"; };
+		FCB822011B1D556F0030B0AE /* RootViewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewView.m; sourceTree = "<group>"; };
+		FCB822041B1D556F0030B0AE /* _SecondViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SecondViewViewController.h; sourceTree = "<group>"; };
+		FCB822051B1D556F0030B0AE /* _SecondViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SecondViewViewController.m; sourceTree = "<group>"; };
+		FCB822061B1D556F0030B0AE /* SecondViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondViewViewController.h; sourceTree = "<group>"; };
+		FCB822071B1D556F0030B0AE /* SecondViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecondViewViewController.m; sourceTree = "<group>"; };
+		FCB822091B1D556F0030B0AE /* _SecondViewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SecondViewView.h; sourceTree = "<group>"; };
+		FCB8220A1B1D556F0030B0AE /* _SecondViewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SecondViewView.m; sourceTree = "<group>"; };
+		FCB8220B1B1D556F0030B0AE /* SecondViewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondViewView.h; sourceTree = "<group>"; };
+		FCB8220C1B1D556F0030B0AE /* SecondViewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecondViewView.m; sourceTree = "<group>"; };
+		FCB822161B1D55820030B0AE /* AMComponentManagerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMComponentManagerProtocol.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -425,6 +412,7 @@
 				FCB8209A1B1C0D040030B0AE /* AMAppMapLabelFactory.m */,
 				FCB8209B1B1C0D040030B0AE /* AMAppMapViewFactory.h */,
 				FCB8209C1B1C0D040030B0AE /* AMAppMapViewFactory.m */,
+				FCB822161B1D55820030B0AE /* AMComponentManagerProtocol.h */,
 			);
 			path = Factory;
 			sourceTree = "<group>";
@@ -508,12 +496,8 @@
 				FCB820DB1B1C0D040030B0AE /* AMViewGenerator.m */,
 				FCB820DC1B1C0D040030B0AE /* AMViewHumanTemplate.h */,
 				FCB820DD1B1C0D040030B0AE /* AMViewHumanTemplate.m */,
-				FCB820DE1B1C0D040030B0AE /* AMViewHumanTemplate_h */,
-				FCB820DF1B1C0D040030B0AE /* AMViewHumanTemplate_m */,
 				FCB820E01B1C0D040030B0AE /* AMViewMachineTemplate.h */,
 				FCB820E11B1C0D040030B0AE /* AMViewMachineTemplate.m */,
-				FCB820E21B1C0D040030B0AE /* AMViewMachineTemplate_h */,
-				FCB820E31B1C0D040030B0AE /* AMViewMachineTemplate_m */,
 				FCB820E41B1C0D040030B0AE /* NSString+AMGenerator.h */,
 				FCB820E51B1C0D040030B0AE /* NSString+AMGenerator.m */,
 			);
@@ -538,92 +522,72 @@
 		FCB821261B1C0D6A0030B0AE /* AppMap */ = {
 			isa = PBXGroup;
 			children = (
-				FCB821671B1C95D30030B0AE /* AMComponentManager.h */,
-				FCB821681B1C95D30030B0AE /* AMComponentManager.m */,
-				FCB821691B1C95D30030B0AE /* rootView */,
-				FCB8217A1B1C95D30030B0AE /* thirdView */,
+				FCB821F51B1D556F0030B0AE /* AMComponentManager.h */,
+				FCB821F61B1D556F0030B0AE /* AMComponentManager.m */,
+				FCB821F71B1D556F0030B0AE /* rootView */,
+				FCB822021B1D556F0030B0AE /* secondView */,
 			);
 			path = AppMap;
 			sourceTree = "<group>";
 		};
-		FCB821691B1C95D30030B0AE /* rootView */ = {
+		FCB821F71B1D556F0030B0AE /* rootView */ = {
 			isa = PBXGroup;
 			children = (
-				FCB8216A1B1C95D30030B0AE /* container155 */,
-				FCB821701B1C95D30030B0AE /* ViewControllers */,
-				FCB821751B1C95D30030B0AE /* Views */,
+				FCB821F81B1D556F0030B0AE /* ViewControllers */,
+				FCB821FD1B1D556F0030B0AE /* Views */,
 			);
 			path = rootView;
 			sourceTree = "<group>";
 		};
-		FCB8216A1B1C95D30030B0AE /* container155 */ = {
+		FCB821F81B1D556F0030B0AE /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				FCB8216B1B1C95D30030B0AE /* Views */,
-			);
-			path = container155;
-			sourceTree = "<group>";
-		};
-		FCB8216B1B1C95D30030B0AE /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				FCB8216C1B1C95D30030B0AE /* _Container155View.h */,
-				FCB8216D1B1C95D30030B0AE /* _Container155View.m */,
-				FCB8216E1B1C95D30030B0AE /* Container155View.h */,
-				FCB8216F1B1C95D30030B0AE /* Container155View.m */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		FCB821701B1C95D30030B0AE /* ViewControllers */ = {
-			isa = PBXGroup;
-			children = (
-				FCB821711B1C95D30030B0AE /* _RootViewViewController.h */,
-				FCB821721B1C95D30030B0AE /* _RootViewViewController.m */,
-				FCB821731B1C95D30030B0AE /* RootViewViewController.h */,
-				FCB821741B1C95D30030B0AE /* RootViewViewController.m */,
+				FCB821F91B1D556F0030B0AE /* _RootViewViewController.h */,
+				FCB821FA1B1D556F0030B0AE /* _RootViewViewController.m */,
+				FCB821FB1B1D556F0030B0AE /* RootViewViewController.h */,
+				FCB821FC1B1D556F0030B0AE /* RootViewViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
-		FCB821751B1C95D30030B0AE /* Views */ = {
+		FCB821FD1B1D556F0030B0AE /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				FCB821761B1C95D30030B0AE /* _RootViewView.h */,
-				FCB821771B1C95D30030B0AE /* _RootViewView.m */,
-				FCB821781B1C95D30030B0AE /* RootViewView.h */,
-				FCB821791B1C95D30030B0AE /* RootViewView.m */,
+				FCB821FE1B1D556F0030B0AE /* _RootViewView.h */,
+				FCB821FF1B1D556F0030B0AE /* _RootViewView.m */,
+				FCB822001B1D556F0030B0AE /* RootViewView.h */,
+				FCB822011B1D556F0030B0AE /* RootViewView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
 		};
-		FCB8217A1B1C95D30030B0AE /* thirdView */ = {
+		FCB822021B1D556F0030B0AE /* secondView */ = {
 			isa = PBXGroup;
 			children = (
-				FCB8217B1B1C95D30030B0AE /* ViewControllers */,
-				FCB821801B1C95D30030B0AE /* Views */,
+				FCB822031B1D556F0030B0AE /* ViewControllers */,
+				FCB822081B1D556F0030B0AE /* Views */,
 			);
-			path = thirdView;
+			path = secondView;
 			sourceTree = "<group>";
 		};
-		FCB8217B1B1C95D30030B0AE /* ViewControllers */ = {
+		FCB822031B1D556F0030B0AE /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				FCB8217C1B1C95D30030B0AE /* _ThirdViewViewController.h */,
-				FCB8217D1B1C95D30030B0AE /* _ThirdViewViewController.m */,
-				FCB8217E1B1C95D30030B0AE /* ThirdViewViewController.h */,
-				FCB8217F1B1C95D30030B0AE /* ThirdViewViewController.m */,
+				FCB822041B1D556F0030B0AE /* _SecondViewViewController.h */,
+				FCB822051B1D556F0030B0AE /* _SecondViewViewController.m */,
+				FCB822061B1D556F0030B0AE /* SecondViewViewController.h */,
+				FCB822071B1D556F0030B0AE /* SecondViewViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
-		FCB821801B1C95D30030B0AE /* Views */ = {
+		FCB822081B1D556F0030B0AE /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				FCB821811B1C95D30030B0AE /* _ThirdViewView.h */,
-				FCB821821B1C95D30030B0AE /* _ThirdViewView.m */,
-				FCB821831B1C95D30030B0AE /* ThirdViewView.h */,
-				FCB821841B1C95D30030B0AE /* ThirdViewView.m */,
+				FCB822091B1D556F0030B0AE /* _SecondViewView.h */,
+				FCB8220A1B1D556F0030B0AE /* _SecondViewView.m */,
+				FCB8220B1B1D556F0030B0AE /* SecondViewView.h */,
+				FCB8220C1B1D556F0030B0AE /* SecondViewView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -708,12 +672,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FCB8211F1B1C0D040030B0AE /* AMViewMachineTemplate_h in Resources */,
 				FC7A773F1A5F5F75009BCA50 /* Images.xcassets in Resources */,
-				FCB8211C1B1C0D040030B0AE /* AMViewHumanTemplate_h in Resources */,
 				FC7A77421A5F5F75009BCA50 /* MainMenu.xib in Resources */,
-				FCB8211D1B1C0D040030B0AE /* AMViewHumanTemplate_m in Resources */,
-				FCB821201B1C0D040030B0AE /* AMViewMachineTemplate_m in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -734,6 +694,7 @@
 				FCB820FD1B1C0D040030B0AE /* AMAppMapViewFactory.m in Sources */,
 				FCB821251B1C0D040030B0AE /* AMRuntimeViewHelper.m in Sources */,
 				FCB821111B1C0D040030B0AE /* AMProportionalVerticalCenterLayout.m in Sources */,
+				FCB822121B1D556F0030B0AE /* _SecondViewViewController.m in Sources */,
 				FCB820F41B1C0D040030B0AE /* NSLayoutConstraint+Utilities.m in Sources */,
 				FCB820F81B1C0D040030B0AE /* AMComponentBehavior.m in Sources */,
 				FCB8210D1B1C0D040030B0AE /* AMProportionalHorizontalCenterLayout.m in Sources */,
@@ -748,19 +709,15 @@
 				FCB8210A1B1C0D040030B0AE /* AMParentLayout.m in Sources */,
 				FCB8211B1B1C0D040030B0AE /* AMViewHumanTemplate.m in Sources */,
 				FC7A773D1A5F5F74009BCA50 /* main.m in Sources */,
-				FCB8218C1B1C95D30030B0AE /* _ThirdViewViewController.m in Sources */,
 				FCB821071B1C0D040030B0AE /* AMLayout.m in Sources */,
 				FCB820FC1B1C0D040030B0AE /* AMAppMapLabelFactory.m in Sources */,
-				FCB8218B1B1C95D30030B0AE /* RootViewView.m in Sources */,
-				FCB821881B1C95D30030B0AE /* _RootViewViewController.m in Sources */,
-				FCB8218A1B1C95D30030B0AE /* _RootViewView.m in Sources */,
 				FCB821001B1C0D040030B0AE /* AMAnchoredRightLayout.m in Sources */,
 				FCB821031B1C0D040030B0AE /* AMCenterVerticallyLayout.m in Sources */,
 				FCB821121B1C0D040030B0AE /* AMSelfLayout.m in Sources */,
-				FCB821871B1C95D30030B0AE /* Container155View.m in Sources */,
-				FCB8218F1B1C95D30030B0AE /* ThirdViewView.m in Sources */,
 				FCB821231B1C0D040030B0AE /* AMRuntimeLabel.m in Sources */,
 				FCB8210B1B1C0D040030B0AE /* AMPositionLayout.m in Sources */,
+				FCB8220E1B1D556F0030B0AE /* _RootViewViewController.m in Sources */,
+				FCB8220F1B1D556F0030B0AE /* RootViewViewController.m in Sources */,
 				FCB821161B1C0D040030B0AE /* AMGenerator.m in Sources */,
 				FCB821171B1C0D040030B0AE /* AMViewControllerGenerator.m in Sources */,
 				FC7A773B1A5F5F74009BCA50 /* AppDelegate.m in Sources */,
@@ -770,31 +727,32 @@
 				FCB821211B1C0D040030B0AE /* NSString+AMGenerator.m in Sources */,
 				FCB821191B1C0D040030B0AE /* AMViewControllerMachineTemplate.m in Sources */,
 				FCB821091B1C0D040030B0AE /* AMLayoutPresetHelper.m in Sources */,
-				FCB821891B1C95D30030B0AE /* RootViewViewController.m in Sources */,
+				FCB822111B1D556F0030B0AE /* RootViewView.m in Sources */,
 				FCB820F01B1C0D040030B0AE /* NSColor+AppMap.m in Sources */,
 				FCB821241B1C0D040030B0AE /* AMRuntimeView.m in Sources */,
-				FCB821851B1C95D30030B0AE /* AMComponentManager.m in Sources */,
+				FCB8220D1B1D556F0030B0AE /* AMComponentManager.m in Sources */,
 				FCB820F21B1C0D040030B0AE /* AMColor+AMColor.m in Sources */,
 				FCB820F71B1C0D040030B0AE /* AMComponent.m in Sources */,
 				FCB821011B1C0D040030B0AE /* AMAnchoredTopLayout.m in Sources */,
+				FCB822131B1D556F0030B0AE /* SecondViewViewController.m in Sources */,
 				FCB820FE1B1C0D040030B0AE /* AMAnchoredBottomLayout.m in Sources */,
 				FCB821221B1C0D040030B0AE /* AMRuntimeButton.m in Sources */,
-				FCB8218D1B1C95D30030B0AE /* ThirdViewViewController.m in Sources */,
 				FCB820F91B1C0D040030B0AE /* AMNavigatingButtonBehavior.m in Sources */,
 				FCB8210F1B1C0D040030B0AE /* AMProportionalRightLayout.m in Sources */,
-				FCB821861B1C95D30030B0AE /* _Container155View.m in Sources */,
 				FCB821051B1C0D040030B0AE /* AMFixedHeightLayout.m in Sources */,
-				FCB8218E1B1C95D30030B0AE /* _ThirdViewView.m in Sources */,
 				FCB821141B1C0D040030B0AE /* AMTextDescriptor.m in Sources */,
+				FCB822141B1D556F0030B0AE /* _SecondViewView.m in Sources */,
 				FCB820FF1B1C0D040030B0AE /* AMAnchoredLeftLayout.m in Sources */,
 				FCB8211E1B1C0D040030B0AE /* AMViewMachineTemplate.m in Sources */,
 				FCB820FB1B1C0D040030B0AE /* AMAppMapContainerFactory.m in Sources */,
 				FCB8211A1B1C0D040030B0AE /* AMViewGenerator.m in Sources */,
+				FCB822151B1D556F0030B0AE /* SecondViewView.m in Sources */,
 				FCB820F11B1C0D040030B0AE /* AMWindowHelper.m in Sources */,
 				FCB8210C1B1C0D040030B0AE /* AMProportionalBottomLayout.m in Sources */,
 				FCB821101B1C0D040030B0AE /* AMProportionalTopLayout.m in Sources */,
 				FCB820F51B1C0D040030B0AE /* NSString+NameUtilities.m in Sources */,
 				FCB821181B1C0D040030B0AE /* AMViewControllerHumanTemplate.m in Sources */,
+				FCB822101B1D556F0030B0AE /* _RootViewView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

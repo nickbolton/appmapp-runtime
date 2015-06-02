@@ -1,27 +1,29 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to ThirdViewViewController.m instead.
+// Make changes to SecondViewViewController.m instead.
 
-#import "_ThirdViewViewController.h"
+#import "_SecondViewViewController.h"
 #import "AMAppMap.h"
 #import "AMLayouts.h"
 #import "AMComponentManager.h"
 #import "AMRuntimeView.h"
+#import "SecondViewView.h"
 
-@interface _ThirdViewViewController ()<AMRuntimeDelegate>
 
-@property (nonatomic, readwrite) ThirdViewView *thirdViewView;
+@interface _SecondViewViewController ()<AMRuntimeDelegate>
+
+@property (nonatomic, readwrite) SecondViewView *secondViewView;
 @end
 
-@implementation _ThirdViewViewController
+@implementation _SecondViewViewController
 
 #pragma mark - Setup
 
 #pragma mark - View Controller Lifecycle
 
 - (void)loadView {
-    self.thirdViewView = [ThirdViewView new];
-    self.thirdViewView.runtimeDelegate = self;
-    self.view = self.thirdViewView;
+    self.secondViewView = [SecondViewView new];
+    self.secondViewView.runtimeDelegate = self;
+    self.view = self.secondViewView;
 }
 
 - (void)viewDidLoad {

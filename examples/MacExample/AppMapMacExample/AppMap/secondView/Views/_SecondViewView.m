@@ -1,15 +1,16 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to ThirdViewView.m instead.
+// Make changes to SecondViewView.m instead.
 
-#import "_ThirdViewView.h"
+#import "_SecondViewView.h"
 #import "AMAppMap.h"
 
-@interface _ThirdViewView ()
+
+@interface _SecondViewView ()
 
 
 @end
 
-@implementation _ThirdViewView
+@implementation _SecondViewView
 
 - (instancetype)init {
     self = [super init];
@@ -24,20 +25,21 @@
 
     NSDictionary *componentDict =
     @{
+        @"useCustomViewClass" : @(1),
         @"borderColor" : @"0.403922,0.458824,0.513726,1.000000",
         @"tlc" : @(1),
         @"backgroundColor" : @"0.874510,0.894118,0.913725,0.700000",
-        @"frame" : @"{{2820.5, 1236.5}, {306, 480}}",
+        @"frame" : @"{{1410.5, 1024}, {288, 352}}",
         @"class-name" : @"AMComponent",
         @"type" : @(0),
-        @"identifier" : @"323839F4-E33A-48CA-A298-7958DCEBE130",
+        @"identifier" : @"E4E7099D-0BD7-42C4-AAD1-B9A536F5F4A2",
         @"clipped" : @(0),
         @"borderWidth" : @(1),
         @"alpha" : @(1),
         @"layoutObjects" : @[@{@"className" : @"AMExpandingLayout",@"proportionalValue" : @(0),},],
-        @"cornerRadius" : @(0),
-        @"name" : @"THIRD VIEw",
-        @"layoutPreset" : @(4),
+        @"layoutPreset" : @(0),
+        @"name" : @"SECOND VIEw",
+        @"cornerRadius" : @(2),
         @"childComponents" : @[],
         };
 
