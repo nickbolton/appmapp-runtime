@@ -2,7 +2,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 platform :osx, '10.10'
 
-pod 'AppMap', :git => 'https://github.com/nickbolton/appmapp-runtime.git', :branch=>'master'
+#pod 'AppMap', :git => 'https://github.com/nickbolton/appmapp-runtime.git', :branch=>'master'
 
 inhibit_all_warnings!
 
