@@ -34,7 +34,7 @@ NSString * const kAMComponentManagerClassName = @"AMComponentManager";
                                     classPrefix:(NSString *)classPrefix
                     baseViewControllerClassName:(NSString *)baseViewControllerClassName
                              baseViewClassNames:(NSDictionary *)baseViewClassNames {
-
+    
     id components = componentsDictionary[kAMComponentsKey];
     NSArray *componentsArray = components;
     
@@ -330,7 +330,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
                 baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     NSString *viewClassName;
-    if (childComponent.useCustomViewClass) {
+    if (YES || childComponent.useCustomViewClass) {
         
          viewClassName = [self buildViewName:childComponent classPrefix:classPrefix];
         
@@ -398,7 +398,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     NSString *viewClassName;
     
-    if (component.useCustomViewClass) {
+    if (YES || component.useCustomViewClass) {
         viewClassName = [self buildViewName:component classPrefix:classPrefix];
     } else {
         viewClassName = [self buildBaseViewNameForComponentType:component.componentType baseViewClassNames:baseViewClassNames ios:ios];
@@ -429,7 +429,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     NSString *viewClassName;
     
-    if (component.useCustomViewClass) {
+    if (YES || component.useCustomViewClass) {
         viewClassName = [self buildViewName:component classPrefix:classPrefix];
     } else {
         viewClassName = [self buildBaseViewNameForComponentType:component.componentType baseViewClassNames:baseViewClassNames ios:ios];

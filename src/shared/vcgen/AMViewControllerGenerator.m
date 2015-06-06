@@ -23,6 +23,49 @@ static NSString * const kAMIOSBaseViewControllerClassName = @"UIViewController";
 
 @implementation AMViewControllerGenerator
 
+- (void)generateClassesWithComponentsDictionary:(NSDictionary *)componentsDictionary
+                                targetDirectory:(NSURL *)targetDirectory
+                                            ios:(BOOL)ios
+                                    classPrefix:(NSString *)classPrefix
+                    baseViewControllerClassName:(NSString *)baseViewControllerClassName
+                             baseViewClassNames:(NSDictionary *)baseViewClassNames {
+    
+    NSFileManager *fm = [NSFileManager defaultManager];
+    
+    if ([fm fileExistsAtPath:targetDirectory.path] == NO) {
+        
+        NSError *error = nil;
+        
+        [fm
+         createDirectoryAtURL:targetDirectory
+         withIntermediateDirectories:YES
+         attributes:nil
+         error:&error];
+        
+        if (error != nil) {
+            
+            NSLog(@"Failed to create target directory '%@' : %@", targetDirectory.path, error);
+            return;
+        }
+    }
+
+    [self
+     generateComponentManagerWithComponentsDictionary:componentsDictionary
+     targetDirectory:targetDirectory
+     ios:ios
+     classPrefix:classPrefix
+     baseViewClassNames:baseViewClassNames];
+ 
+    [super
+     generateClassesWithComponentsDictionary:componentsDictionary
+     targetDirectory:targetDirectory
+     ios:ios
+     classPrefix:classPrefix
+     baseViewControllerClassName:baseViewControllerClassName
+     baseViewClassNames:baseViewClassNames];
+}
+
+
 - (BOOL)buildClass:(NSDictionary *)componentDict
    targetDirectory:(NSURL *)targetDirectory
                ios:(BOOL)ios

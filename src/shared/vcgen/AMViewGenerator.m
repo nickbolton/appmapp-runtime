@@ -48,7 +48,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
          baseViewClassNames:baseViewClassNames];
     }
     
-    if (component.useCustomViewClass) {
+    if (YES || component.useCustomViewClass) {
 
         NSFileManager *fm = [NSFileManager defaultManager];
         
