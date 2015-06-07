@@ -33,6 +33,15 @@
 #endif
 }
 
+- (void)setupButton {
+    
+#if TARGET_OS_IPHONE
+#else
+    self.bordered = NO;
+    self.title = @"";
+#endif
+}
+
 #pragma mark - Getters and Setters
 
 - (AMRuntimeViewHelper *)helper {
@@ -47,6 +56,7 @@
 - (void)setComponent:(AMComponent *)component {
     _component = component;
     [self.helper setComponent:component forView:self];
+    [self setupButton];
     [self setupAction];
 }
 
