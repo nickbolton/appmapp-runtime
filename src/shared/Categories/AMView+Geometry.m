@@ -49,6 +49,40 @@ CGRect AMPixelAlignedCGRect(CGRect frame) {
     return result;
 }
 
+CGFloat AMPointAlignedValue(CGFloat value) {
+    
+    return roundf(value);
+}
+
+CGPoint AMPointAlignedCGPoint(CGPoint point) {
+    
+    CGPoint result;
+    result.x = AMPointAlignedValue(point.x);
+    result.y = AMPointAlignedValue(point.y);
+    
+    return result;
+}
+
+extern CGSize AMPointAlignedCGSize(CGSize size) {
+    
+    CGSize result;
+    result.width = AMPointAlignedValue(size.width);
+    result.height = AMPointAlignedValue(size.height);
+    
+    return result;
+}
+
+CGRect AMPointAlignedCGRect(CGRect frame) {
+    
+    CGRect result;// = CGRectIntegral(frame);
+    result.origin.x = AMPointAlignedValue(frame.origin.x);
+    result.origin.y = AMPointAlignedValue(frame.origin.y);
+    result.size.width = AMPointAlignedValue(frame.size.width);
+    result.size.height = AMPointAlignedValue(frame.size.height);
+    
+    return result;
+}
+
 CGFloat AMWindowScale() {
     
     CGFloat scale = 1.0f;
