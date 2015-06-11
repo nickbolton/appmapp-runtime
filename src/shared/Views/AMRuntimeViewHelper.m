@@ -104,6 +104,10 @@
          allLayoutObjects:view.component.layoutObjects
          inView:view
          animated:NO];
+        
+#if DEBUG
+        layoutObject.viewIdentifier = view.component.name;
+#endif
     }
     [self constraintsDidChange:view];
 }

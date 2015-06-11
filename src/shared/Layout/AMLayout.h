@@ -18,6 +18,7 @@
 @property (nonatomic, readonly) AMLayoutType layoutType;
 @property (nonatomic) BOOL layoutApplied;
 @property (nonatomic, readonly) BOOL isProportional;
+@property (nonatomic, copy) NSString *viewIdentifier;
 
 @property (nonatomic, weak) AMView *view;
 

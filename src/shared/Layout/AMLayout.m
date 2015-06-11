@@ -63,6 +63,16 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     return dict;
 }
 
+#pragma mark - Getters and Setters
+
+- (NSString *)viewIdentifier {
+    
+    if (_viewIdentifier == nil) {
+        _viewIdentifier = NSStringFromClass(self.view.class);
+    }
+    return _viewIdentifier;
+}
+
 #pragma mark - Public
 
 + (BOOL)isProportionalLayoutType:(AMLayoutType)layoutType {
@@ -110,6 +120,13 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
         if (self.view.superview != nil) {
             self.constraint = [self buildConstraintWithMultiplier:multiplier];
             self.constraint.priority = priority;
+            
+#if DEBUG
+            self.constraint.identifier =
+            [NSString
+             stringWithFormat:@"%@:%@",
+             self.viewIdentifier, NSStringFromClass(self.class)];
+#endif
         }
     }
 }
