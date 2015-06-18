@@ -37,7 +37,9 @@ NSString * kAMComponentLayoutObjectsKey = @"layoutObjects";
 NSString * kAMComponentLayoutPresetKey = @"layoutPreset";
 NSString * kAMComponentTextDescriptorKey = @"textDescriptor";
 NSString * kAMComponentLinkedComponentKey = @"linkedComponent";
+NSString * kAMComponentDuplicateSourceKey = @"kAMComponentDuplicateSource";
 NSString * kAMComponentUseCustomViewClassKey = @"useCustomViewClass";
+NSString * kAMComponentDuplicateTypeKey = @"duplicateType";
 
 static NSString * kAMComponentDefaultNamePrefix = @"Container-";
 
@@ -50,34 +52,52 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 @property (nonatomic, readwrite) NSString *exportedName;
 @property (nonatomic, readwrite) BOOL hasProportionalLayout;
 @property (nonatomic, readwrite) NSString *linkedComponentIdentifier;
+@property (nonatomic, readwrite) NSString *duplicateSourceIdentifier;
 @property (nonatomic, strong) NSMutableDictionary *behavors;
+@property (nonatomic, strong) NSNumber *rawComponentType;
+@property (nonatomic, strong) NSNumber *rawClipped;
+@property (nonatomic, strong) NSNumber *rawUseCustomClass;
+@property (nonatomic, strong) NSNumber *rawAlpha;
+@property (nonatomic, strong) NSNumber *rawCornerRadius;
+@property (nonatomic, strong) NSNumber *rawBorderWidth;
+@property (nonatomic) BOOL useLocalGetters;
 
 @end
 
 @implementation AMComponent
 
 @synthesize name = _name;
+@synthesize classPrefix = _classPrefix;
+@synthesize borderColor = _borderColor;
+@synthesize backgroundColor = _backgroundColor;
+@synthesize textDescriptor = _textDescriptor;
 
 - (void)encodeWithCoder:(NSCoder *)coder {
     
-    [coder encodeObject:self.name forKey:kAMComponentNameKey];
-    [coder encodeInteger:self.componentType forKey:kAMComponentTypeKey];
-    [coder encodeObject:self.classPrefix forKey:kAMComponentClassPrefixKey];
     [coder encodeObject:self.identifier forKey:kAMComponentIdentifierKey];
-    [coder encodeBool:self.isClipped forKey:kAMComponentClippedKey];
-    [coder encodeBool:self.useCustomViewClass forKey:kAMComponentUseCustomViewClassKey];
-    [coder encodeObject:self.backgroundColor forKey:kAMComponentBackgroundColorKey];
-    [coder encodeObject:self.borderColor forKey:kAMComponentBorderColorWidthKey];
-    [coder encodeFloat:self.alpha forKey:kAMComponentAlphaKey];
-    [coder encodeFloat:self.cornerRadius forKey:kAMComponentCornerRadiusKey];
-    [coder encodeFloat:self.borderWidth forKey:kAMComponentBorderWidthKey];
-    [coder encodeObject:self.childComponents forKey:kAMComponentChildComponentsKey];
-    [coder encodeObject:self.behavor forKey:kAMComponentBehavorKey];
+    [coder encodeObject:_name forKey:kAMComponentNameKey];
+    [coder encodeObject:self.rawComponentType forKey:kAMComponentTypeKey];
+    [coder encodeObject:_classPrefix forKey:kAMComponentClassPrefixKey];
+    [coder encodeObject:self.rawClipped forKey:kAMComponentClippedKey];
+    [coder encodeObject:self.rawUseCustomClass forKey:kAMComponentUseCustomViewClassKey];
+    [coder encodeObject:_backgroundColor forKey:kAMComponentBackgroundColorKey];
+    [coder encodeObject:_borderColor forKey:kAMComponentBorderColorWidthKey];
+    [coder encodeObject:self.rawAlpha forKey:kAMComponentAlphaKey];
+    [coder encodeObject:self.rawCornerRadius forKey:kAMComponentCornerRadiusKey];
+    [coder encodeObject:self.rawBorderWidth forKey:kAMComponentBorderWidthKey];
+    [coder encodeObject:_textDescriptor forKey:kAMComponentTextDescriptorKey];
+    [coder encodeObject:self.linkedComponent.identifier forKey:kAMComponentLinkedComponentKey];
+    [coder encodeObject:self.duplicateSource.identifier forKey:kAMComponentDuplicateSourceKey];
+    [coder encodeInteger:self.duplicateType forKey:kAMComponentDuplicateTypeKey];
+    
+    if (self.behavors.count > 0) {
+        [coder encodeObject:self.behavor forKey:kAMComponentBehavorKey];
+    }
+    
     [coder encodeInteger:self.layoutPreset forKey:kAMComponentLayoutPresetKey];
     [coder encodeObject:self.layoutObjects forKey:kAMComponentLayoutObjectsKey];
-    [coder encodeObject:self.textDescriptor forKey:kAMComponentTextDescriptorKey];
-    [coder encodeObject:self.linkedComponent.identifier forKey:kAMComponentLinkedComponentKey];
-    
+    [coder encodeObject:self.childComponents forKey:kAMComponentChildComponentsKey];
+
 #if TARGET_OS_IPHONE
     [coder encodeObject:NSStringFromCGRect(self.frame) forKey:kAMComponentFrameKey];
 #else
@@ -92,20 +112,22 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     if (self != nil) {
 
         self.name = [decoder decodeObjectForKey:kAMComponentNameKey];
-        self.componentType = [decoder decodeIntegerForKey:kAMComponentTypeKey];
+        self.rawComponentType = [decoder decodeObjectForKey:kAMComponentTypeKey];
         self.classPrefix = [decoder decodeObjectForKey:kAMComponentClassPrefixKey];
         self.identifier = [decoder decodeObjectForKey:kAMComponentIdentifierKey];
-        self.clipped = [decoder decodeBoolForKey:kAMComponentClippedKey];
-        self.useCustomViewClass = [decoder decodeBoolForKey:kAMComponentUseCustomViewClassKey];
+        self.rawClipped = [decoder decodeObjectForKey:kAMComponentClippedKey];
+        self.rawUseCustomClass = [decoder decodeObjectForKey:kAMComponentUseCustomViewClassKey];
         self.backgroundColor = [decoder decodeObjectForKey:kAMComponentBackgroundColorKey];
-        self.alpha = [decoder decodeFloatForKey:kAMComponentAlphaKey];
-        self.cornerRadius = [decoder decodeFloatForKey:kAMComponentCornerRadiusKey];
-        self.borderWidth = [decoder decodeFloatForKey:kAMComponentBorderWidthKey];
+        self.rawAlpha = [decoder decodeObjectForKey:kAMComponentAlphaKey];
+        self.rawCornerRadius = [decoder decodeObjectForKey:kAMComponentCornerRadiusKey];
+        self.rawBorderWidth = [decoder decodeObjectForKey:kAMComponentBorderWidthKey];
         self.borderColor = [decoder decodeObjectForKey:kAMComponentBorderColorWidthKey];
         self.layoutPreset = [decoder decodeIntegerForKey:kAMComponentLayoutPresetKey];
         self.layoutObjects = [decoder decodeObjectForKey:kAMComponentLayoutObjectsKey];
         self.textDescriptor = [decoder decodeObjectForKey:kAMComponentTextDescriptorKey];
         self.linkedComponentIdentifier = [decoder decodeObjectForKey:kAMComponentLinkedComponentKey];
+        self.duplicateSourceIdentifier = [decoder decodeObjectForKey:kAMComponentDuplicateSourceKey];
+        self.duplicateType = [decoder decodeIntegerForKey:kAMComponentDuplicateTypeKey];
         
 #if TARGET_OS_IPHONE
         self.frame = CGRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
@@ -140,18 +162,20 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         NSString *borderColorString = dict[kAMComponentBorderColorWidthKey];
 
         self.name = dict[kAMComponentNameKey];
-        self.componentType = [dict[kAMComponentTypeKey] integerValue];
+        self.rawComponentType = dict[kAMComponentTypeKey];
         self.classPrefix = dict[kAMComponentClassPrefixKey];
         self.identifier = dict[kAMComponentIdentifierKey];
-        self.clipped = [dict[kAMComponentClippedKey] boolValue];
-        self.useCustomViewClass = [dict[kAMComponentUseCustomViewClassKey] boolValue];
-        self.alpha = [dict[kAMComponentAlphaKey] floatValue];
-        self.cornerRadius = [dict[kAMComponentCornerRadiusKey] floatValue];
-        self.borderWidth = [dict[kAMComponentBorderWidthKey] floatValue];
+        self.rawClipped = dict[kAMComponentClippedKey];
+        self.rawUseCustomClass = dict[kAMComponentUseCustomViewClassKey];
+        self.rawAlpha = dict[kAMComponentAlphaKey];
+        self.rawCornerRadius = dict[kAMComponentCornerRadiusKey];
+        self.rawBorderWidth = dict[kAMComponentBorderWidthKey];
         self.borderColor = [AMColor colorWithHexcodePlusAlpha:borderColorString];
         self.backgroundColor = [AMColor colorWithHexcodePlusAlpha:backgroundColorString];
         self.layoutPreset = [dict[kAMComponentLayoutPresetKey] integerValue];
         self.linkedComponentIdentifier = dict[kAMComponentLinkedComponentKey];
+        self.duplicateSourceIdentifier = dict[kAMComponentDuplicateSourceKey];
+        self.duplicateType = [dict[kAMComponentDuplicateTypeKey] integerValue];
         
         NSDictionary *descriptorDict = dict[kAMComponentTextDescriptorKey];
         
@@ -254,21 +278,23 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     AMComponent *component = [[self.class alloc] init];
     component.name = self.name.copy;
-    component.componentType = self.componentType;
+    component.rawComponentType = self.rawComponentType;
     component.defaultName = self.defaultName.copy;
     component.classPrefix = self.classPrefix.copy;
     component.identifier = self.identifier.copy;
     component.frame = self.frame;
-    component.clipped = self.isClipped;
-    component.useCustomViewClass = self.useCustomViewClass;
+    component.rawClipped = self.rawClipped;
+    component.rawUseCustomClass = self.rawUseCustomClass;
     component.backgroundColor = self.backgroundColor;
-    component.alpha = self.alpha;
-    component.borderWidth = self.borderWidth;
+    component.rawAlpha = self.rawAlpha;
+    component.rawBorderWidth = self.rawBorderWidth;
     component.borderColor = self.borderColor;
     component.layoutPreset = self.layoutPreset;
     component.layoutObjects = self.layoutObjects.copy;
     component.textDescriptor = self.textDescriptor.copy;
     component.linkedComponent = self.linkedComponent;
+    component.duplicateSource = self.duplicateSource;
+    component.duplicateType = self.duplicateType;
 
     // only used to refer back to original parent
     // children will have this reset with the next loop
@@ -351,20 +377,49 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     dict[kAMComponentClassNameKey] = NSStringFromClass(self.class);
     dict[kAMComponentNameKey] = self.name;
-    dict[kAMComponentTypeKey] = @(self.componentType);
     dict[kAMComponentTopLevelComponentKey] = @(self.isTopLevelComponent);
     dict[kAMComponentIdentifierKey] = self.identifier;
-    dict[kAMComponentClippedKey] = @(self.isClipped);
-    dict[kAMComponentUseCustomViewClassKey] = @(self.useCustomViewClass);
-    dict[kAMComponentBackgroundColorKey] = [self.backgroundColor hexcodePlusAlpha];
-    dict[kAMComponentBorderColorWidthKey] = [self.borderColor hexcodePlusAlpha];
-    dict[kAMComponentAlphaKey] = @(self.alpha);
-    dict[kAMComponentCornerRadiusKey] = @(self.cornerRadius);
-    dict[kAMComponentBorderWidthKey] = @(self.borderWidth);
     dict[kAMComponentLayoutPresetKey] = @(self.layoutPreset);
+    dict[kAMComponentDuplicateTypeKey] = @(self.duplicateType);
+    
+    if (self.rawComponentType != nil) {
+        dict[kAMComponentTypeKey] = self.rawComponentType;
+    }
+
+    if (self.rawClipped != nil) {
+        dict[kAMComponentClippedKey] = self.rawClipped;
+    }
+    
+    if (self.rawUseCustomClass != nil) {
+        dict[kAMComponentUseCustomViewClassKey] = self.rawUseCustomClass;
+    }
+    
+    if (self.backgroundColor != nil) {
+        dict[kAMComponentBackgroundColorKey] = [self.backgroundColor hexcodePlusAlpha];
+    }
+    
+    if (self.borderColor != nil) {
+        dict[kAMComponentBorderColorWidthKey] = [self.borderColor hexcodePlusAlpha];
+    }
+    
+    if (self.rawAlpha != nil) {
+        dict[kAMComponentAlphaKey] = self.rawAlpha;
+    }
+    
+    if (self.rawCornerRadius != nil) {
+        dict[kAMComponentCornerRadiusKey] = self.rawCornerRadius;
+    }
+    
+    if (self.rawBorderWidth != nil) {
+        dict[kAMComponentBorderWidthKey] = self.rawBorderWidth;
+    }
     
     if (self.linkedComponent != nil) {
         dict[kAMComponentLinkedComponentKey] = self.linkedComponent.identifier;
+    }
+    
+    if (self.duplicateSource != nil) {
+        dict[kAMComponentDuplicateSourceKey] = self.duplicateSource.identifier;
     }
     
     if (self.textDescriptor != nil) {
@@ -415,21 +470,29 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 Component(%d): %p %@ %@\
     Parent: %@\
     Link: %@\
+    Duplicate Source: %@\
+    Duplicate Type: %ld\
     LayoutPreset: %ld\
     frame: %@",
-    (int)self.componentType, self, self.name, self.identifier, self.parentComponent.identifier, self.linkedComponent.identifier, self.layoutPreset, frameString];
+    (int)self.componentType, self, self.name, self.identifier, self.parentComponent.identifier, self.linkedComponent.identifier, self.duplicateSource.identifier, self.duplicateType, self.layoutPreset, frameString];
 //    return [NSString stringWithFormat:@"\
 //Component(%d): %p %@ %@\
 //    Parent: %@\
 //    Link: %@\
+//    Duplicate Source: %@\
+//    Duplicate Type: %ld\
 //    LayoutPreset: %ld\
 //    frame: %@\
 //    children:\
 //%@",
-//    (int)self.componentType, self, self.name, self.identifier, self.parentComponent.identifier, self.linkedComponent.identifier, self.layoutPreset, NSStringFromCGRect(self.frame), self.childComponents];
+//    (int)self.componentType, self, self.name, self.identifier, self.parentComponent.identifier, self.linkedComponent.identifier, self.duplicateSource.identifier, self.duplicateType, self.layoutPreset, NSStringFromCGRect(self.frame), self.childComponents];
 }
 
 #pragma mark - Getters and Setters
+
+- (BOOL)useLocalGetters {
+    return (self.duplicateSource == nil || self.duplicateType != AMDuplicateTypeMirrored);
+}
 
 - (BOOL)isContainer {
     return self.componentType == AMComponentContainer;
@@ -445,6 +508,301 @@ Component(%d): %p %@ %@\
 - (void)setName:(NSString *)name {
     _name = name;
     _exportedName = nil;
+}
+
+- (NSString *)classPrefix {
+    
+    if (self.useLocalGetters && _classPrefix != nil) {
+        return _classPrefix;
+    }
+    
+    return self.duplicateSource.classPrefix;
+}
+
+- (void)setClassPrefix:(NSString *)classPrefix {
+    
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeInherited) {
+            
+            if ((self.duplicateSource.classPrefix == nil && classPrefix == nil) ||
+                [self.duplicateSource.classPrefix isEqualToString:classPrefix]) {
+                _classPrefix = nil;
+                return;
+            }
+            
+        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
+            
+            self.duplicateSource.classPrefix = classPrefix;
+            return;
+        }
+    }
+    
+    _classPrefix = classPrefix;
+}
+
+- (AMComponentType)componentType {
+    
+    if (self.useLocalGetters && _rawComponentType != nil) {
+        return _rawComponentType.integerValue;
+    }
+    return self.duplicateSource.componentType;
+}
+
+- (void)setComponentType:(AMComponentType)componentType {
+    
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeInherited) {
+            
+            if (self.duplicateSource.componentType == componentType) {
+                _rawComponentType = nil;
+                return;
+            }
+            
+        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
+            
+            self.duplicateSource.componentType = componentType;
+            return;
+        }
+    }
+    
+    _rawComponentType = @(componentType);
+}
+
+- (BOOL)useCustomViewClass {
+
+    if (self.useLocalGetters && _rawUseCustomClass != nil) {
+        return _rawUseCustomClass.boolValue;
+    }
+    return self.duplicateSource.useCustomViewClass;
+}
+
+- (void)setUseCustomViewClass:(BOOL)useCustomViewClass {
+    
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeInherited) {
+            
+            if (self.duplicateSource.useCustomViewClass == useCustomViewClass) {
+                _rawUseCustomClass = nil;
+                return;
+            }
+            
+        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
+            
+            self.duplicateSource.useCustomViewClass = useCustomViewClass;
+            return;
+        }
+    }
+    
+    _rawUseCustomClass = @(useCustomViewClass);
+}
+
+- (CGFloat)cornerRadius {
+    
+    if (self.useLocalGetters && _rawCornerRadius != nil) {
+        return _rawCornerRadius.floatValue;
+    }
+    return self.duplicateSource.cornerRadius;
+}
+
+- (void)setCornerRadius:(CGFloat)cornerRadius {
+    
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeInherited) {
+            
+            if (self.duplicateSource.cornerRadius == cornerRadius) {
+                _rawCornerRadius = nil;
+                return;
+            }
+            
+        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
+            
+            self.duplicateSource.cornerRadius = cornerRadius;
+            return;
+        }
+    }
+    
+    _rawCornerRadius = @(cornerRadius);
+}
+
+- (CGFloat)borderWidth {
+    
+    if (self.useLocalGetters && _rawBorderWidth != nil) {
+        return _rawBorderWidth.floatValue;
+    }
+    return self.duplicateSource.borderWidth;
+}
+
+- (void)setBorderWidth:(CGFloat)borderWidth {
+    
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeInherited) {
+            
+            if (self.duplicateSource.borderWidth == borderWidth) {
+                _rawBorderWidth = nil;
+                return;
+            }
+            
+        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
+            
+            self.duplicateSource.borderWidth = borderWidth;
+            return;
+        }
+    }
+    
+    _rawBorderWidth = @(borderWidth);
+}
+
+- (BOOL)isClipped {
+    
+    if (self.useLocalGetters && _rawClipped != nil) {
+        return _rawClipped.boolValue;
+    }
+    return self.duplicateSource.isClipped;
+}
+
+- (void)setClipped:(BOOL)clipped {
+    
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeInherited) {
+            
+            if (self.duplicateSource.isClipped == clipped) {
+                _rawClipped = nil;
+                return;
+            }
+            
+        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
+            
+            self.duplicateSource.clipped = clipped;
+            return;
+        }
+    }
+    
+    _rawClipped = @(clipped);
+}
+
+- (CGFloat)alpha {
+    
+    if (self.useLocalGetters && _rawAlpha != nil) {
+        return _rawAlpha.floatValue;
+    }
+    return self.duplicateSource.alpha;
+}
+
+- (void)setAlpha:(CGFloat)alpha {
+    
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeInherited) {
+            
+            if (self.duplicateSource.alpha == alpha) {
+                _rawAlpha = nil;
+                return;
+            }
+            
+        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
+            
+            self.duplicateSource.alpha = alpha;
+            return;
+        }
+    }
+    
+    _rawAlpha = @(alpha);
+}
+
+- (AMColor *)borderColor {
+    
+    if (self.useLocalGetters && _borderColor != nil) {
+        return _borderColor;
+    }
+    return self.duplicateSource.borderColor;
+}
+
+- (void)setBorderColor:(NSColor *)borderColor {
+    
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeInherited) {
+            
+            if ([self.duplicateSource.borderColor isEqual:borderColor] ||
+                (self.duplicateSource.borderColor == nil && borderColor == nil)) {
+                _borderColor = nil;
+                return;
+            }
+            
+        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
+            
+            self.duplicateSource.borderColor = borderColor;
+            return;
+        }
+    }
+    
+    _borderColor = borderColor;
+}
+
+- (AMColor *)backgroundColor {
+    
+    if (self.useLocalGetters && _backgroundColor != nil) {
+        return _backgroundColor;
+    }
+    return self.duplicateSource.backgroundColor;
+}
+
+- (void)setBackgroundColor:(NSColor *)backgroundColor {
+    
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeInherited) {
+            
+            if ([self.duplicateSource.backgroundColor isEqual:backgroundColor] ||
+                (self.duplicateSource.backgroundColor == nil && backgroundColor == nil)) {
+                _backgroundColor = nil;
+                return;
+            }
+            
+        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
+            
+            self.duplicateSource.backgroundColor = backgroundColor;
+            return;
+        }
+    }
+    
+    _backgroundColor = backgroundColor;
+}
+
+- (AMCompositeTextDescriptor *)textDescriptor {
+    
+    if (self.useLocalGetters && _textDescriptor != nil) {
+        return _textDescriptor;
+    }
+    return self.duplicateSource.textDescriptor;
+}
+
+- (void)setTextDescriptor:(AMCompositeTextDescriptor *)textDescriptor {
+ 
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeInherited) {
+            
+            if ([self.duplicateSource.textDescriptor isEqual:textDescriptor] ||
+                (self.duplicateSource.textDescriptor == nil && textDescriptor == nil)) {
+                _textDescriptor = nil;
+                return;
+            }
+            
+        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
+            
+            self.duplicateSource.textDescriptor = textDescriptor;
+            return;
+        }
+    }
+    
+    _textDescriptor = textDescriptor;
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -467,6 +825,11 @@ Component(%d): %p %@ %@\
 - (void)setLinkedComponent:(AMComponent *)linkedComponent {
     _linkedComponent = linkedComponent;
     self.linkedComponentIdentifier = linkedComponent.identifier;
+}
+
+- (void)setDuplicateSource:(AMComponent *)duplicateSource {
+    _duplicateSource = duplicateSource;
+    self.duplicateSourceIdentifier = duplicateSource.identifier;
 }
 
 - (NSString *)exportedName {
@@ -521,15 +884,48 @@ Component(%d): %p %@ %@\
 }
 
 - (NSArray *)childComponents {
-    return
-    [NSArray arrayWithArray:self.primChildComponents];
+
+    NSMutableArray *result = [NSMutableArray array];
+    
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeInherited) {
+            
+            [result addObjectsFromArray:self.duplicateSource.childComponents];
+            
+        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
+
+            return self.duplicateSource.childComponents;
+        }
+    }
+    
+    [result addObjectsFromArray:self.primChildComponents];
+    
+    return result;
 }
 
 - (void)setChildComponents:(NSArray *)childComponents {
+    
+    NSMutableArray *localComponents = childComponents.mutableCopy;
+    
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeInherited) {
+            
+            for (AMComponent *component in self.duplicateSource.childComponents) {
+                [localComponents removeObject:component];
+            }
+            
+        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
+            
+            self.duplicateSource.childComponents = childComponents;
+            return;
+        }
+    }
  
     NSMutableArray *primComponents = self.primChildComponents;
     [primComponents removeAllObjects];
-    [primComponents addObjectsFromArray:childComponents];
+    [primComponents addObjectsFromArray:localComponents];
 }
 
 - (NSMutableDictionary *)behavors {
@@ -697,7 +1093,7 @@ Component(%d): %p %@ %@\
              updateProportionalValueFromFrame:self.frame
              parentFrame:self.parentComponent.frame];
             
-            for (AMComponent *childComponent in self.childComponents) {
+            for (AMComponent *childComponent in self.primChildComponents) {
          
                 [childComponent updateProportionalLayouts];
             }
@@ -707,7 +1103,7 @@ Component(%d): %p %@ %@\
 
 - (void)updateChildFrames {
     
-    for (AMComponent *childComponent in self.childComponents) {
+    for (AMComponent *childComponent in self.primChildComponents) {
         [childComponent updateFrame];
     }
 }
@@ -736,15 +1132,19 @@ Component(%d): %p %@ %@\
     self.frame = updatedFrame;
     
     
-    for (AMComponent *childComponent in self.childComponents) {
+    for (AMComponent *childComponent in self.primChildComponents) {
         [childComponent updateFrame];
     }
 }
 
 - (AMComponentBehavior *)behavor {
     
-    AMComponentBehavior *result = self.behavors[@(self.componentType)];
-    return result;
+    if (self.behavors.count > 0) {
+        AMComponentBehavior *result = self.behavors[@(self.componentType)];
+        return result;
+    }
+    
+    return self.duplicateSource.behavor;
 }
 
 #pragma mark - Public
@@ -804,6 +1204,14 @@ Component(%d): %p %@ %@\
 }
 
 - (void)addChildComponents:(NSArray *)components {
+    
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
+            [self.duplicateSource addChildComponents:components];
+            return;
+        }
+    }
 
     NSMutableArray *primComponents = self.primChildComponents;
 
@@ -819,6 +1227,14 @@ Component(%d): %p %@ %@\
 
 - (void)insertChildComponent:(AMComponent *)insertedComponent
              beforeComponent:(AMComponent *)siblingComponent {
+    
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
+            [self.duplicateSource insertChildComponent:insertedComponent beforeComponent:siblingComponent];
+            return;
+        }
+    }
     
     NSMutableArray *primComponents = self.primChildComponents;
 
@@ -840,6 +1256,14 @@ Component(%d): %p %@ %@\
 - (void)insertChildComponent:(AMComponent *)insertedComponent
               afterComponent:(AMComponent *)siblingComponent {
     
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
+            [self.duplicateSource insertChildComponent:insertedComponent afterComponent:siblingComponent];
+            return;
+        }
+    }
+
     NSMutableArray *primComponents = self.primChildComponents;
     
     NSUInteger pos = [primComponents indexOfObject:siblingComponent];
@@ -872,6 +1296,7 @@ Component(%d): %p %@ %@\
 
 - (void)removeChildComponents:(NSArray *)components {
     [self.primChildComponents removeObjectsInArray:components];
+    [self.duplicateSource removeChildComponents:components];
     
     [components enumerateObjectsUsingBlock:^(AMComponent *component, NSUInteger idx, BOOL *stop) {
         component.parentComponent = nil;
