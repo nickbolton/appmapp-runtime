@@ -37,7 +37,7 @@ NSString * kAMComponentLayoutObjectsKey = @"layoutObjects";
 NSString * kAMComponentLayoutPresetKey = @"layoutPreset";
 NSString * kAMComponentTextDescriptorKey = @"textDescriptor";
 NSString * kAMComponentLinkedComponentKey = @"linkedComponent";
-NSString * kAMComponentDuplicateSourceKey = @"kAMComponentDuplicateSource";
+NSString * kAMComponentDuplicateSourceKey = @"duplicateSource";
 NSString * kAMComponentUseCustomViewClassKey = @"useCustomViewClass";
 NSString * kAMComponentDuplicateTypeKey = @"duplicateType";
 
@@ -337,6 +337,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     result.childComponents = children;
     result.layoutObjects = nil;
     result.layoutPreset = result.layoutPreset;
+    result.duplicateSource = self;
     
     return result;
 }
@@ -883,6 +884,31 @@ Component(%d): %p %@ %@\
     return _defaultName;
 }
 
+- (NSArray *)ownedChildComponents {
+    return [self ownedChildComponents:self.childComponents];
+}
+
+- (NSArray *)ownedChildComponents:(NSArray *)childComponents {
+    
+    NSMutableArray *localComponents = childComponents.mutableCopy;
+    
+    if (self.duplicateSource != nil) {
+        
+        if (self.duplicateType == AMDuplicateTypeInherited) {
+            
+            for (AMComponent *component in self.duplicateSource.childComponents) {
+                [localComponents removeObject:component];
+            }
+            
+        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
+
+            [localComponents removeAllObjects];
+        }
+    }
+    
+    return localComponents;
+}
+
 - (NSArray *)childComponents {
 
     NSMutableArray *result = [NSMutableArray array];
@@ -1056,7 +1082,7 @@ Component(%d): %p %@ %@\
 - (void)setScale:(CGFloat)scale {
     _scale = scale;
     
-    for (AMComponent *component in self.childComponents) {
+    for (AMComponent *component in self.ownedChildComponents) {
         component.scale = scale;
     }
 }

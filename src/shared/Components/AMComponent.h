@@ -46,6 +46,7 @@ extern NSString * kAMComponentDuplicateTypeKey;
 @property (nonatomic) AMComponentType componentType;
 @property (nonatomic, strong) NSArray *layoutObjects;
 @property (nonatomic, strong) NSArray *childComponents;
+@property (nonatomic, readonly) NSArray *ownedChildComponents;
 @property (nonatomic, weak) AMComponent *parentComponent;
 @property (nonatomic, strong) NSString *lastParentComponentIdentifier;
 @property (nonatomic, readonly) AMComponent *topLevelComponent;
