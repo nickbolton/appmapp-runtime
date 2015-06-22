@@ -47,7 +47,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 @interface AMComponent()
 
-@property (nonatomic, strong) NSMutableArray *primChildComponents;
+@property (nonatomic, strong) NSMutableArray *localChildComponents;
+@property (nonatomic, strong) NSArray *fullChildComponents;
 @property (nonatomic, readwrite) NSString *defaultName;
 @property (nonatomic, readwrite) NSString *exportedName;
 @property (nonatomic, readwrite) BOOL hasProportionalLayout;
@@ -66,6 +67,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 @implementation AMComponent
 
+@synthesize parentComponent = _parentComponent;
 @synthesize name = _name;
 @synthesize classPrefix = _classPrefix;
 @synthesize borderColor = _borderColor;
@@ -96,7 +98,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     [coder encodeInteger:self.layoutPreset forKey:kAMComponentLayoutPresetKey];
     [coder encodeObject:self.layoutObjects forKey:kAMComponentLayoutObjectsKey];
-    [coder encodeObject:self.childComponents forKey:kAMComponentChildComponentsKey];
+    [coder encodeObject:self.localChildComponents forKey:kAMComponentChildComponentsKey];
 
 #if TARGET_OS_IPHONE
     [coder encodeObject:NSStringFromCGRect(self.frame) forKey:kAMComponentFrameKey];
@@ -295,7 +297,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.linkedComponent = self.linkedComponent;
     component.duplicateSource = self.duplicateSource;
     component.duplicateType = self.duplicateType;
-
+    
     // only used to refer back to original parent
     // children will have this reset with the next loop
     component.parentComponent = self.parentComponent;
@@ -306,14 +308,26 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     NSMutableArray *children = [NSMutableArray array];
 
-    for (AMComponent *component in self.primChildComponents) {
+    for (AMComponent *component in self.localChildComponents) {
         [children addObject:component.copy];
     }
-    component.childComponents = children;
+    component.localChildComponents = children;
     
     component.behavors = self.behavors.mutableCopy;
 
     return component;
+}
+
+- (instancetype)duplicateComponent:(AMComponent *)component {
+    
+    AMComponent *result = component.copyForPasting;
+    result.parentComponent = self;
+    
+    result.identifier =
+    [NSString stringWithFormat:@"%@-%@",
+     self.identifier, component.identifier];
+
+    return result;
 }
 
 - (instancetype)copyForPasting {
@@ -328,15 +342,18 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     NSMutableArray *children = [NSMutableArray array];
     
-    for (AMComponent *childComponent in self.childComponents) {
+    for (AMComponent *childComponent in self.localChildComponents) {
         
         AMComponent *childCopy = [childComponent copyForPasting];
         [children addObject:childCopy];
     }
     
-    result.childComponents = children;
-    result.layoutObjects = nil;
-    result.layoutPreset = result.layoutPreset;
+    [result.localChildComponents removeAllObjects];
+    [result addChildComponents:children];
+    
+//    result.layoutObjects = nil;
+//    result.layoutPreset = result.layoutPreset;
+    
     result.duplicateSource = self;
     
     return result;
@@ -439,7 +456,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     NSMutableDictionary *children = [NSMutableDictionary dictionary];
     
-    for (AMComponent *childComponent in self.childComponents) {
+    for (AMComponent *childComponent in self.localChildComponents) {
         children[childComponent.identifier] = [childComponent exportComponent];
     }
 
@@ -833,6 +850,16 @@ Component(%d): %p %@ %@\
     self.duplicateSourceIdentifier = duplicateSource.identifier;
 }
 
+- (void)setDuplicateType:(AMDuplicateType)duplicateType {
+    _duplicateType = duplicateType;
+    NSArray *childComponents = self.localChildComponents.copy;
+    [self.localChildComponents removeAllObjects];
+    
+    if (duplicateType != AMDuplicateTypeMirrored) {
+        [self addChildComponents:childComponents];
+    }
+}
+
 - (NSString *)exportedName {
     
     if (_exportedName == nil) {
@@ -885,29 +912,29 @@ Component(%d): %p %@ %@\
 }
 
 - (NSArray *)ownedChildComponents {
-    return [self ownedChildComponents:self.childComponents];
+    return self.localChildComponents.copy;
 }
 
-- (NSArray *)ownedChildComponents:(NSArray *)childComponents {
-    
-    NSMutableArray *localComponents = childComponents.mutableCopy;
-    
-    if (self.duplicateSource != nil) {
-        
-        if (self.duplicateType == AMDuplicateTypeInherited) {
-            
-            for (AMComponent *component in self.duplicateSource.childComponents) {
-                [localComponents removeObject:component];
-            }
-            
-        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-
-            [localComponents removeAllObjects];
-        }
-    }
-    
-    return localComponents;
-}
+//- (NSArray *)ownedChildComponents:(NSArray *)childComponents {
+//    
+//    NSMutableArray *localComponents = childComponents.mutableCopy;
+//    
+//    if (self.duplicateSource != nil) {
+//        
+//        if (self.duplicateType == AMDuplicateTypeInherited) {
+//            
+//            for (AMComponent *component in self.duplicateSource.childComponents) {
+//                [localComponents removeObject:component];
+//            }
+//            
+//        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
+//
+//            [localComponents removeAllObjects];
+//        }
+//    }
+//    
+//    return localComponents;
+//}
 
 - (NSArray *)childComponents {
 
@@ -915,17 +942,41 @@ Component(%d): %p %@ %@\
     
     if (self.duplicateSource != nil) {
         
+        if (self.fullChildComponents != nil) {
+            return self.fullChildComponents;
+        }
+        
         if (self.duplicateType == AMDuplicateTypeInherited) {
             
-            [result addObjectsFromArray:self.duplicateSource.childComponents];
+            NSArray *components = [self duplicateComponents:self.duplicateSource.childComponents];
+            [result addObjectsFromArray:components];
+            [result addObjectsFromArray:self.localChildComponents];
+
+            self.fullChildComponents = result;
+            return result;
             
         } else if (self.duplicateType == AMDuplicateTypeMirrored) {
 
-            return self.duplicateSource.childComponents;
+            NSArray *components = [self duplicateComponents:self.duplicateSource.childComponents];
+            self.fullChildComponents = components;
+            return components;
         }
     }
     
-    [result addObjectsFromArray:self.primChildComponents];
+    [result addObjectsFromArray:self.localChildComponents];
+    
+    return result;
+}
+
+- (NSArray *)duplicateComponents:(NSArray *)components {
+    
+    NSMutableArray *result = [NSMutableArray array];
+    
+    for (AMComponent *component in components) {
+        
+        AMComponent *duplicate = [self duplicateComponent:component];
+        [result addObject:duplicate];
+    }
     
     return result;
 }
@@ -949,9 +1000,7 @@ Component(%d): %p %@ %@\
         }
     }
  
-    NSMutableArray *primComponents = self.primChildComponents;
-    [primComponents removeAllObjects];
-    [primComponents addObjectsFromArray:localComponents];
+    self.localChildComponents = localComponents;
 }
 
 - (NSMutableDictionary *)behavors {
@@ -962,12 +1011,12 @@ Component(%d): %p %@ %@\
     return _behavors;
 }
 
-- (NSMutableArray *)primChildComponents {
+- (NSMutableArray *)localChildComponents {
     
-    if (_primChildComponents == nil) {
-        _primChildComponents = [NSMutableArray array];
+    if (_localChildComponents == nil) {
+        _localChildComponents = [NSMutableArray array];
     }
-    return _primChildComponents;
+    return _localChildComponents;
 }
 
 - (NSInteger)depth {
@@ -1119,7 +1168,7 @@ Component(%d): %p %@ %@\
              updateProportionalValueFromFrame:self.frame
              parentFrame:self.parentComponent.frame];
             
-            for (AMComponent *childComponent in self.primChildComponents) {
+            for (AMComponent *childComponent in self.localChildComponents) {
          
                 [childComponent updateProportionalLayouts];
             }
@@ -1129,7 +1178,7 @@ Component(%d): %p %@ %@\
 
 - (void)updateChildFrames {
     
-    for (AMComponent *childComponent in self.primChildComponents) {
+    for (AMComponent *childComponent in self.localChildComponents) {
         [childComponent updateFrame];
     }
 }
@@ -1158,7 +1207,7 @@ Component(%d): %p %@ %@\
     self.frame = updatedFrame;
     
     
-    for (AMComponent *childComponent in self.primChildComponents) {
+    for (AMComponent *childComponent in self.localChildComponents) {
         [childComponent updateFrame];
     }
 }
@@ -1239,12 +1288,12 @@ Component(%d): %p %@ %@\
         }
     }
 
-    NSMutableArray *primComponents = self.primChildComponents;
+    NSMutableArray *localComponents = self.localChildComponents;
 
     for (AMComponent *component in components) {
         
-        if ([primComponents containsObject:component] == NO) {
-            [primComponents addObject:component];
+        if ([localComponents containsObject:component] == NO) {
+            [localComponents addObject:component];
         }
         
         component.parentComponent = self;
@@ -1262,19 +1311,19 @@ Component(%d): %p %@ %@\
         }
     }
     
-    NSMutableArray *primComponents = self.primChildComponents;
+    NSMutableArray *localComponents = self.localChildComponents;
 
-    NSUInteger pos = [primComponents indexOfObject:siblingComponent];
+    NSUInteger pos = [localComponents indexOfObject:siblingComponent];
     
     if (pos == NSNotFound) {
         pos = 0;
     }
     
-    if ([primComponents containsObject:insertedComponent]) {
-        [primComponents removeObject:insertedComponent];
+    if ([localComponents containsObject:insertedComponent]) {
+        [localComponents removeObject:insertedComponent];
     }
     
-    [primComponents insertObject:insertedComponent atIndex:pos];
+    [localComponents insertObject:insertedComponent atIndex:pos];
     
     insertedComponent.parentComponent = self;
 }
@@ -1290,25 +1339,25 @@ Component(%d): %p %@ %@\
         }
     }
 
-    NSMutableArray *primComponents = self.primChildComponents;
+    NSMutableArray *localComponents = self.localChildComponents;
     
-    NSUInteger pos = [primComponents indexOfObject:siblingComponent];
+    NSUInteger pos = [localComponents indexOfObject:siblingComponent];
     
     if (pos == NSNotFound) {
-        pos = primComponents.count-1;
+        pos = localComponents.count-1;
     }
     
     pos++;
-    pos = MIN(pos, primComponents.count);
+    pos = MIN(pos, localComponents.count);
     
-    if ([primComponents containsObject:insertedComponent]) {
-        [primComponents removeObject:insertedComponent];
+    if ([localComponents containsObject:insertedComponent]) {
+        [localComponents removeObject:insertedComponent];
     }
     
-    if (pos < primComponents.count) {
-        [primComponents insertObject:insertedComponent atIndex:pos];
+    if (pos < localComponents.count) {
+        [localComponents insertObject:insertedComponent atIndex:pos];
     } else {
-        [primComponents addObject:insertedComponent];
+        [localComponents addObject:insertedComponent];
     }
     
     insertedComponent.parentComponent = self;
@@ -1321,7 +1370,7 @@ Component(%d): %p %@ %@\
 }
 
 - (void)removeChildComponents:(NSArray *)components {
-    [self.primChildComponents removeObjectsInArray:components];
+    [self.localChildComponents removeObjectsInArray:components];
     [self.duplicateSource removeChildComponents:components];
     
     [components enumerateObjectsUsingBlock:^(AMComponent *component, NSUInteger idx, BOOL *stop) {

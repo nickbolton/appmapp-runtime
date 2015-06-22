@@ -23,7 +23,9 @@
 - (void)clearLayout {
     [super clearLayout];
     
-    [self.view.superview removeConstraints:self.constraints];
+    if (self.constraints.count > 0) {
+        [self.view.superview removeConstraints:self.constraints];
+    }
     self.constraints = nil;
 }
 

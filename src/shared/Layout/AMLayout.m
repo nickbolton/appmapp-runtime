@@ -73,6 +73,10 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     return _viewIdentifier;
 }
 
+- (void)setView:(NSView *)view {
+    _view = view;
+}
+
 #pragma mark - Public
 
 + (BOOL)isProportionalLayoutType:(AMLayoutType)layoutType {
