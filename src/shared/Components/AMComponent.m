@@ -741,7 +741,7 @@ Component(%d): %p %@ %@\
     return self.duplicateSource.borderColor;
 }
 
-- (void)setBorderColor:(NSColor *)borderColor {
+- (void)setBorderColor:(AMColor *)borderColor {
     
     if (self.duplicateSource != nil) {
         
@@ -771,7 +771,7 @@ Component(%d): %p %@ %@\
     return self.duplicateSource.backgroundColor;
 }
 
-- (void)setBackgroundColor:(NSColor *)backgroundColor {
+- (void)setBackgroundColor:(AMColor *)backgroundColor {
     
     if (self.duplicateSource != nil) {
         
