@@ -279,12 +279,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 - (id)copy {
     
-//    NSLog(@"copying component: %@", self.identifier);
-//    
-//    if ([self.identifier isEqualToString:@"1629220C-F989-4394-9FB9-FA508936A99B"]) {
-//        NSLog(@"ZZZ");
-//    }
-    
     AMComponent *component = [[self.class alloc] init];
     component.name = self.name.copy;
     component.rawComponentType = self.rawComponentType;
@@ -1211,10 +1205,6 @@ Component(%d): %p %@ %@\
 
 - (void)updateFrame {
     
-//    NSLog(@"%s component: %@", __PRETTY_FUNCTION__, self.identifier);
-//    NSLog(@"startingFrame: %@", NSStringFromCGRect(self.frame));
-//    NSLog(@"parentFrame: %@", NSStringFromCGRect(self.parentComponent.frame));
-    
     CGRect updatedFrame = self.frame;
     
     for (AMLayout *layout in self.layoutObjects) {
@@ -1224,15 +1214,9 @@ Component(%d): %p %@ %@\
          adjustedFrame:updatedFrame
          forComponent:self
          scale:self.scale];
-        
-//        AMBuilderView *view = (id)layout.view;
-//        
-//        NSLog(@"%@(%p) - %@ - %@", NSStringFromClass(layout.class), layout, layout.constraint, view.component.identifier);
-//        NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
     }
 
     updatedFrame = AMPixelAlignedCGRect(updatedFrame);
-//    NSLog(@"endingFrame: %@", NSStringFromCGRect(updatedFrame));
 
     self.frame = updatedFrame;
     
