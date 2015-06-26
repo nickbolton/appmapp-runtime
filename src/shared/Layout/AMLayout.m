@@ -91,6 +91,11 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 }
 
 - (void)clearLayout {
+    
+//    AMComponent *component = (id)[self.view performSelector:@selector(component)];
+//    
+//    NSLog(@"clearing constraint for %@", component.identifier);
+    
     self.constraint = nil;
     self.layoutApplied = NO;
 }
@@ -123,8 +128,14 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
         [self clearLayout];
             
         if (self.view.superview != nil) {
+            
+//            AMComponent *component = (id)[self.view performSelector:@selector(component)];
+//            NSLog(@"creating constraint for %@", component.identifier);
+            
             self.constraint = [self buildConstraintWithMultiplier:multiplier];
             self.constraint.priority = priority;
+            
+//            NSLog(@"constraint: %@", self.constraint);
             
 #if DEBUG
             self.constraint.identifier =

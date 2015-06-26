@@ -15,6 +15,7 @@
 #import "AMView+Geometry.h"
 #import "AMCompositeTextDescriptor.h"
 #import "AMComponentBehavior.h"
+#import "AMBuilderView.h"
 
 NSString * const kAMComponentClassNameKey = @"class-name";
 NSString * const kAMComponentsKey = @"components";
@@ -278,6 +279,12 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 - (id)copy {
     
+//    NSLog(@"copying component: %@", self.identifier);
+//    
+//    if ([self.identifier isEqualToString:@"1629220C-F989-4394-9FB9-FA508936A99B"]) {
+//        NSLog(@"ZZZ");
+//    }
+    
     AMComponent *component = [[self.class alloc] init];
     component.name = self.name.copy;
     component.rawComponentType = self.rawComponentType;
@@ -351,8 +358,19 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [result.localChildComponents removeAllObjects];
     [result addChildComponents:children];
     
-//    result.layoutObjects = nil;
-//    result.layoutPreset = result.layoutPreset;
+    NSMutableArray *layoutObjects = [NSMutableArray array];
+    
+    for (AMLayout *layoutObject in result.layoutObjects) {
+        
+        AMLayout *copiedObject =
+        [[AMLayoutFactory sharedInstance]
+         buildLayoutOfType:layoutObject.layoutType];
+        
+        [layoutObjects addObject:copiedObject];
+    }
+    
+    [result setLayoutObjects:layoutObjects clearLayouts:NO];
+    result.layoutObjects = layoutObjects;
     
     result.duplicateSource = self;
     
@@ -492,7 +510,7 @@ Component(%d): %p %@ %@\
     Duplicate Type: %ld\
     LayoutPreset: %ld\
     frame: %@",
-    (int)self.componentType, self, self.name, self.identifier, self.parentComponent.identifier, self.linkedComponent.identifier, self.duplicateSource.identifier, self.duplicateType, self.layoutPreset, frameString];
+    (int)self.componentType, self, self.name, self.identifier, self.parentComponent.identifier, self.linkedComponent.identifier, self.duplicateSource.identifier, (long)self.duplicateType, (long)self.layoutPreset, frameString];
 //    return [NSString stringWithFormat:@"\
 //Component(%d): %p %@ %@\
 //    Parent: %@\
@@ -827,6 +845,7 @@ Component(%d): %p %@ %@\
     
     BOOL sizeChanged = (CGSizeEqualToSize(frame.size, self.frame.size) == NO);
     _frame = frame;
+    
     if (sizeChanged) {
         [self updateChildFrames];
     }
@@ -1108,9 +1127,16 @@ Component(%d): %p %@ %@\
 }
 
 - (void)setLayoutObjects:(NSArray *)layoutObjects {
-    
-    for (AMLayout *layoutObject in _layoutObjects) {
-        [layoutObject clearLayout];
+    [self setLayoutObjects:layoutObjects clearLayouts:YES];
+}
+
+- (void)setLayoutObjects:(NSArray *)layoutObjects clearLayouts:(BOOL)clearLayouts {
+
+    if (clearLayouts) {
+        
+        for (AMLayout *layoutObject in _layoutObjects) {
+            [layoutObject clearLayout];
+        }
     }
     
     _layoutObjects = layoutObjects;
@@ -1185,6 +1211,7 @@ Component(%d): %p %@ %@\
 
 - (void)updateFrame {
     
+//    NSLog(@"%s component: %@", __PRETTY_FUNCTION__, self.identifier);
 //    NSLog(@"startingFrame: %@", NSStringFromCGRect(self.frame));
 //    NSLog(@"parentFrame: %@", NSStringFromCGRect(self.parentComponent.frame));
     
@@ -1198,6 +1225,9 @@ Component(%d): %p %@ %@\
          forComponent:self
          scale:self.scale];
         
+//        AMBuilderView *view = (id)layout.view;
+//        
+//        NSLog(@"%@(%p) - %@ - %@", NSStringFromClass(layout.class), layout, layout.constraint, view.component.identifier);
 //        NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
     }
 
@@ -1376,6 +1406,14 @@ Component(%d): %p %@ %@\
     [components enumerateObjectsUsingBlock:^(AMComponent *component, NSUInteger idx, BOOL *stop) {
         component.parentComponent = nil;
     }];
+}
+
+- (void)clearDuplicateCaches {
+    
+    self.fullChildComponents = nil;
+    for (AMComponent *childComponent in self.localChildComponents) {
+        [childComponent clearDuplicateCaches];
+    }
 }
 
 - (BOOL)isEqualToComponent:(AMComponent *)object {

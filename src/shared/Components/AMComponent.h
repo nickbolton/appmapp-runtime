@@ -101,6 +101,8 @@ extern NSString * kAMComponentDuplicateTypeKey;
 
 + (instancetype)buildComponent;
 
+- (void)clearDuplicateCaches;
+
 - (instancetype)copyForPasting;
 - (BOOL)isDescendent:(AMComponent *)component;
 - (AMComponent *)ancestorBefore:(AMComponent *)component;
