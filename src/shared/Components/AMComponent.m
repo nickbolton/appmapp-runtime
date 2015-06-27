@@ -323,6 +323,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     AMComponent *result = component.copyForPasting;
     result.parentComponent = self;
+    result.duplicateType = self.duplicateType;
     
     result.identifier =
     [NSString stringWithFormat:@"%@-%@",
@@ -928,27 +929,6 @@ Component(%d): %p %@ %@\
     return self.localChildComponents.copy;
 }
 
-//- (NSArray *)ownedChildComponents:(NSArray *)childComponents {
-//    
-//    NSMutableArray *localComponents = childComponents.mutableCopy;
-//    
-//    if (self.duplicateSource != nil) {
-//        
-//        if (self.duplicateType == AMDuplicateTypeInherited) {
-//            
-//            for (AMComponent *component in self.duplicateSource.childComponents) {
-//                [localComponents removeObject:component];
-//            }
-//            
-//        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-//
-//            [localComponents removeAllObjects];
-//        }
-//    }
-//    
-//    return localComponents;
-//}
-
 - (NSArray *)childComponents {
 
     NSMutableArray *result = [NSMutableArray array];
@@ -969,7 +949,7 @@ Component(%d): %p %@ %@\
             return result;
             
         } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-
+            
             NSArray *components = [self duplicateComponents:self.duplicateSource.childComponents];
             self.fullChildComponents = components;
             return components;
@@ -992,6 +972,82 @@ Component(%d): %p %@ %@\
     }
     
     return result;
+}
+
+- (void)promoteToDuplicateSource:(AMComponent *)sourceComponent {
+    
+    self.duplicateSource = nil;
+    self.duplicateSourceIdentifier = nil;
+    
+    if (self.duplicateType == AMDuplicateTypeMirrored ||
+        _name == nil) {
+        
+        self.name = sourceComponent.name;
+    }
+
+    if (self.duplicateType == AMDuplicateTypeMirrored ||
+        _classPrefix == nil) {
+        
+        self.classPrefix = sourceComponent.classPrefix;
+    }
+
+    if (self.duplicateType == AMDuplicateTypeMirrored ||
+        _borderColor == nil) {
+        
+        self.borderColor = sourceComponent.borderColor;
+    }
+
+    if (self.duplicateType == AMDuplicateTypeMirrored ||
+        _backgroundColor == nil) {
+        
+        self.backgroundColor = sourceComponent.backgroundColor;
+    }
+
+    if (self.duplicateType == AMDuplicateTypeMirrored ||
+        _textDescriptor == nil) {
+        
+        self.textDescriptor = sourceComponent.textDescriptor;
+    }
+
+    if (self.duplicateType == AMDuplicateTypeMirrored ||
+        _rawComponentType == nil) {
+        
+        self.rawComponentType = @(sourceComponent.componentType);
+    }
+
+    if (self.duplicateType == AMDuplicateTypeMirrored ||
+        _rawClipped == nil) {
+        
+        self.rawClipped = @(sourceComponent.isClipped);
+    }
+    
+    if (self.duplicateType == AMDuplicateTypeMirrored ||
+        _rawUseCustomClass == nil) {
+        
+        self.rawUseCustomClass = @(sourceComponent.useCustomViewClass);
+    }
+
+    if (self.duplicateType == AMDuplicateTypeMirrored ||
+        _rawAlpha == nil) {
+        
+        self.rawAlpha = @(sourceComponent.alpha);
+    }
+
+    if (self.duplicateType == AMDuplicateTypeMirrored ||
+        _rawCornerRadius == nil) {
+        
+        self.rawCornerRadius = @(sourceComponent.cornerRadius);
+    }
+
+    if (self.duplicateType == AMDuplicateTypeMirrored ||
+        _rawBorderWidth == nil) {
+        
+        self.rawBorderWidth = @(sourceComponent.borderWidth);
+    }
+    
+    for (AMComponent *childComponent in sourceComponent.ownedChildComponents) {
+        [self addChildComponent:childComponent];
+    }
 }
 
 - (void)setChildComponents:(NSArray *)childComponents {
@@ -1234,6 +1290,20 @@ Component(%d): %p %@ %@\
     }
     
     return self.duplicateSource.behavor;
+}
+
+- (NSArray *)allAncestors {
+    
+    NSMutableArray *result = [NSMutableArray array];
+    
+    AMComponent *parentComponent = self.parentComponent;
+    
+    while (parentComponent != nil) {
+        [result addObject:parentComponent];
+        parentComponent = parentComponent.parentComponent;
+    }
+    
+    return result;
 }
 
 #pragma mark - Public

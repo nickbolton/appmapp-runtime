@@ -48,7 +48,7 @@ extern NSString * kAMComponentDuplicateTypeKey;
 @property (nonatomic, strong) NSArray *childComponents;
 @property (nonatomic, readonly) NSArray *ownedChildComponents;
 @property (nonatomic, weak) AMComponent *parentComponent;
-@property (nonatomic, strong) NSString *lastParentComponentIdentifier;
+@property (nonatomic, readonly) NSArray *allAncestors;
 @property (nonatomic, readonly) AMComponent *topLevelComponent;
 @property (nonatomic, weak) AMComponent *linkedComponent;
 @property (nonatomic, weak) AMComponent *duplicateSource;
@@ -59,6 +59,7 @@ extern NSString * kAMComponentDuplicateTypeKey;
 @property (nonatomic, readonly) NSArray *sizePresets;
 @property (nonatomic) CGFloat scale; // canvas scale
 @property (nonatomic) BOOL useCustomViewClass;
+@property (nonatomic) BOOL dropTarget;
 
 @property (nonatomic) CGFloat cornerRadius;
 @property (nonatomic) CGFloat borderWidth;
@@ -102,6 +103,7 @@ extern NSString * kAMComponentDuplicateTypeKey;
 + (instancetype)buildComponent;
 
 - (void)clearDuplicateCaches;
+- (void)promoteToDuplicateSource:(AMComponent *)sourceComponent;
 
 - (instancetype)copyForPasting;
 - (BOOL)isDescendent:(AMComponent *)component;
