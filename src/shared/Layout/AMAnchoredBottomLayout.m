@@ -109,12 +109,30 @@
 
 - (CGRect)adjustedFrame:(CGRect)frame
            forComponent:(AMComponent *)component
+           maintainSize:(BOOL)maintainSize
                   scale:(CGFloat)scale {
 
     if (component.parentComponent != nil && scale > 0.0f) {
         
+        CGFloat topSpace = [self topConstraintConstant:component.layoutObjects];
+        
         CGRect result = frame;
-        result.origin.y = CGRectGetHeight(component.parentComponent.frame) - CGRectGetHeight(frame) + self.constraint.constant/scale;
+        
+        if (maintainSize == NO && topSpace > -MAXFLOAT) {
+            
+            result.size.height =
+            CGRectGetHeight(component.parentComponent.frame) -
+            topSpace +
+            (self.constraint.constant/scale);
+            
+        } else {
+            
+            result.origin.y =
+            CGRectGetHeight(component.parentComponent.frame) -
+            CGRectGetHeight(frame) +
+            (self.constraint.constant/scale);
+        }
+        
         return result;
     }
     

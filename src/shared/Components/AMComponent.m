@@ -1276,7 +1276,6 @@ Component(%d): %p %@ %@\
 
     self.frame = updatedFrame;
     
-    
     for (AMComponent *childComponent in self.localChildComponents) {
         [childComponent updateFrame];
     }

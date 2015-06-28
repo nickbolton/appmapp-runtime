@@ -143,12 +143,13 @@
 
 - (CGRect)adjustedFrame:(CGRect)frame
            forComponent:(AMComponent *)component
+           maintainSize:(BOOL)maintainSize
                   scale:(CGFloat)scale {
     
-    CGRect result = [self.widthLayout adjustedFrame:frame forComponent:component scale:scale];
-    result = [self.heightLayout adjustedFrame:frame forComponent:component scale:scale];
-    result = [self.topLayout adjustedFrame:frame forComponent:component scale:scale];
-    result = [self.leftLayout adjustedFrame:frame forComponent:component scale:scale];
+    CGRect result = [self.widthLayout adjustedFrame:frame forComponent:component maintainSize:maintainSize scale:scale];
+    result = [self.heightLayout adjustedFrame:frame forComponent:component maintainSize:maintainSize scale:scale];
+    result = [self.topLayout adjustedFrame:frame forComponent:component maintainSize:maintainSize scale:scale];
+    result = [self.leftLayout adjustedFrame:frame forComponent:component maintainSize:maintainSize scale:scale];
     return result;
 }
 
