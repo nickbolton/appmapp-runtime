@@ -52,6 +52,7 @@ extern NSString * kAMComponentDuplicateTypeKey;
 @property (nonatomic, readonly) AMComponent *topLevelComponent;
 @property (nonatomic, weak) AMComponent *linkedComponent;
 @property (nonatomic, weak) AMComponent *duplicateSource;
+@property (nonatomic, readonly) AMComponent *mirrorSource;
 @property (nonatomic) AMDuplicateType duplicateType;
 @property (nonatomic, readonly) NSString *linkedComponentIdentifier;
 @property (nonatomic, readonly) NSString *duplicateSourceIdentifier;

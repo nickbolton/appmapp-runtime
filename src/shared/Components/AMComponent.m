@@ -864,6 +864,15 @@ Component(%d): %p %@ %@\
     self.duplicateSourceIdentifier = duplicateSource.identifier;
 }
 
+- (AMComponent *)mirrorSource {
+    
+    if (self.duplicateSource != nil && self.duplicateType == AMDuplicateTypeMirrored) {
+        return self.duplicateSource.mirrorSource;
+    }
+    
+    return self;
+}
+
 - (void)setDuplicateType:(AMDuplicateType)duplicateType {
     _duplicateType = duplicateType;
     NSArray *childComponents = self.localChildComponents.copy;
