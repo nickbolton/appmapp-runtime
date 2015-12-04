@@ -553,17 +553,7 @@ Component(%d): %p %@ %@\
 - (void)setClassPrefix:(NSString *)classPrefix {
     
     if (self.duplicateSource != nil) {
-        
-        if (self.duplicateType == AMDuplicateTypeInherited) {
-            
-            if ((self.duplicateSource.classPrefix == nil && classPrefix == nil) ||
-                [self.duplicateSource.classPrefix isEqualToString:classPrefix]) {
-                _classPrefix = nil;
-                return;
-            }
-            
-        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-            
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
             self.duplicateSource.classPrefix = classPrefix;
             return;
         }
@@ -583,16 +573,7 @@ Component(%d): %p %@ %@\
 - (void)setComponentType:(AMComponentType)componentType {
     
     if (self.duplicateSource != nil) {
-        
-        if (self.duplicateType == AMDuplicateTypeInherited) {
-            
-            if (self.duplicateSource.componentType == componentType) {
-                _rawComponentType = nil;
-                return;
-            }
-            
-        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-            
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
             self.duplicateSource.componentType = componentType;
             return;
         }
@@ -612,16 +593,7 @@ Component(%d): %p %@ %@\
 - (void)setUseCustomViewClass:(BOOL)useCustomViewClass {
     
     if (self.duplicateSource != nil) {
-        
-        if (self.duplicateType == AMDuplicateTypeInherited) {
-            
-            if (self.duplicateSource.useCustomViewClass == useCustomViewClass) {
-                _rawUseCustomClass = nil;
-                return;
-            }
-            
-        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-            
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
             self.duplicateSource.useCustomViewClass = useCustomViewClass;
             return;
         }
@@ -641,16 +613,7 @@ Component(%d): %p %@ %@\
 - (void)setCornerRadius:(CGFloat)cornerRadius {
     
     if (self.duplicateSource != nil) {
-        
-        if (self.duplicateType == AMDuplicateTypeInherited) {
-            
-            if (self.duplicateSource.cornerRadius == cornerRadius) {
-                _rawCornerRadius = nil;
-                return;
-            }
-            
-        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-            
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
             self.duplicateSource.cornerRadius = cornerRadius;
             return;
         }
@@ -670,16 +633,7 @@ Component(%d): %p %@ %@\
 - (void)setBorderWidth:(CGFloat)borderWidth {
     
     if (self.duplicateSource != nil) {
-        
-        if (self.duplicateType == AMDuplicateTypeInherited) {
-            
-            if (self.duplicateSource.borderWidth == borderWidth) {
-                _rawBorderWidth = nil;
-                return;
-            }
-            
-        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-            
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
             self.duplicateSource.borderWidth = borderWidth;
             return;
         }
@@ -699,16 +653,7 @@ Component(%d): %p %@ %@\
 - (void)setClipped:(BOOL)clipped {
     
     if (self.duplicateSource != nil) {
-        
-        if (self.duplicateType == AMDuplicateTypeInherited) {
-            
-            if (self.duplicateSource.isClipped == clipped) {
-                _rawClipped = nil;
-                return;
-            }
-            
-        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-            
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
             self.duplicateSource.clipped = clipped;
             return;
         }
@@ -728,16 +673,7 @@ Component(%d): %p %@ %@\
 - (void)setAlpha:(CGFloat)alpha {
     
     if (self.duplicateSource != nil) {
-        
-        if (self.duplicateType == AMDuplicateTypeInherited) {
-            
-            if (self.duplicateSource.alpha == alpha) {
-                _rawAlpha = nil;
-                return;
-            }
-            
-        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-            
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
             self.duplicateSource.alpha = alpha;
             return;
         }
@@ -757,17 +693,7 @@ Component(%d): %p %@ %@\
 - (void)setBorderColor:(AMColor *)borderColor {
     
     if (self.duplicateSource != nil) {
-        
-        if (self.duplicateType == AMDuplicateTypeInherited) {
-            
-            if ([self.duplicateSource.borderColor isEqual:borderColor] ||
-                (self.duplicateSource.borderColor == nil && borderColor == nil)) {
-                _borderColor = nil;
-                return;
-            }
-            
-        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-            
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
             self.duplicateSource.borderColor = borderColor;
             return;
         }
@@ -787,17 +713,7 @@ Component(%d): %p %@ %@\
 - (void)setBackgroundColor:(AMColor *)backgroundColor {
     
     if (self.duplicateSource != nil) {
-        
-        if (self.duplicateType == AMDuplicateTypeInherited) {
-            
-            if ([self.duplicateSource.backgroundColor isEqual:backgroundColor] ||
-                (self.duplicateSource.backgroundColor == nil && backgroundColor == nil)) {
-                _backgroundColor = nil;
-                return;
-            }
-            
-        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-            
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
             self.duplicateSource.backgroundColor = backgroundColor;
             return;
         }
@@ -817,17 +733,7 @@ Component(%d): %p %@ %@\
 - (void)setTextDescriptor:(AMCompositeTextDescriptor *)textDescriptor {
  
     if (self.duplicateSource != nil) {
-        
-        if (self.duplicateType == AMDuplicateTypeInherited) {
-            
-            if ([self.duplicateSource.textDescriptor isEqual:textDescriptor] ||
-                (self.duplicateSource.textDescriptor == nil && textDescriptor == nil)) {
-                _textDescriptor = nil;
-                return;
-            }
-            
-        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-            
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
             self.duplicateSource.textDescriptor = textDescriptor;
             return;
         }
@@ -948,17 +854,7 @@ Component(%d): %p %@ %@\
             return self.fullChildComponents;
         }
         
-        if (self.duplicateType == AMDuplicateTypeInherited) {
-            
-            NSArray *components = [self duplicateComponents:self.duplicateSource.childComponents];
-            [result addObjectsFromArray:components];
-            [result addObjectsFromArray:self.localChildComponents];
-
-            self.fullChildComponents = result;
-            return result;
-            
-        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-            
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
             NSArray *components = [self duplicateComponents:self.duplicateSource.childComponents];
             self.fullChildComponents = components;
             return components;
@@ -1064,15 +960,7 @@ Component(%d): %p %@ %@\
     NSMutableArray *localComponents = childComponents.mutableCopy;
     
     if (self.duplicateSource != nil) {
-        
-        if (self.duplicateType == AMDuplicateTypeInherited) {
-            
-            for (AMComponent *component in self.duplicateSource.childComponents) {
-                [localComponents removeObject:component];
-            }
-            
-        } else if (self.duplicateType == AMDuplicateTypeMirrored) {
-            
+        if (self.duplicateType == AMDuplicateTypeMirrored) {
             self.duplicateSource.childComponents = childComponents;
             return;
         }
