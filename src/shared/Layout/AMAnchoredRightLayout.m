@@ -110,15 +110,16 @@
 
 - (CGRect)adjustedFrame:(CGRect)frame
            forComponent:(AMComponent *)component
+           maintainSize:(BOOL)maintainSize
                   scale:(CGFloat)scale {
     
     if (component.parentComponent != nil && scale > 0.0f) {
-                
+        
         CGFloat leftSpace = [self leftConstraintConstant:component.layoutObjects];
         
         CGRect result = frame;
         
-        if (leftSpace > -MAXFLOAT) {
+        if (maintainSize == NO && leftSpace > -MAXFLOAT) {
             
             result.size.width =
             CGRectGetWidth(component.parentComponent.frame) -
@@ -136,7 +137,6 @@
         return result;
     }
     
-    return frame;
-}
+    return frame;}
 
 @end

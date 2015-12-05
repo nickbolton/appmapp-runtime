@@ -45,7 +45,6 @@ extern NSString * kAMComponentLinkedComponentKey;
 @property (nonatomic, strong) NSArray *layoutObjects;
 @property (nonatomic, strong) NSArray *childComponents;
 @property (nonatomic, weak) AMComponent *parentComponent;
-@property (nonatomic, strong) NSString *lastParentComponentIdentifier;
 @property (nonatomic, readonly) AMComponent *topLevelComponent;
 @property (nonatomic, weak) AMComponent *linkedComponent;
 @property (nonatomic, readonly) NSString *linkedComponentIdentifier;
@@ -53,6 +52,7 @@ extern NSString * kAMComponentLinkedComponentKey;
 @property (nonatomic, readonly) NSArray *sizePresets;
 @property (nonatomic) CGFloat scale; // canvas scale
 @property (nonatomic) BOOL useCustomViewClass;
+@property (nonatomic) BOOL dropTarget;
 
 @property (nonatomic) CGFloat cornerRadius;
 @property (nonatomic) CGFloat borderWidth;

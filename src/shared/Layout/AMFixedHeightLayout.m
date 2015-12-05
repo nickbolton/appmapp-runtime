@@ -55,10 +55,10 @@
 
 - (CGRect)adjustedFrame:(CGRect)frame
            forComponent:(AMComponent *)component
+           maintainSize:(BOOL)maintainSize
                   scale:(CGFloat)scale {
 
-    if (component.parentComponent != nil && scale > 0.0f) {
-
+    if (maintainSize == NO && component.parentComponent != nil && scale > 0.0f) {
         CGRect result = frame;
         result.size.height = self.constraint.constant/scale;
         return result;

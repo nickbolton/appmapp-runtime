@@ -39,6 +39,11 @@
 
 - (CGRect)adjustedFrame:(CGRect)frame
            forComponent:(AMComponent *)component
+           maintainSize:(BOOL)maintainSize
+                  scale:(CGFloat)scale;
+
+- (CGRect)adjustedFrame:(CGRect)frame
+           forComponent:(AMComponent *)component
                   scale:(CGFloat)scale;
 
 - (void)applyConstraintIfNecessary;
