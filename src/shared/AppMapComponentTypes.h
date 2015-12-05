@@ -54,6 +54,7 @@ typedef NS_ENUM(NSInteger, AMLayoutPreset) {
 typedef NS_ENUM(NSInteger, AMDuplicateType) {
     AMDuplicateTypeCopied = 0,
     AMDuplicateTypeMirrored,
+    AMDuplicateTypeExcluded,
 };
 
 #endif
