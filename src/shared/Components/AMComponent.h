@@ -47,6 +47,8 @@ extern NSString * kAMComponentLinkedComponentKey;
 @property (nonatomic, weak) AMComponent *parentComponent;
 @property (nonatomic, readonly) AMComponent *topLevelComponent;
 @property (nonatomic, weak) AMComponent *linkedComponent;
+@property (nonatomic, weak) AMComponent *duplicateSource;
+@property (nonatomic, readonly) NSString *duplicateSourceIdentifier;
 @property (nonatomic, readonly) NSString *linkedComponentIdentifier;
 @property (nonatomic, readonly) BOOL isTopLevelComponent;
 @property (nonatomic, readonly) NSArray *sizePresets;

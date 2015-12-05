@@ -37,6 +37,7 @@ NSString * kAMComponentLayoutObjectsKey = @"layoutObjects";
 NSString * kAMComponentLayoutPresetKey = @"layoutPreset";
 NSString * kAMComponentTextDescriptorKey = @"textDescriptor";
 NSString * kAMComponentLinkedComponentKey = @"linkedComponent";
+NSString * kAMComponentDuplicateSourceKey = @"duplicateSource";
 NSString * kAMComponentUseCustomViewClassKey = @"useCustomViewClass";
 
 static NSString * kAMComponentDefaultNamePrefix = @"Container-";
@@ -49,6 +50,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 @property (nonatomic, readwrite) NSString *defaultName;
 @property (nonatomic, readwrite) NSString *exportedName;
 @property (nonatomic, readwrite) BOOL hasProportionalLayout;
+@property (nonatomic, readwrite) NSString *duplicateSourceIdentifier;
 @property (nonatomic, readwrite) NSString *linkedComponentIdentifier;
 @property (nonatomic, strong) NSMutableDictionary *behavors;
 
@@ -76,6 +78,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [coder encodeInteger:self.layoutPreset forKey:kAMComponentLayoutPresetKey];
     [coder encodeObject:self.layoutObjects forKey:kAMComponentLayoutObjectsKey];
     [coder encodeObject:self.textDescriptor forKey:kAMComponentTextDescriptorKey];
+    [coder encodeObject:self.duplicateSource.identifier forKey:kAMComponentDuplicateSourceKey];
     [coder encodeObject:self.linkedComponent.identifier forKey:kAMComponentLinkedComponentKey];
     
 #if TARGET_OS_IPHONE
@@ -105,6 +108,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         self.layoutPreset = [decoder decodeIntegerForKey:kAMComponentLayoutPresetKey];
         self.layoutObjects = [decoder decodeObjectForKey:kAMComponentLayoutObjectsKey];
         self.textDescriptor = [decoder decodeObjectForKey:kAMComponentTextDescriptorKey];
+        self.duplicateSourceIdentifier = [decoder decodeObjectForKey:kAMComponentDuplicateSourceKey];
         self.linkedComponentIdentifier = [decoder decodeObjectForKey:kAMComponentLinkedComponentKey];
         
 #if TARGET_OS_IPHONE
@@ -151,6 +155,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         self.borderColor = [AMColor colorWithHexcodePlusAlpha:borderColorString];
         self.backgroundColor = [AMColor colorWithHexcodePlusAlpha:backgroundColorString];
         self.layoutPreset = [dict[kAMComponentLayoutPresetKey] integerValue];
+        self.duplicateSourceIdentifier = dict[kAMComponentDuplicateSourceKey];
         self.linkedComponentIdentifier = dict[kAMComponentLinkedComponentKey];
         
         NSDictionary *descriptorDict = dict[kAMComponentTextDescriptorKey];
@@ -363,6 +368,10 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     dict[kAMComponentBorderWidthKey] = @(self.borderWidth);
     dict[kAMComponentLayoutPresetKey] = @(self.layoutPreset);
     
+    if (self.duplicateSource != nil) {
+        dict[kAMComponentDuplicateSourceKey] = self.duplicateSource.identifier;
+    }
+
     if (self.linkedComponent != nil) {
         dict[kAMComponentLinkedComponentKey] = self.linkedComponent.identifier;
     }
@@ -462,6 +471,11 @@ Component(%d): %p %@ %@\
     if (parentComponent == nil) {
         self.useCustomViewClass = YES;
     }
+}
+
+- (void)setDuplicateSource:(AMComponent *)duplicateSource {
+    _duplicateSource = duplicateSource;
+    self.duplicateSourceIdentifier = duplicateSource.identifier;
 }
 
 - (void)setLinkedComponent:(AMComponent *)linkedComponent {
