@@ -22,6 +22,7 @@ extern NSString * kAMComponentChildComponentsKey;
 extern NSString * kAMComponentLinkedComponentKey;
 extern NSString * kAMComponentTextDescriptorKey;
 extern NSString * kAMComponentDuplicateTypeKey;
+extern NSString * kAMComponentOriginalDescriptorKey;
 
 extern NSString * kAMComponentOverridingClippedKey;
 extern NSString * kAMComponentOverridingBackgroundColorKey;
@@ -54,6 +55,7 @@ extern NSString * kAMComponentOverridingCornerRadiusKey;
 @property (nonatomic, readonly) BOOL hasProportionalLayout;
 @property (nonatomic) AMLayoutPreset layoutPreset;
 @property (nonatomic) AMDuplicateType duplicateType;
+@property (nonatomic, strong) NSString *originalDescriptorIdentifier;
 @property (nonatomic, readonly) BOOL isMirrored;
 @property (nonatomic, readonly) BOOL isCopied;
 @property (nonatomic, readonly) BOOL isInherited;

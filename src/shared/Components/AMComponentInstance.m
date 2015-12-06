@@ -28,6 +28,7 @@ NSString * kAMComponentLinkedComponentKey = @"linkedComponent";
 NSString * kAMComponentUseCustomViewClassKey = @"useCustomViewClass";
 NSString * kAMComponentTextDescriptorKey = @"textDescriptor";
 NSString * kAMComponentDuplicateTypeKey = @"duplicateType";
+NSString * kAMComponentOriginalDescriptorKey = @"originalDescriptor";
 
 NSString * kAMComponentOverridingCornerRadiusKey = @"overridingCornerRadius";
 NSString * kAMComponentOverridingBorderWidthKey = @"overridingBorderWidth";
@@ -76,6 +77,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [coder encodeBool:self.useCustomViewClass forKey:kAMComponentUseCustomViewClassKey];
     [coder encodeObject:self.textDescriptor forKey:kAMComponentTextDescriptorKey];
     [coder encodeInteger:self.duplicateType forKey:kAMComponentDuplicateTypeKey];
+    [coder encodeObject:self.originalDescriptorIdentifier forKey:kAMComponentOriginalDescriptorKey];
 
     [coder encodeObject:self.overridingCornerRadius forKey:kAMComponentOverridingCornerRadiusKey];
     [coder encodeObject:self.overridingBorderWidth forKey:kAMComponentOverridingBorderWidthKey];
@@ -105,6 +107,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         self.linkedComponentIdentifier = [decoder decodeObjectForKey:kAMComponentLinkedComponentKey];
         self.textDescriptor = [decoder decodeObjectForKey:kAMComponentTextDescriptorKey];
         self.duplicateType = [decoder decodeIntegerForKey:kAMComponentDuplicateTypeKey];
+        self.originalDescriptorIdentifier = [decoder decodeObjectForKey:kAMComponentOriginalDescriptorKey];
         
         self.overridingCornerRadius = [decoder decodeObjectForKey:kAMComponentOverridingCornerRadiusKey];
         self.overridingBorderWidth = [decoder decodeObjectForKey:kAMComponentOverridingBorderWidthKey];
@@ -148,6 +151,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         self.useCustomViewClass = [dict[kAMComponentUseCustomViewClassKey] boolValue];
         self.linkedComponentIdentifier = dict[kAMComponentLinkedComponentKey];
         self.duplicateType = [dict[kAMComponentDuplicateTypeKey] integerValue];
+        self.originalDescriptorIdentifier = dict[kAMComponentOriginalDescriptorKey];
         
         self.overridingCornerRadius = dict[kAMComponentOverridingCornerRadiusKey];
         self.overridingBorderWidth = dict[kAMComponentOverridingBorderWidthKey];
@@ -256,11 +260,12 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     AMComponentInstance *component = super.copy;
     component.name = self.name.copy;
+    component.descriptor = self.descriptor.copy;
     component.defaultName = self.defaultName.copy;
     component.frame = self.frame;
     component.textDescriptor = self.textDescriptor.copy;
-    component.descriptor = self.descriptor;
     component.duplicateType = self.duplicateType;
+    component.originalDescriptorIdentifier = self.originalDescriptorIdentifier.copy;
     component.layoutPreset = self.layoutPreset;
     component.layoutObjects = self.layoutObjects.copy;
     component.overridingCornerRadius = self.overridingCornerRadius;
@@ -302,6 +307,18 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     result.defaultName = nil;
     result.layoutObjects = nil;
     result.layoutPreset = result.layoutPreset;
+    result.originalDescriptorIdentifier = self.descriptor.identifier;
+    result.holdDescriptor = YES;
+    
+    AMComponentDescriptor *descriptor = self.descriptor.copy;
+    
+    if (result.duplicateType == AMDuplicateTypeCopied) {
+        descriptor.identifier = [[NSUUID new] UUIDString];
+    } else {
+        descriptor = self.descriptor;
+    }
+    
+    result.descriptor = descriptor;
     
     if ([result.name hasPrefix:kAMComponentDefaultNamePrefix]) {
         result.name = nil;
@@ -336,6 +353,10 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     dict[kAMComponentDescriptorKey] = self.descriptor.identifier;
     dict[kAMComponentLayoutPresetKey] = @(self.layoutPreset);
     dict[kAMComponentDuplicateTypeKey] = @(self.duplicateType);
+    
+    if (self.originalDescriptorIdentifier != nil) {
+        dict[kAMComponentOriginalDescriptorKey] = self.originalDescriptorIdentifier;
+    }
     
     if (self.overridingCornerRadius != nil) {
         dict[kAMComponentOverridingCornerRadiusKey] = self.overridingCornerRadius;
@@ -446,6 +467,9 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 - (void)setDescriptor:(AMComponentDescriptor *)descriptor {
     _descriptor = descriptor;
     self.descriptorIdentifier = descriptor.identifier;
+    if (self.holdDescriptor) {
+        self.strongDescriptor = descriptor;
+    }
 }
 
 - (void)setFrame:(CGRect)frame {
