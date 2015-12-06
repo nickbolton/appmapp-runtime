@@ -8,7 +8,7 @@
 
 #import "AMGenerator.h"
 #import "AMViewGenerator.h"
-#import "AMComponent.h"
+#import "AMComponentInstance.h"
 #import "AMExpandingLayout.h"
 #import "NSString+NameUtilities.h"
 #import "AMComponentManagerTemplate.h"
@@ -153,8 +153,8 @@ NSString * const kAMComponentManagerClassName = @"AMComponentManager";
     
     for (NSDictionary *componentDict in components) {
         
-        AMComponent *component =
-        [AMComponent componentWithDictionary:componentDict];
+        AMComponentInstance *component =
+        [AMComponentInstance componentWithDictionary:componentDict];
         
         NSString *viewName = [self buildViewName:component classPrefix:classPrefix];
 
@@ -168,8 +168,8 @@ NSString * const kAMComponentManagerClassName = @"AMComponentManager";
     
     for (NSDictionary *componentDict in components) {
         
-        AMComponent *component =
-        [AMComponent componentWithDictionary:componentDict];
+        AMComponentInstance *component =
+        [AMComponentInstance componentWithDictionary:componentDict];
         
         NSString *viewControllerName = [self buildViewControllerName:component.exportedName classPrefix:classPrefix];
         
@@ -289,7 +289,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     return name;
 }
 
-- (NSString *)buildMachineProperties:(AMComponent *)component
+- (NSString *)buildMachineProperties:(AMComponentInstance *)component
                                  ios:(BOOL)ios
                            interface:(BOOL)interface
                        viewBaseClass:(NSString *)viewBaseClass
@@ -298,7 +298,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     NSMutableString *result = [NSMutableString string];
     
-    [component.childComponents enumerateObjectsUsingBlock:^(AMComponent *childComponent, NSUInteger idx, BOOL *stop) {
+    [component.childComponents enumerateObjectsUsingBlock:^(AMComponentInstance *childComponent, NSUInteger idx, BOOL *stop) {
         
         NSString *propertyString =
         [self
@@ -316,13 +316,13 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     return  result;
 }
 
-- (NSString *)buildRootViewName:(AMComponent *)component {
+- (NSString *)buildRootViewName:(AMComponentInstance *)component {
     
     NSString *name = [component.exportedName stringByAppendingString:@"View"];
     return name;
 }
 
-- (NSString *)buildMachineProperty:(AMComponent *)childComponent
+- (NSString *)buildMachineProperty:(AMComponentInstance *)childComponent
                                ios:(BOOL)ios
                          interface:(BOOL)interface
                      viewBaseClass:(NSString *)viewBaseClass
@@ -330,7 +330,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
                 baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     NSString *viewClassName;
-    if (YES || childComponent.useCustomViewClass) {
+    if (childComponent.useCustomViewClass) {
         
          viewClassName = [self buildViewName:childComponent classPrefix:classPrefix];
         
@@ -352,7 +352,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
      readQualifier, viewClassName, propertyName];
 }
 
-- (NSString *)buildViewName:(AMComponent *)component
+- (NSString *)buildViewName:(AMComponentInstance *)component
                 classPrefix:(NSString *)classPrefix {
     
     NSString *suffix = @"View";
@@ -383,7 +383,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     NSMutableString *result = [NSMutableString string];
     
-    [components enumerateObjectsUsingBlock:^(AMComponent *childComponent, NSUInteger idx, BOOL *stop) {
+    [components enumerateObjectsUsingBlock:^(AMComponentInstance *childComponent, NSUInteger idx, BOOL *stop) {
         
         [result appendString:[self buildClassDeclaration:childComponent ios:ios classPrefix:classPrefix baseViewClassNames:baseViewClassNames]];
     }];
@@ -391,14 +391,14 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     return result;
 }
 
-- (NSString *)buildClassDeclaration:(AMComponent *)component
+- (NSString *)buildClassDeclaration:(AMComponentInstance *)component
                                 ios:(BOOL)ios
                         classPrefix:(NSString *)classPrefix
                  baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     NSString *viewClassName;
     
-    if (YES || component.useCustomViewClass) {
+    if (component.useCustomViewClass) {
         viewClassName = [self buildViewName:component classPrefix:classPrefix];
     } else {
         viewClassName = [self buildBaseViewNameForComponentType:component.componentType baseViewClassNames:baseViewClassNames ios:ios];
@@ -414,7 +414,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     NSMutableString *result = [NSMutableString string];
     
-    [components enumerateObjectsUsingBlock:^(AMComponent *childComponent, NSUInteger idx, BOOL *stop) {
+    [components enumerateObjectsUsingBlock:^(AMComponentInstance *childComponent, NSUInteger idx, BOOL *stop) {
         
         [result appendString:[self buildClassImport:childComponent ios:ios classPrefix:classPrefix baseViewClassNames:baseViewClassNames]];
     }];
@@ -422,14 +422,14 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     return result;
 }
 
-- (NSString *)buildClassImport:(AMComponent *)component
+- (NSString *)buildClassImport:(AMComponentInstance *)component
                            ios:(BOOL)ios
                    classPrefix:(NSString *)classPrefix
             baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     NSString *viewClassName;
     
-    if (YES || component.useCustomViewClass) {
+    if (component.useCustomViewClass) {
         viewClassName = [self buildViewName:component classPrefix:classPrefix];
     } else {
         viewClassName = [self buildBaseViewNameForComponentType:component.componentType baseViewClassNames:baseViewClassNames ios:ios];

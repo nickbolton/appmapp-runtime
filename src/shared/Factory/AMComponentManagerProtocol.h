@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AMComponent.h"
+#import "AMComponentInstance.h"
 
 @protocol AMComponentManager <NSObject>
 

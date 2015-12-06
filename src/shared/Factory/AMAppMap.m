@@ -7,7 +7,7 @@
 //
 
 #import "AMAppMap.h"
-#import "AMComponent.h"
+#import "AMComponentInstance.h"
 #import "AMAppMapContainerFactory.h"
 #import "AMAppMapLabelFactory.h"
 
@@ -37,7 +37,7 @@
       };
 }
 
-- (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
+- (AMRuntimeView *)buildViewFromComponent:(AMComponentInstance *)component
                               inContainer:(AMView *)container {
     return
     [self
@@ -46,7 +46,7 @@
      bindingObject:nil];
 }
 
-- (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
+- (AMRuntimeView *)buildViewFromComponent:(AMComponentInstance *)component
                               inContainer:(AMView *)container
                             bindingObject:(id)bindingObject {
 

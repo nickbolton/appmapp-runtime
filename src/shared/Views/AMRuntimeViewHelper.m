@@ -7,7 +7,7 @@
 //
 
 #import "AMRuntimeViewHelper.h"
-#import "AMComponent.h"
+#import "AMComponentInstance.h"
 #import "AMRuntimeView.h"
 #import "AMLayoutFactory.h"
 #import "AMLayout.h"
@@ -35,7 +35,7 @@
 
 #pragma mark - Getters and Setters
 
-- (void)setComponent:(AMComponent *)component forView:(AMView<AMRuntimeView> *)view {
+- (void)setComponent:(AMComponentInstance *)component forView:(AMView<AMRuntimeView> *)view {
     
     for (AMLayout *layout in component.layoutObjects) {
         layout.view = view;

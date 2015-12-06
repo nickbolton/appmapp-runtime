@@ -9,12 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "AMRuntimeView.h"
 
-@class AMComponent;
-
 @interface AMRuntimeViewHelper : NSObject
 
 - (void)setBaseAttributes:(AMView <AMRuntimeView> *)view;
-- (void)setComponent:(AMComponent *)component forView:(AMView<AMRuntimeView> *)view;
+- (void)setComponent:(AMComponentInstance *)component forView:(AMView<AMRuntimeView> *)view;
 - (void)layoutView:(AMView<AMRuntimeView> *)view;
 - (void)clearConstraints:(AMView<AMRuntimeView> *)view;
 - (void)constraintsDidChange:(AMView<AMRuntimeView> *)runtimeView;

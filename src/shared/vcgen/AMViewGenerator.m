@@ -7,7 +7,7 @@
 //
 
 #import "AMViewGenerator.h"
-#import "AMComponent.h"
+#import "AMComponentInstance.h"
 #import "NSString+AMGenerator.h"
 #import "AMViewHumanTemplate.h"
 #import "AMViewMachineTemplate.h"
@@ -23,8 +23,8 @@ static NSString * const kAMBaseViewClassNameToken = @"BASE_VIEW_CLASS_NAME";
 baseViewControllerClassName:(NSString *)baseViewControllerClassName
 baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
-    AMComponent *component =
-    [AMComponent componentWithDictionary:componentDict];
+    AMComponentInstance *component =
+    [AMComponentInstance componentWithDictionary:componentDict];
 
     NSDictionary *childComponentsDict = componentDict[kAMComponentChildComponentsKey];
     
@@ -186,7 +186,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
                 classPrefix:(NSString *)classPrefix
          baseViewClassNames:(NSDictionary *)baseViewClassNames
         componentDictionary:(NSDictionary *)componentDictionary
-                  component:(AMComponent *)component {
+                  component:(AMComponentInstance *)component {
     
     NSFileManager *fm = [NSFileManager defaultManager];
     if ([fm fileExistsAtPath:url.path]) {

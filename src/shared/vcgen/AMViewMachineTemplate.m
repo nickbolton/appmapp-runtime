@@ -79,9 +79,9 @@ MACHINE_PROPERTIES\n\
     NSDictionary *componentDict =\n\
     COMPONENT_DICTIONARY;\n\
 \n\
-    self.component = [AMComponent componentWithDictionary:componentDict];\n\
+    self.component = [AMComponentInstance componentWithDictionary:componentDict];\n\
 \n\
-    for (AMComponent *childComponent in self.component.childComponents) {\n\
+    for (AMComponentInstance *childComponent in self.component.childComponents) {\n\
 \n\
         [[AMAppMap sharedInstance]\n\
          buildViewFromComponent:childComponent\n\

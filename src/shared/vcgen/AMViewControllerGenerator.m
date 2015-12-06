@@ -9,7 +9,7 @@
 #import "AMViewControllerGenerator.h"
 #import "AMViewGenerator.h"
 #import "NSString+AMGenerator.h"
-#import "AMComponent.h"
+#import "AMComponentInstance.h"
 #import "AMViewControllerHumanTemplate.h"
 #import "AMViewControllerMachineTemplate.h"
 #import "NSString+NameUtilities.h"
@@ -89,8 +89,8 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     NSFileManager *fm = [NSFileManager defaultManager];
     
-    AMComponent *component =
-    [AMComponent componentWithDictionary:componentDict];
+    AMComponentInstance *component =
+    [AMComponentInstance componentWithDictionary:componentDict];
     
     NSString *humanViewControllerName =
     [self buildViewControllerName:component.exportedName classPrefix:classPrefix];
@@ -247,7 +247,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
                 classPrefix:(NSString *)classPrefix
          baseViewClassNames:(NSDictionary *)baseViewClassNames
         componentDictionary:(NSDictionary *)componentDictionary
-                  component:(AMComponent *)component {
+                  component:(AMComponentInstance *)component {
     
     NSFileManager *fm = [NSFileManager defaultManager];
     if ([fm fileExistsAtPath:url.path]) {

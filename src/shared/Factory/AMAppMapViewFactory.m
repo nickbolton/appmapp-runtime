@@ -7,14 +7,14 @@
 //
 
 #import "AMAppMapViewFactory.h"
-#import "AMComponent.h"
+#import "AMComponentInstance.h"
 #import "AMAppMap.h"
 #import "NSString+NameUtilities.h"
 #import "AMComponentManagerProtocol.h"
 
 @implementation AMAppMapViewFactory
 
-- (AMView <AMRuntimeView> *)buildViewFromComponent:(AMComponent *)component
+- (AMView <AMRuntimeView> *)buildViewFromComponent:(AMComponentInstance *)component
                                        inContainer:(AMView *)container
                                      bindingObject:(id)bindingObject {
 
@@ -76,7 +76,7 @@
         view.runtimeDelegate = bindingObject;
     }
     
-    [component.childComponents enumerateObjectsUsingBlock:^(AMComponent *childComponent, NSUInteger idx, BOOL *stop) {
+    [component.childComponents enumerateObjectsUsingBlock:^(AMComponentInstance *childComponent, NSUInteger idx, BOOL *stop) {
         
         [[AMAppMap sharedInstance]
          buildViewFromComponent:childComponent

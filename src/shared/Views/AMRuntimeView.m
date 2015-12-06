@@ -7,7 +7,7 @@
 //
 
 #import "AMRuntimeView.h"
-#import "AMComponent.h"
+#import "AMComponentInstance.h"
 #import "AMLayoutFactory.h"
 #import "AMRuntimeViewHelper.h"
 
@@ -15,7 +15,7 @@ NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeVi
 
 @interface AMRuntimeView()
 
-@property (nonatomic, strong) AMComponent *component;
+@property (nonatomic, strong) AMComponentInstance *component;
 @property (nonatomic, strong) AMRuntimeViewHelper *helper;
 
 @end
@@ -33,7 +33,7 @@ NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeVi
     return _helper;
 }
 
-- (void)setComponent:(AMComponent *)component {
+- (void)setComponent:(AMComponentInstance *)component {
     _component = component;
     [self.helper setComponent:component forView:self];
 }
