@@ -393,8 +393,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 #pragma mark - Getters and Setters
 
-- (void)setDuplicateType:(AMDuplicateType)duplicateType {
-    _duplicateType = duplicateType;
+- (AMDuplicateType)effectiveDuplicateType {
+    if ([self.descriptorIdentifier isEqualToString:self.originalDescriptorIdentifier]) {
+        return AMDuplicateTypeCopied;
+    }
+    return self.duplicateType;
 }
 
 - (void)setIdentifier:(NSString *)identifier {
@@ -561,6 +564,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
             [self updateChildFrames];
         }
     } else {
+        self.overridingFrameString = nil;
         self.descriptor.frame = frame;
     }
 }

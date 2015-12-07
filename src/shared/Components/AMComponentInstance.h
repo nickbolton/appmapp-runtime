@@ -45,6 +45,7 @@ extern NSString * kAMComponentOverridingCornerRadiusKey;
 @property (nonatomic, readonly) AMComponentInstance *parentInstance;
 
 @property (nonatomic) AMDuplicateType duplicateType;
+@property (nonatomic, readonly) AMDuplicateType effectiveDuplicateType;
 @property (nonatomic, readonly) NSString *originalIdentifier;
 @property (nonatomic, copy) NSString *originalDescriptorIdentifier;
 @property (nonatomic, readonly) NSString *sourceDescriptorIdentifier;
