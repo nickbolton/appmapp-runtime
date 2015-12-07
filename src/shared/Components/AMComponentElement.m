@@ -138,11 +138,22 @@ NSString * kAMComponentIdentifierKey = @"identifier";
 - (instancetype)copy {
     
     AMComponentElement *component = [[self.class alloc] init];
-    [self copyToComponent:component];
+    [self copyToComponent:component deep:YES];
+    return component;
+}
+
+- (instancetype)shallowCopy {
+    
+    AMComponentElement *component = [[self.class alloc] init];
+    [self copyToComponent:component deep:NO];
     return component;
 }
 
 - (void)copyToComponent:(AMComponentElement *)component {
+    [self copyToComponent:component deep:YES];
+}
+
+- (void)copyToComponent:(AMComponentElement *)component deep:(BOOL)deep {
     component.identifier = self.identifier.copy;
     component.layoutPreset = self.layoutPreset;
     component.layoutObjects = self.layoutObjects.copy;
@@ -152,16 +163,18 @@ NSString * kAMComponentIdentifierKey = @"identifier";
     // children will have this reset with the next loop
     component.parentComponent = self.parentComponent;
     
-    for (AMComponentElement *childComponent in component.childComponents) {
-        childComponent.parentComponent = component;
+    if (deep) {
+        for (AMComponentElement *childComponent in component.childComponents) {
+            childComponent.parentComponent = component;
+        }
+        
+        NSMutableArray *children = [NSMutableArray array];
+        
+        for (AMComponentElement *component in self.childComponents) {
+            [children addObject:component.copy];
+        }
+        component.childComponents = children;
     }
-    
-    NSMutableArray *children = [NSMutableArray array];
-    
-    for (AMComponentElement *component in self.childComponents) {
-        [children addObject:component.copy];
-    }
-    component.childComponents = children;
 }
 
 + (NSDictionary *)exportComponents:(NSArray *)components {

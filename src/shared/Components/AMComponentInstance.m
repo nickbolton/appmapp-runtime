@@ -15,6 +15,8 @@
 #import "AMCompositeTextDescriptor.h"
 #import "AMColor+AMColor.h"
 
+static NSString * kAMComponentDescriptorInstanceKey = @"descriptorInstance";
+
 NSString * kAMComponentDescriptorKey = @"descriptor";
 NSString * kAMComponentNameKey = @"name";
 NSString * kAMComponentBehavorKey = @"behavior";
@@ -86,6 +88,10 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [coder encodeObject:self.overridingBorderColor forKey:kAMComponentOverridingBorderColorKey];
     [coder encodeObject:self.overridingBackgroundColor forKey:kAMComponentOverridingBackgroundColorKey];
     [coder encodeObject:self.overridingLayoutPreset forKey:kAMComponentOverridingLayoutPresetKey];
+    
+    if (self.duplicating) {
+        [coder encodeObject:self.descriptor forKey:kAMComponentDescriptorInstanceKey];
+    }
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -103,6 +109,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         self.originalIdentifier = [decoder decodeObjectForKey:kAMComponentOriginalIdentifierKey];
         self.sourceDescriptorIdentifier = [decoder decodeObjectForKey:kAMComponentSourceDescriptorKey];
         self.originalDescriptorIdentifier = [decoder decodeObjectForKey:kAMComponentOriginalDescriptorKey];
+        self.descriptor = [decoder decodeObjectForKey:kAMComponentDescriptorInstanceKey];
         
         self.overridingFrameString = [decoder decodeObjectForKey:kAMComponentOverridingFrameKey];
         self.overridingCornerRadius = [decoder decodeObjectForKey:kAMComponentOverridingCornerRadiusKey];
@@ -236,42 +243,63 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     return component;
 }
 
-- (instancetype)copyForPasting {
+- (void)resetIdentifiers:(AMComponentInstance *)component {
+    component.identifier = [[NSUUID UUID] UUIDString];
+    component.originalIdentifier = component.identifier;
     
-    AMComponentInstance *result = self.copy;
+    for (AMComponentInstance *childComponent in component.childComponents) {
+        [self resetIdentifiers:childComponent];
+    }
+}
 
-    result.defaultName = nil;
-    result.layoutObjects = nil;
-    result.layoutPreset = result.layoutPreset;
+- (instancetype)duplicate {
+    AMComponentInstance *result = self.copy;
+    [self resetIdentifiers:result];
     
-    if (result.sourceDescriptorIdentifier == nil) {
-        result.sourceDescriptorIdentifier = self.descriptor.identifier;
+    return result;
+}
+
+- (void)augmentComponentForPasting:(AMComponentInstance *)component sourceComponent:(AMComponentInstance *)sourceComponent {
+    
+    component.defaultName = nil;
+    component.layoutObjects = nil;
+    component.layoutPreset = component.layoutPreset;
+    
+    if (component.sourceDescriptorIdentifier == nil) {
+        component.sourceDescriptorIdentifier = sourceComponent.descriptor.identifier;
     }
     
-    AMComponentDescriptor *descriptor = self.descriptor.copy;
+    AMComponentDescriptor *descriptor = sourceComponent.descriptor.copy;
     
-    if (result.duplicateType == AMDuplicateTypeCopied) {
+    if (component.duplicateType == AMDuplicateTypeCopied) {
         descriptor.identifier = [[NSUUID new] UUIDString];
     } else {
-        descriptor = self.descriptor;
+        descriptor = sourceComponent.descriptor;
     }
     
-    result.descriptor = descriptor;
+    component.descriptor = descriptor;
     
-    if ([result.name hasPrefix:kAMComponentDefaultNamePrefix]) {
-        result.name = nil;
+    if ([component.name hasPrefix:kAMComponentDefaultNamePrefix]) {
+        component.name = nil;
     }
     
     NSMutableArray *children = [NSMutableArray array];
     
-    for (AMComponentInstance *childComponent in self.childComponents) {
+    for (AMComponentInstance *childComponent in sourceComponent.childComponents) {
         
         AMComponentInstance *childCopy = [childComponent copyForPasting];
         [children addObject:childCopy];
     }
     
-    result.childComponents = children;
+    component.childComponents = children;
+}
 
+- (instancetype)copyForPasting {
+    
+    AMComponentInstance *result = [self shallowCopy];
+    [self augmentComponentForPasting:result sourceComponent:self];
+
+    result.duplicating = YES;
     return result;
 }
 
@@ -767,15 +795,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         [self.behavors removeObjectForKey:@(behavior.componentType)];
     }
 }
-
-- (instancetype)duplicate {
-    AMComponentInstance *result = self.copy;
-    result.identifier = [[NSUUID UUID] UUIDString];
-    result.originalIdentifier = result.identifier;
-    
-    return result;
-}
-
 
 #pragma mark - Parent/Child
 

@@ -46,6 +46,7 @@ extern NSString * kAMComponentIdentifierKey;
 + (instancetype)componentWithDictionary:(NSDictionary *)dict;
 + (NSDictionary *)exportComponents:(NSArray *)components;
 - (void)copyToComponent:(AMComponentElement *)component;
+- (instancetype)shallowCopy;
 
 - (BOOL)isEqualToComponent:(AMComponentElement *)object;
 

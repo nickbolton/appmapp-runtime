@@ -52,6 +52,7 @@ extern NSString * kAMComponentOverridingCornerRadiusKey;
 @property (nonatomic, readonly) BOOL isMirrored;
 @property (nonatomic, readonly) BOOL isCopied;
 @property (nonatomic, readonly) BOOL isInherited;
+@property (nonatomic) BOOL duplicating;
 
 @property (nonatomic, strong) NSString *classPrefix;
 @property (nonatomic) BOOL dropTarget;
