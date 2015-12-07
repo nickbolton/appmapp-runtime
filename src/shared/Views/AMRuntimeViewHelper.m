@@ -92,7 +92,7 @@
 - (void)updateConstraintsFromComponent:(AMView<AMRuntimeView> *)view {
     
     CGRect frame = AMPixelAlignedCGRect(view.component.frame);
-    CGRect parentFrame = AMPixelAlignedCGRect(view.component.parentComponent.frame);
+    CGRect parentFrame = AMPixelAlignedCGRect(view.component.parentInstance.frame);
     
     for (AMLayout *layoutObject in view.component.layoutObjects) {
         

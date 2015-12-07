@@ -8,11 +8,11 @@
 
 #import "AppMapTypes.h"
 
-@class AMComponentInstance;
+@class AMComponentElement;
 
 @interface AMLayoutPresetHelper : NSObject
 
-- (NSArray *)layoutTypesForComponent:(AMComponentInstance *)component
+- (NSArray *)layoutTypesForComponent:(AMComponentElement *)component
                         layoutPreset:(AMLayoutPreset)layoutPreset;
 
 @end

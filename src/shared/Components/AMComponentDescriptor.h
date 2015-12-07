@@ -18,4 +18,6 @@ extern NSString * kAMComponentCornerRadiusKey;
 
 @interface AMComponentDescriptor : AMComponentElement
 
+@property (nonatomic, readonly) BOOL isContainer;
+
 @end

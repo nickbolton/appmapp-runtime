@@ -85,7 +85,6 @@ NSString * kAMComponentCornerRadiusKey = @"cornerRadius";
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict addEntriesFromDictionary:[super exportComponent]];
     
-    dict[kAMComponentClassNameKey] = NSStringFromClass(self.class);
     dict[kAMComponentTypeKey] = @(self.componentType);
     dict[kAMComponentClippedKey] = @(self.isClipped);
     dict[kAMComponentBackgroundColorKey] = [self.backgroundColor hexcodePlusAlpha];
@@ -93,6 +92,8 @@ NSString * kAMComponentCornerRadiusKey = @"cornerRadius";
     dict[kAMComponentAlphaKey] = @(self.alpha);
     dict[kAMComponentCornerRadiusKey] = @(self.cornerRadius);
     dict[kAMComponentBorderWidthKey] = @(self.borderWidth);
+    
+    [dict removeObjectForKey:kAMComponentChildComponentsKey];
 
     return dict;
 }

@@ -17,44 +17,44 @@
 
 NSString * kAMComponentDescriptorKey = @"descriptor";
 NSString * kAMComponentNameKey = @"name";
-NSString * kAMComponentFrameKey = @"frame";
 NSString * kAMComponentBehavorKey = @"behavior";
-NSString * kAMComponentLayoutObjectsKey = @"layoutObjects";
-NSString * kAMComponentLayoutPresetKey = @"layoutPreset";
-NSString * kAMComponentTopLevelComponentKey = @"tlc";
 NSString * kAMComponentClassPrefixKey = @"classPrefix";
-NSString * kAMComponentChildComponentsKey = @"childComponents";
 NSString * kAMComponentLinkedComponentKey = @"linkedComponent";
 NSString * kAMComponentUseCustomViewClassKey = @"useCustomViewClass";
 NSString * kAMComponentTextDescriptorKey = @"textDescriptor";
 NSString * kAMComponentDuplicateTypeKey = @"duplicateType";
+NSString * kAMComponentOriginalIdentifierKey = @"originalIdentifier";
+NSString * kAMComponentSourceDescriptorKey = @"sourceDescriptor";
 NSString * kAMComponentOriginalDescriptorKey = @"originalDescriptor";
 
+NSString * kAMComponentOverridingFrameKey = @"overridingFrame";
 NSString * kAMComponentOverridingCornerRadiusKey = @"overridingCornerRadius";
 NSString * kAMComponentOverridingBorderWidthKey = @"overridingBorderWidth";
 NSString * kAMComponentOverridingClippedKey = @"overridingClipped";
 NSString * kAMComponentOverridingAlphaKey = @"overridingAlpha";
 NSString * kAMComponentOverridingBorderColorKey = @"overridingBorderColor";
 NSString * kAMComponentOverridingBackgroundColorKey = @"overridingBackgroundColor";
+NSString * kAMComponentOverridingLayoutPresetKey = @"overridingLayoutPreset";
 
 static NSString * kAMComponentDefaultNamePrefix = @"Container-";
 static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 @interface AMComponentInstance()
 
-@property (nonatomic, strong) AMComponentDescriptor *strongDescriptor;
 @property (nonatomic, readwrite) NSString *descriptorIdentifier;
 @property (nonatomic, readwrite) NSString *defaultName;
 @property (nonatomic, readwrite) NSString *exportedName;
 @property (nonatomic, strong) NSMutableDictionary *behavors;
-@property (nonatomic, readwrite) BOOL hasProportionalLayout;
-@property (nonatomic, strong) NSMutableArray *primChildComponents;
 @property (nonatomic, readwrite) NSString *linkedComponentIdentifier;
+@property (nonatomic, readwrite) NSString *originalIdentifier;
+@property (nonatomic, readwrite) NSString *sourceDescriptorIdentifier;
 
+@property (nonatomic, strong) NSString *overridingFrameString;
 @property (nonatomic, strong) NSNumber *overridingCornerRadius;
 @property (nonatomic, strong) NSNumber *overridingBorderWidth;
 @property (nonatomic, strong) NSNumber *overridingClipped;
 @property (nonatomic, strong) NSNumber *overridingAlpha;
+@property (nonatomic, strong) NSNumber *overridingLayoutPreset;
 @property (nonatomic, strong) AMColor *overridingBorderColor;
 @property (nonatomic, strong) AMColor *overridingBackgroundColor;
 
@@ -69,28 +69,23 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [coder encodeObject:self.descriptor.identifier forKey:kAMComponentDescriptorKey];
     [coder encodeObject:self.name forKey:kAMComponentNameKey];
     [coder encodeObject:self.behavor forKey:kAMComponentBehavorKey];
-    [coder encodeInteger:self.layoutPreset forKey:kAMComponentLayoutPresetKey];
-    [coder encodeObject:self.layoutObjects forKey:kAMComponentLayoutObjectsKey];
-    [coder encodeObject:self.childComponents forKey:kAMComponentChildComponentsKey];
     [coder encodeObject:self.linkedComponent.identifier forKey:kAMComponentLinkedComponentKey];
     [coder encodeObject:self.classPrefix forKey:kAMComponentClassPrefixKey];
     [coder encodeBool:self.useCustomViewClass forKey:kAMComponentUseCustomViewClassKey];
     [coder encodeObject:self.textDescriptor forKey:kAMComponentTextDescriptorKey];
     [coder encodeInteger:self.duplicateType forKey:kAMComponentDuplicateTypeKey];
+    [coder encodeObject:self.originalIdentifier forKey:kAMComponentOriginalIdentifierKey];
+    [coder encodeObject:self.sourceDescriptorIdentifier forKey:kAMComponentSourceDescriptorKey];
     [coder encodeObject:self.originalDescriptorIdentifier forKey:kAMComponentOriginalDescriptorKey];
 
+    [coder encodeObject:self.overridingFrameString forKey:kAMComponentOverridingFrameKey];
     [coder encodeObject:self.overridingCornerRadius forKey:kAMComponentOverridingCornerRadiusKey];
     [coder encodeObject:self.overridingBorderWidth forKey:kAMComponentOverridingBorderWidthKey];
     [coder encodeObject:self.overridingClipped forKey:kAMComponentOverridingClippedKey];
     [coder encodeObject:self.overridingAlpha forKey:kAMComponentOverridingAlphaKey];
     [coder encodeObject:self.overridingBorderColor forKey:kAMComponentOverridingBorderColorKey];
     [coder encodeObject:self.overridingBackgroundColor forKey:kAMComponentOverridingBackgroundColorKey];
-
-#if TARGET_OS_IPHONE
-    [coder encodeObject:NSStringFromCGRect(self.frame) forKey:kAMComponentFrameKey];
-#else
-    [coder encodeObject:NSStringFromRect(self.frame) forKey:kAMComponentFrameKey];
-#endif
+    [coder encodeObject:self.overridingLayoutPreset forKey:kAMComponentOverridingLayoutPresetKey];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -100,33 +95,24 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     if (self != nil) {
         self.descriptorIdentifier = [decoder decodeObjectForKey:kAMComponentDescriptorKey];
         self.name = [decoder decodeObjectForKey:kAMComponentNameKey];
-        self.layoutPreset = [decoder decodeIntegerForKey:kAMComponentLayoutPresetKey];
-        self.layoutObjects = [decoder decodeObjectForKey:kAMComponentLayoutObjectsKey];
         self.classPrefix = [decoder decodeObjectForKey:kAMComponentClassPrefixKey];
         self.useCustomViewClass = [decoder decodeBoolForKey:kAMComponentUseCustomViewClassKey];
         self.linkedComponentIdentifier = [decoder decodeObjectForKey:kAMComponentLinkedComponentKey];
         self.textDescriptor = [decoder decodeObjectForKey:kAMComponentTextDescriptorKey];
         self.duplicateType = [decoder decodeIntegerForKey:kAMComponentDuplicateTypeKey];
+        self.originalIdentifier = [decoder decodeObjectForKey:kAMComponentOriginalIdentifierKey];
+        self.sourceDescriptorIdentifier = [decoder decodeObjectForKey:kAMComponentSourceDescriptorKey];
         self.originalDescriptorIdentifier = [decoder decodeObjectForKey:kAMComponentOriginalDescriptorKey];
         
+        self.overridingFrameString = [decoder decodeObjectForKey:kAMComponentOverridingFrameKey];
         self.overridingCornerRadius = [decoder decodeObjectForKey:kAMComponentOverridingCornerRadiusKey];
         self.overridingBorderWidth = [decoder decodeObjectForKey:kAMComponentOverridingBorderWidthKey];
         self.overridingClipped = [decoder decodeObjectForKey:kAMComponentOverridingClippedKey];
         self.overridingAlpha = [decoder decodeObjectForKey:kAMComponentOverridingAlphaKey];
         self.overridingBorderColor = [decoder decodeObjectForKey:kAMComponentOverridingBorderColorKey];
         self.overridingBackgroundColor = [decoder decodeObjectForKey:kAMComponentOverridingBackgroundColorKey];
-
-#if TARGET_OS_IPHONE
-        self.frame = CGRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
-#else
-        self.frame = NSRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
-#endif
+        self.overridingLayoutPreset = [decoder decodeObjectForKey:kAMComponentOverridingLayoutPresetKey];
         
-        NSArray *childComponents =
-        [decoder decodeObjectForKey:kAMComponentChildComponentsKey];
-        
-        [self addChildComponents:childComponents];
-
         AMComponentBehavior *behavior = [decoder decodeObjectForKey:kAMComponentBehavorKey];
         
         if (behavior != nil) {
@@ -146,17 +132,20 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     if (self != nil) {
         self.descriptorIdentifier = dict[kAMComponentDescriptorKey];
         self.name = dict[kAMComponentNameKey];
-        self.layoutPreset = [dict[kAMComponentLayoutPresetKey] integerValue];
         self.classPrefix = dict[kAMComponentClassPrefixKey];
         self.useCustomViewClass = [dict[kAMComponentUseCustomViewClassKey] boolValue];
         self.linkedComponentIdentifier = dict[kAMComponentLinkedComponentKey];
         self.duplicateType = [dict[kAMComponentDuplicateTypeKey] integerValue];
+        self.originalIdentifier = dict[kAMComponentOriginalIdentifierKey];
+        self.sourceDescriptorIdentifier = dict[kAMComponentSourceDescriptorKey];
         self.originalDescriptorIdentifier = dict[kAMComponentOriginalDescriptorKey];
         
+        self.overridingFrameString = dict[kAMComponentOverridingFrameKey];
         self.overridingCornerRadius = dict[kAMComponentOverridingCornerRadiusKey];
         self.overridingBorderWidth = dict[kAMComponentOverridingBorderWidthKey];
         self.overridingClipped = dict[kAMComponentOverridingClippedKey];
         self.overridingAlpha = dict[kAMComponentOverridingAlphaKey];
+        self.overridingLayoutPreset = dict[kAMComponentOverridingLayoutPresetKey];
         
         NSString *overridingBackgroundColorString = dict[kAMComponentOverridingBackgroundColorKey];
         if (overridingBackgroundColorString != nil) {
@@ -172,45 +161,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         if (descriptorDict != nil) {
             self.textDescriptor = [[AMCompositeTextDescriptor alloc] initWithDictionary:descriptorDict];
         }
-
-#if TARGET_OS_IPHONE
-        self.frame = CGRectFromString(dict[kAMComponentFrameKey]);
-#else
-        self.frame = NSRectFromString(dict[kAMComponentFrameKey]);
-#endif
-        
-        // children
-        
-        NSMutableArray *childComponents = [NSMutableArray array];
-        id children = dict[kAMComponentChildComponentsKey];
-        NSArray *childrenArray = nil;
-        
-        if ([children isKindOfClass:[NSArray class]]) {
-            childrenArray = children;
-        } else if ([children isKindOfClass:[NSDictionary class]]) {
-            childrenArray = ((NSDictionary *)children).allValues;
-        }
-        
-        for (NSDictionary *childDict in childrenArray) {
-            
-            AMComponentElement *childComponent = [self.class componentWithDictionary:childDict];
-            [childComponents addObject:childComponent];
-        }
-        
-        [self addChildComponents:childComponents];
-        
-        // layout objects
-        
-        NSMutableArray *layoutObjects = [NSMutableArray array];
-        NSArray *layoutObjectDicts = dict[kAMComponentLayoutObjectsKey];
-        
-        for (NSDictionary *dict in layoutObjectDicts) {
-            
-            AMLayout *layout = [AMLayout layoutWithDictionary:dict];
-            [layoutObjects addObject:layout];
-        }
-        
-        self.layoutObjects = layoutObjects;
         
         // behaviors
         
@@ -261,19 +211,21 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     AMComponentInstance *component = super.copy;
     component.name = self.name.copy;
     component.descriptor = self.descriptor.copy;
+    [self copyToComponent:component];
     component.defaultName = self.defaultName.copy;
-    component.frame = self.frame;
     component.textDescriptor = self.textDescriptor.copy;
     component.duplicateType = self.duplicateType;
+    component.originalIdentifier = self.originalIdentifier.copy;
+    component.sourceDescriptorIdentifier = self.sourceDescriptorIdentifier.copy;
     component.originalDescriptorIdentifier = self.originalDescriptorIdentifier.copy;
-    component.layoutPreset = self.layoutPreset;
-    component.layoutObjects = self.layoutObjects.copy;
+    component.overridingFrameString = self.overridingFrameString.copy;
     component.overridingCornerRadius = self.overridingCornerRadius;
     component.overridingBorderWidth = self.overridingBorderWidth;
     component.overridingClipped = self.overridingClipped;
     component.overridingAlpha = self.overridingAlpha;
     component.overridingBorderColor = self.overridingBorderColor;
     component.overridingBackgroundColor = self.overridingBackgroundColor;
+    component.overridingLayoutPreset = self.overridingLayoutPreset;
 
     component.behavors = self.behavors.mutableCopy;
 
@@ -281,34 +233,20 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.useCustomViewClass = self.useCustomViewClass;
     component.linkedComponent = self.linkedComponent;
     
-    // only used to refer back to original parent
-    // children will have this reset with the next loop
-    component.parentComponent = self.parentComponent;
-    
-    for (AMComponentInstance *childComponent in component.childComponents) {
-        childComponent.parentComponent = component;
-    }
-    
-    NSMutableArray *children = [NSMutableArray array];
-    
-    for (AMComponentInstance *component in self.primChildComponents) {
-        [children addObject:component.copy];
-    }
-    component.childComponents = children;
-
     return component;
 }
 
 - (instancetype)copyForPasting {
     
     AMComponentInstance *result = self.copy;
-    result.identifier = [[NSUUID new] UUIDString];
 
     result.defaultName = nil;
     result.layoutObjects = nil;
     result.layoutPreset = result.layoutPreset;
-    result.originalDescriptorIdentifier = self.descriptor.identifier;
-    result.holdDescriptor = YES;
+    
+    if (result.sourceDescriptorIdentifier == nil) {
+        result.sourceDescriptorIdentifier = self.descriptor.identifier;
+    }
     
     AMComponentDescriptor *descriptor = self.descriptor.copy;
     
@@ -344,18 +282,23 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     dict[kAMComponentNameKey] = self.name;
     
-#if TARGET_OS_IPHONE
-    dict[kAMComponentFrameKey] = NSStringFromCGRect(self.frame);
-#else
-    dict[kAMComponentFrameKey] = NSStringFromRect(self.frame);
-#endif
-    
     dict[kAMComponentDescriptorKey] = self.descriptor.identifier;
-    dict[kAMComponentLayoutPresetKey] = @(self.layoutPreset);
     dict[kAMComponentDuplicateTypeKey] = @(self.duplicateType);
     
+    if (self.originalIdentifier != nil) {
+        dict[kAMComponentOriginalIdentifierKey] = self.originalIdentifier;
+    }
+    
+    if (self.sourceDescriptorIdentifier != nil) {
+        dict[kAMComponentSourceDescriptorKey] = self.sourceDescriptorIdentifier;
+    }
+
     if (self.originalDescriptorIdentifier != nil) {
         dict[kAMComponentOriginalDescriptorKey] = self.originalDescriptorIdentifier;
+    }
+
+    if (self.overridingFrameString != nil) {
+        dict[kAMComponentOverridingFrameKey] = self.overridingFrameString;
     }
     
     if (self.overridingCornerRadius != nil) {
@@ -381,19 +324,14 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     if (self.overridingBackgroundColor != nil) {
         dict[kAMComponentOverridingBackgroundColorKey] = [self.overridingBackgroundColor hexcodePlusAlpha];
     }
+    
+    if (self.overridingLayoutPreset != nil) {
+        dict[kAMComponentOverridingLayoutPresetKey] = self.overridingLayoutPreset;
+    }
 
     if (self.textDescriptor != nil) {
         dict[kAMComponentTextDescriptorKey] = [self.textDescriptor exportTextDescriptor];
     }
-
-    NSMutableArray *layoutObjectDicts = [NSMutableArray array];
-    
-    for (AMLayout *layout in self.layoutObjects) {
-        NSDictionary *dict = [layout exportLayout];
-        [layoutObjectDicts addObject:dict];
-    }
-    
-    dict[kAMComponentLayoutObjectsKey] = layoutObjectDicts;
 
     if (self.behavor != nil) {
         dict[kAMComponentBehavorKey] = [self.behavor exportBehavior];
@@ -410,14 +348,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         dict[kAMComponentClassPrefixKey] = self.classPrefix;
     }
     
-    NSMutableDictionary *children = [NSMutableDictionary dictionary];
-    
-    for (AMComponentElement *childComponent in self.childComponents) {
-        children[childComponent.identifier] = [childComponent exportComponent];
-    }
-    
-    dict[kAMComponentChildComponentsKey] = children;
-
     return dict;
 }
 
@@ -457,27 +387,34 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.identifier = [[NSUUID new] UUIDString];
     component.layoutPreset = AMLayoutPresetFixedSizeNearestCorner;
     component.descriptor = descriptor;
-    component.holdDescriptor = YES;
     
     return component;
 }
 
 #pragma mark - Getters and Setters
 
-- (void)setDescriptor:(AMComponentDescriptor *)descriptor {
-    _descriptor = descriptor;
-    self.descriptorIdentifier = descriptor.identifier;
-    if (self.holdDescriptor) {
-        self.strongDescriptor = descriptor;
+- (void)setDuplicateType:(AMDuplicateType)duplicateType {
+    _duplicateType = duplicateType;
+}
+
+- (void)setIdentifier:(NSString *)identifier {
+    super.identifier = identifier;
+    if (self.originalIdentifier == nil) {
+        self.originalIdentifier = identifier;
     }
 }
 
-- (void)setFrame:(CGRect)frame {
+- (void)setDescriptor:(AMComponentDescriptor *)descriptor {
+    CGRect oldFrame = self.frame;
+    BOOL overrideFrame = self.isInherited && _descriptor != nil && [_descriptor isEqualToComponent:descriptor] == NO;
+    _descriptor = descriptor;
+    self.descriptorIdentifier = descriptor.identifier;
+    if (self.originalDescriptorIdentifier == nil) {
+        self.originalDescriptorIdentifier = self.descriptorIdentifier;
+    }
     
-    BOOL sizeChanged = (CGSizeEqualToSize(frame.size, self.frame.size) == NO);
-    _frame = frame;
-    if (sizeChanged) {
-        [self updateChildFrames];
+    if (overrideFrame) {
+        self.frame = oldFrame;
     }
 }
 
@@ -544,14 +481,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     return _defaultName;
 }
 
-- (void)setScale:(CGFloat)scale {
-    _scale = scale;
-    
-    for (AMComponentInstance *component in self.childComponents) {
-        component.scale = scale;
-    }
-}
-
 - (NSArray *)sizePresets {
     
     static NSArray *presets = nil;
@@ -589,117 +518,13 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     return result;
 }
 
-- (void)setLayoutPreset:(AMLayoutPreset)layoutPreset {
-    _layoutPreset = layoutPreset;
-    
-    _layoutPreset = MAX(0, _layoutPreset);
-    _layoutPreset = MIN(AMLayoutPresetCustom, _layoutPreset);
-    
-    if (_layoutPreset < AMLayoutPresetCustom) {
-        
-        AMLayoutPresetHelper *helper = [AMLayoutPresetHelper new];
-        
-        NSArray *layoutTypes = [helper layoutTypesForComponent:self layoutPreset:_layoutPreset];
-        NSMutableArray *layoutObjects = [NSMutableArray array];
-        
-        for (NSNumber *layoutType in layoutTypes) {
-            
-            AMLayout *layoutObject =
-            [[AMLayoutFactory sharedInstance]
-             buildLayoutOfType:layoutType.integerValue];
-            
-            [layoutObjects addObject:layoutObject];
-        }
-        
-        self.layoutObjects = layoutObjects;
-    }
-}
-
-- (void)setLayoutObjects:(NSArray *)layoutObjects {
-    
-    for (AMLayout *layoutObject in _layoutObjects) {
-        [layoutObject clearLayout];
-    }
-    
-    _layoutObjects = layoutObjects;
-    
-    [self updateProportionalLayouts];
-    
-    self.hasProportionalLayout = NO;
-    
-    for (AMLayout *layout in layoutObjects) {
-        
-        if (layout.isProportional) {
-            self.hasProportionalLayout = YES;
-            break;
-        }
-    }
-}
-
-- (void)setParentComponent:(AMComponentInstance *)parentComponent {
-    _parentComponent = parentComponent;
-    
-    if (parentComponent == nil) {
-        self.useCustomViewClass = YES;
-    }
+- (AMComponentInstance *)parentInstance {
+    return (id)self.parentComponent;
 }
 
 - (void)setLinkedComponent:(AMComponentInstance *)linkedComponent {
     _linkedComponent = linkedComponent;
     self.linkedComponentIdentifier = linkedComponent.identifier;
-}
-
-- (NSArray *)childComponents {
-    return
-    [NSArray arrayWithArray:self.primChildComponents];
-}
-
-- (void)setChildComponents:(NSArray *)childComponents {
-    
-    NSMutableArray *primComponents = self.primChildComponents;
-    [primComponents removeAllObjects];
-    [primComponents addObjectsFromArray:childComponents];
-}
-
-- (NSMutableArray *)primChildComponents {
-    
-    if (_primChildComponents == nil) {
-        _primChildComponents = [NSMutableArray array];
-    }
-    return _primChildComponents;
-}
-
-- (NSInteger)depth {
-    
-    if (self.parentComponent != nil) {
-        return [self.parentComponent depth] + 1;
-    }
-    
-    return 1;
-}
-
-- (NSInteger)childIndex {
-    
-    NSInteger result = NSNotFound;
-    
-    if (self.parentComponent != nil) {
-        result = [self.parentComponent.childComponents indexOfObject:self];
-    }
-    
-    return result;
-}
-
-- (BOOL)isTopLevelComponent {
-    return self.topLevelComponent == self;
-}
-
-- (AMComponentInstance *)topLevelComponent {
-    
-    if (self.parentComponent != nil) {
-        return self.parentComponent.topLevelComponent;
-    }
-    
-    return self;
 }
 
 - (BOOL)isMirrored {
@@ -714,16 +539,100 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     return self.duplicateType == AMDuplicateTypeInherited;
 }
 
-- (void)setHoldDescriptor:(BOOL)holdDescriptor {
-    _holdDescriptor = holdDescriptor;
-    if (holdDescriptor) {
-        self.strongDescriptor = self.descriptor;
+#pragma mark - Descriptor Overrides
+
+- (CGRect)frame {
+    if (self.overridingFrameString != nil) {
+        return CGRectFromString(self.overridingFrameString);
+    }
+    return self.descriptor.frame;
+}
+
+- (void)setFrame:(CGRect)frame {
+    if (self.isInherited) {
+        BOOL sizeChanged = (CGSizeEqualToSize(frame.size, self.frame.size) == NO);
+        
+        if (CGRectEqualToRect(frame, self.descriptor.frame)) {
+            self.overridingFrameString = nil;
+        } else {
+            self.overridingFrameString = NSStringFromCGRect(frame);
+        }
+        if (sizeChanged) {
+            [self updateChildFrames];
+        }
     } else {
-        self.strongDescriptor = nil;
+        self.descriptor.frame = frame;
     }
 }
 
-#pragma mark - Descriptor Overrides
+//- (AMComponentInstance *)parentComponent {
+//    if (self.isInherited && super.parentComponent != nil) {
+//        return (id)super.parentComponent;
+//    }
+//    
+//    if (self.descriptor.parentComponent != nil) {
+//        AMComponentInstance *parentInstance =
+//        [self componentInstanceFromDescriptor:(id)self.descriptor.parentComponent];
+//        return parentInstance;
+//    }
+//    
+//    return nil;
+//}
+//
+//- (void)setParentComponent:(AMComponentInstance *)parentComponent {
+//    
+//    if (self.isInherited) {
+//        super.parentComponent = parentComponent;
+//    } else {
+//        self.descriptor.parentComponent = parentComponent.descriptor;
+//    }
+//    
+//    if (parentComponent == nil) {
+//        self.useCustomViewClass = YES;
+//    }
+//}
+
+- (AMLayoutPreset)layoutPreset {
+    if (self.overridingLayoutPreset != nil) {
+        return self.overridingLayoutPreset.integerValue;
+    }
+    return self.descriptor.layoutPreset;
+}
+
+- (void)setLayoutPreset:(AMLayoutPreset)layoutPreset {
+    if (self.isInherited) {
+        if (layoutPreset != self.descriptor.layoutPreset) {
+            self.overridingLayoutPreset = @(layoutPreset);
+        } else {
+            self.overridingLayoutPreset = nil;
+        }
+    } else {
+        self.descriptor.layoutPreset = layoutPreset;
+    }
+}
+
+- (NSArray *)layoutObjects {
+    if (self.isInherited && super.layoutObjects.count > 0) {
+        return super.layoutObjects;
+    }
+    return self.descriptor.layoutObjects;
+}
+
+- (void)setLayoutObjects:(NSArray *)layoutObjects {
+    for (AMLayout *layoutObject in self.layoutObjects) {
+        [layoutObject clearLayout];
+    }
+    
+    if (self.isInherited) {
+        if ([layoutObjects isEqualToArray:self.descriptor.layoutObjects]) {
+            super.layoutObjects = nil;
+        } else {
+            super.layoutObjects = layoutObjects;
+        }
+    } else {
+        self.descriptor.layoutObjects = layoutObjects;
+    }
+}
 
 - (CGFloat)cornerRadius {
     if (self.overridingCornerRadius != nil) {
@@ -734,7 +643,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 - (void)setCornerRadius:(CGFloat)cornerRadius {
     if (self.isInherited) {
-        self.overridingCornerRadius = @(cornerRadius);
+        if (cornerRadius != self.descriptor.cornerRadius) {
+            self.overridingCornerRadius = @(cornerRadius);
+        } else {
+            self.overridingCornerRadius = nil;
+        }
     } else {
         self.descriptor.cornerRadius = cornerRadius;
     }
@@ -749,7 +662,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 - (void)setBorderWidth:(CGFloat)borderWidth {
     if (self.isInherited) {
-        self.overridingBorderWidth = @(borderWidth);
+        if (borderWidth != self.descriptor.borderWidth) {
+            self.overridingBorderWidth = @(borderWidth);
+        } else {
+            self.overridingBorderWidth = nil;
+        }
     } else {
         self.descriptor.borderWidth = borderWidth;
     }
@@ -764,7 +681,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 - (void)setClipped:(BOOL)clipped {
     if (self.isInherited) {
-        self.overridingClipped = @(clipped);
+        if (clipped != self.descriptor.isClipped) {
+            self.overridingClipped = @(clipped);
+        } else {
+            self.overridingClipped = nil;
+        }
     } else {
         self.descriptor.clipped = clipped;
     }
@@ -779,7 +700,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 - (void)setAlpha:(CGFloat)alpha {
     if (self.isInherited) {
-        self.overridingAlpha = @(alpha);
+        if (alpha != self.descriptor.alpha) {
+            self.overridingAlpha = @(alpha);
+        } else {
+            self.overridingAlpha = nil;
+        }
     } else {
         self.descriptor.alpha = alpha;
     }
@@ -794,7 +719,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 - (void)setBorderColor:(AMColor *)borderColor {
     if (self.isInherited) {
-        self.overridingBorderColor = borderColor;
+        if ([borderColor isEqual:self.descriptor.borderColor] == NO) {
+            self.overridingBorderColor = borderColor;
+        } else {
+            self.overridingBorderColor = nil;
+        }
     } else {
         self.descriptor.borderColor = borderColor;
     }
@@ -809,7 +738,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 - (void)setBackgroundColor:(NSColor *)backgroundColor {
     if (self.isInherited) {
-        self.overridingBackgroundColor = backgroundColor;
+        if ([backgroundColor isEqual:self.descriptor.backgroundColor] == NO) {
+            self.overridingBackgroundColor = backgroundColor;
+        } else {
+            self.overridingBackgroundColor = nil;
+        }
     } else {
         self.descriptor.backgroundColor = backgroundColor;
     }
@@ -831,203 +764,96 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
-+ (BOOL)doesHaveCommonTopLevelComponent:(NSArray *)components {
+- (instancetype)duplicate {
+    AMComponentInstance *result = self.copy;
+    result.identifier = [[NSUUID UUID] UUIDString];
+    result.originalIdentifier = result.identifier;
     
-    NSMutableSet *topLevelComponents = [NSMutableSet set];
-    BOOL allAreTopLevelComponents = components.count > 0;
-    
-    for (AMComponentInstance *component in components) {
-        
-        [topLevelComponents addObject:component.topLevelComponent];
-        if (component.parentComponent != nil) {
-            allAreTopLevelComponents = NO;
-        }
-    }
-    
-    return allAreTopLevelComponents || topLevelComponents.count == 1;
+    return result;
 }
 
-+ (BOOL)doesHaveCommonTopLevelComponent:(NSArray *)components
-                          withComponent:(AMComponentInstance *)component {
-    
-    NSMutableArray *allComponents = [NSMutableArray array];
-    [allComponents addObjectsFromArray:components];
-    
-    if (component != nil) {
-        [allComponents addObject:component];
-    }
-    
-    return [self doesHaveCommonTopLevelComponent:allComponents];
-}
 
-- (AMComponentInstance *)ancestorBefore:(AMComponentInstance *)component {
-    
-    AMComponentInstance *parentComponent = self.parentComponent;
-    AMComponentInstance *result = self;
-    
-    while (parentComponent != nil) {
-        
-        if ([parentComponent.identifier isEqualToString:component.identifier]) {
-            return result;
-        }
-        
-        result = parentComponent;
-        parentComponent = parentComponent.parentComponent;
-    }
-    
-    return nil;
-}
+#pragma mark - Parent/Child
 
-- (BOOL)isDescendent:(AMComponentInstance *)component {
-    
-    AMComponentInstance *parentComponent = component.parentComponent;
-    
-    while (parentComponent != nil) {
-        
-        if ([parentComponent.identifier isEqualToString:self.identifier]) {
-            return YES;
-        }
-        
-        parentComponent = parentComponent.parentComponent;
-    }
-    
-    return NO;
-}
-
-- (void)addChildComponent:(AMComponentInstance *)component {
-    if (component != nil) {
-        [self addChildComponents:@[component]];
-    }
-}
-
-- (void)addChildComponents:(NSArray *)components {
-    
-    NSMutableArray *primComponents = self.primChildComponents;
-    
-    for (AMComponentInstance *component in components) {
-        
-        if ([primComponents containsObject:component] == NO) {
-            [primComponents addObject:component];
-        }
-        
-        component.parentComponent = self;
-    }
-}
-
-- (void)insertChildComponent:(AMComponentInstance *)insertedComponent
-             beforeComponent:(AMComponentInstance *)siblingComponent {
-    
-    NSMutableArray *primComponents = self.primChildComponents;
-    
-    NSUInteger pos = [primComponents indexOfObject:siblingComponent];
-    
-    if (pos == NSNotFound) {
-        pos = 0;
-    }
-    
-    if ([primComponents containsObject:insertedComponent]) {
-        [primComponents removeObject:insertedComponent];
-    }
-    
-    [primComponents insertObject:insertedComponent atIndex:pos];
-    
-    insertedComponent.parentComponent = self;
-}
-
-- (void)insertChildComponent:(AMComponentInstance *)insertedComponent
-              afterComponent:(AMComponentInstance *)siblingComponent {
-    
-    NSMutableArray *primComponents = self.primChildComponents;
-    
-    NSUInteger pos = [primComponents indexOfObject:siblingComponent];
-    
-    if (pos == NSNotFound) {
-        pos = primComponents.count-1;
-    }
-    
-    pos++;
-    pos = MIN(pos, primComponents.count);
-    
-    if ([primComponents containsObject:insertedComponent]) {
-        [primComponents removeObject:insertedComponent];
-    }
-    
-    if (pos < primComponents.count) {
-        [primComponents insertObject:insertedComponent atIndex:pos];
-    } else {
-        [primComponents addObject:insertedComponent];
-    }
-    
-    insertedComponent.parentComponent = self;
-}
-
-- (void)removeChildComponent:(AMComponentInstance *)component {
-    if (component != nil) {
-        [self removeChildComponents:@[component]];
-    }
-}
-
-- (void)removeChildComponents:(NSArray *)components {
-    [self.primChildComponents removeObjectsInArray:components];
-    
-    [components enumerateObjectsUsingBlock:^(AMComponentInstance *component, NSUInteger idx, BOOL *stop) {
-        component.parentComponent = nil;
-    }];
-}
-
-#pragma mark - Helpers
-
-- (void)updateProportionalLayouts {
-    
-    for (AMLayout *layout in self.layoutObjects) {
-        
-        if (self.parentComponent != nil) {
-            [layout
-             updateProportionalValueFromFrame:self.frame
-             parentFrame:self.parentComponent.frame];
-            
-            for (AMComponentInstance *childComponent in self.childComponents) {
-                
-                [childComponent updateProportionalLayouts];
-            }
-        }
-    }
-}
-
-- (void)updateChildFrames {
-    
-    for (AMComponentInstance *childComponent in self.childComponents) {
-        [childComponent updateFrame];
-    }
-}
-
-- (void)updateFrame {
-    
-    //    NSLog(@"startingFrame: %@", NSStringFromCGRect(self.frame));
-    //    NSLog(@"parentFrame: %@", NSStringFromCGRect(self.parentComponent.frame));
-    
-    CGRect updatedFrame = self.frame;
-    
-    for (AMLayout *layout in self.layoutObjects) {
-        
-        updatedFrame =
-        [layout
-         adjustedFrame:updatedFrame
-         forComponent:self
-         scale:self.scale];
-        
-        //        NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
-    }
-    
-    updatedFrame = AMPixelAlignedCGRect(updatedFrame);
-    //    NSLog(@"endingFrame: %@", NSStringFromCGRect(updatedFrame));
-    
-    self.frame = updatedFrame;
-    
-    
-    for (AMComponentInstance *childComponent in self.childComponents) {
-        [childComponent updateFrame];
-    }
-}
+//- (AMComponentInstance *)componentInstanceFromDescriptor:(AMComponentDescriptor *)descriptor {
+//    AMComponentInstance *instance = [AMComponentInstance new];
+//    instance.descriptor = descriptor;
+//    instance.identifier = descriptor.identifier;
+//    return instance;
+//}
+//
+//- (NSArray *)childComponents {
+//    NSMutableArray *result = [NSMutableArray new];
+//    for (AMComponentDescriptor *descriptor in self.descriptor.childComponents) {
+//        AMComponentInstance *instance = [self componentInstanceFromDescriptor:descriptor];
+//        instance.parentComponent = self;
+//        [result addObject:instance];
+//    }
+//    
+//    if (self.isInherited) {
+//        [result addObjectsFromArray:super.childComponents];
+//    }
+//    return result.copy;
+//}
+//
+//- (void)setChildComponents:(NSArray *)childComponents {
+//    
+//    if (self.isInherited) {
+//        super.childComponents = childComponents;
+//    } else {
+//        self.descriptor.childComponents = [childComponents valueForKey:@"descriptor"];
+//    }
+//}
+//
+//- (void)addChildComponent:(AMComponentElement *)component {
+//    
+//    if ([component isKindOfClass:[AMComponentInstance class]]) {
+//        AMComponentInstance *instance = (id)component;
+//        
+//        if (self.isInherited) {
+//            [self addChildComponents:@[instance]];
+//        } else {
+//            [self.descriptor addChildComponent:instance.descriptor];
+//        }
+//    }
+//}
+//
+//- (void)addChildComponents:(NSArray *)components {
+//    if (self.isInherited) {
+//        [super addChildComponents:components];
+//    } else {
+//        [self.descriptor addChildComponents:[components valueForKey:@"descriptor"]];
+//    }
+//}
+//
+//- (void)insertChildComponent:(AMComponentInstance *)insertedComponent
+//             beforeComponent:(AMComponentInstance *)siblingComponent {
+//    if (self.isInherited) {
+//        [super insertChildComponent:insertedComponent beforeComponent:siblingComponent];
+//    } else {
+//        [self.descriptor insertChildComponent:insertedComponent.descriptor beforeComponent:siblingComponent.descriptor];
+//    }
+//}
+//
+//- (void)insertChildComponent:(AMComponentInstance *)insertedComponent
+//              afterComponent:(AMComponentInstance *)siblingComponent {
+//    if (self.isInherited) {
+//        [super insertChildComponent:insertedComponent afterComponent:siblingComponent];
+//    } else {
+//        [self.descriptor insertChildComponent:insertedComponent.descriptor afterComponent:siblingComponent.descriptor];
+//    }
+//}
+//
+//- (void)removeChildComponent:(AMComponentInstance *)component {
+//    if (component != nil) {
+//        [self removeChildComponents:@[component]];
+//        [self.descriptor removeChildComponent:component];
+//    }
+//}
+//
+//- (void)removeChildComponents:(NSArray *)components {
+//    [super removeChildComponents:components];
+//    [self.descriptor removeChildComponents:[components valueForKey:@"descriptor"]];
+//}
 
 @end

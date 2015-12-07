@@ -18,8 +18,18 @@
 - (void)applyConstraintIfNecessary {
     
     if (self.layoutApplied == NO && self.constraint != nil) {
+        [self clearPreviousConstraint];
         [self.view addConstraint:self.constraint];
         self.layoutApplied = YES;
+    }
+}
+
+- (void)clearPreviousConstraint {
+    for (NSLayoutConstraint *constraint in self.view.constraints.copy) {
+        if (constraint.firstItem == self.constraint.firstItem &&
+            constraint.firstAttribute == self.constraint.firstAttribute) {
+            [self.view removeConstraint:constraint];
+        }
     }
 }
 

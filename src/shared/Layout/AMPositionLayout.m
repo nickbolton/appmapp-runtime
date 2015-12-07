@@ -142,7 +142,7 @@
 }
 
 - (CGRect)adjustedFrame:(CGRect)frame
-           forComponent:(AMComponentInstance *)component
+           forComponent:(AMComponentElement *)component
            maintainSize:(BOOL)maintainSize
                   scale:(CGFloat)scale {
     
