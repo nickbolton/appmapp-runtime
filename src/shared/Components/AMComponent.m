@@ -535,6 +535,34 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [self resetLayout];
 }
 
+- (void)setLayoutObjects:(NSArray *)layoutObjects {
+    [self setLayoutObjects:layoutObjects clearLayouts:YES];
+}
+
+- (void)setLayoutObjects:(NSArray *)layoutObjects clearLayouts:(BOOL)clearLayouts {
+    
+    if (clearLayouts) {
+        
+        for (AMLayout *layoutObject in _layoutObjects) {
+            [layoutObject clearLayout];
+        }
+    }
+    
+    _layoutObjects = layoutObjects;
+    
+    [self updateProportionalLayouts];
+    
+    self.hasProportionalLayout = NO;
+    
+    for (AMLayout *layout in layoutObjects) {
+        
+        if (layout.isProportional) {
+            self.hasProportionalLayout = YES;
+            break;
+        }
+    }
+}
+
 - (NSString *)name {
     if (_name != nil) {
         return _name;
