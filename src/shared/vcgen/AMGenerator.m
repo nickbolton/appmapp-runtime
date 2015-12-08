@@ -8,7 +8,7 @@
 
 #import "AMGenerator.h"
 #import "AMViewGenerator.h"
-#import "AMComponentInstance.h"
+#import "AMComponent.h"
 #import "AMExpandingLayout.h"
 #import "NSString+NameUtilities.h"
 #import "AMComponentManagerTemplate.h"
@@ -153,8 +153,8 @@ NSString * const kAMComponentManagerClassName = @"AMComponentManager";
     
     for (NSDictionary *componentDict in components) {
         
-        AMComponentInstance *component =
-        [AMComponentInstance componentWithDictionary:componentDict];
+        AMComponent *component =
+        [AMComponent componentWithDictionary:componentDict];
         
         NSString *viewName = [self buildViewName:component classPrefix:classPrefix];
 
@@ -168,8 +168,8 @@ NSString * const kAMComponentManagerClassName = @"AMComponentManager";
     
     for (NSDictionary *componentDict in components) {
         
-        AMComponentInstance *component =
-        [AMComponentInstance componentWithDictionary:componentDict];
+        AMComponent *component =
+        [AMComponent componentWithDictionary:componentDict];
         
         NSString *viewControllerName = [self buildViewControllerName:component.exportedName classPrefix:classPrefix];
         
@@ -289,7 +289,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     return name;
 }
 
-- (NSString *)buildMachineProperties:(AMComponentInstance *)component
+- (NSString *)buildMachineProperties:(AMComponent *)component
                                  ios:(BOOL)ios
                            interface:(BOOL)interface
                        viewBaseClass:(NSString *)viewBaseClass
@@ -298,7 +298,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     NSMutableString *result = [NSMutableString string];
     
-    [component.childComponents enumerateObjectsUsingBlock:^(AMComponentInstance *childComponent, NSUInteger idx, BOOL *stop) {
+    [component.childComponents enumerateObjectsUsingBlock:^(AMComponent *childComponent, NSUInteger idx, BOOL *stop) {
         
         NSString *propertyString =
         [self
@@ -316,13 +316,13 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     return  result;
 }
 
-- (NSString *)buildRootViewName:(AMComponentInstance *)component {
+- (NSString *)buildRootViewName:(AMComponent *)component {
     
     NSString *name = [component.exportedName stringByAppendingString:@"View"];
     return name;
 }
 
-- (NSString *)buildMachineProperty:(AMComponentInstance *)childComponent
+- (NSString *)buildMachineProperty:(AMComponent *)childComponent
                                ios:(BOOL)ios
                          interface:(BOOL)interface
                      viewBaseClass:(NSString *)viewBaseClass
@@ -352,7 +352,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
      readQualifier, viewClassName, propertyName];
 }
 
-- (NSString *)buildViewName:(AMComponentInstance *)component
+- (NSString *)buildViewName:(AMComponent *)component
                 classPrefix:(NSString *)classPrefix {
     
     NSString *suffix = @"View";
@@ -383,7 +383,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     NSMutableString *result = [NSMutableString string];
     
-    [components enumerateObjectsUsingBlock:^(AMComponentInstance *childComponent, NSUInteger idx, BOOL *stop) {
+    [components enumerateObjectsUsingBlock:^(AMComponent *childComponent, NSUInteger idx, BOOL *stop) {
         
         [result appendString:[self buildClassDeclaration:childComponent ios:ios classPrefix:classPrefix baseViewClassNames:baseViewClassNames]];
     }];
@@ -391,7 +391,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     return result;
 }
 
-- (NSString *)buildClassDeclaration:(AMComponentInstance *)component
+- (NSString *)buildClassDeclaration:(AMComponent *)component
                                 ios:(BOOL)ios
                         classPrefix:(NSString *)classPrefix
                  baseViewClassNames:(NSDictionary *)baseViewClassNames {
@@ -414,7 +414,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     
     NSMutableString *result = [NSMutableString string];
     
-    [components enumerateObjectsUsingBlock:^(AMComponentInstance *childComponent, NSUInteger idx, BOOL *stop) {
+    [components enumerateObjectsUsingBlock:^(AMComponent *childComponent, NSUInteger idx, BOOL *stop) {
         
         [result appendString:[self buildClassImport:childComponent ios:ios classPrefix:classPrefix baseViewClassNames:baseViewClassNames]];
     }];
@@ -422,7 +422,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames {
     return result;
 }
 
-- (NSString *)buildClassImport:(AMComponentInstance *)component
+- (NSString *)buildClassImport:(AMComponent *)component
                            ios:(BOOL)ios
                    classPrefix:(NSString *)classPrefix
             baseViewClassNames:(NSDictionary *)baseViewClassNames {

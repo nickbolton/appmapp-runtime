@@ -103,13 +103,13 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 }
 
 - (CGRect)adjustedFrame:(CGRect)frame
-           forComponent:(AMComponentElement *)component
+           forComponent:(AMComponent *)component
                   scale:(CGFloat)scale {
     return [self adjustedFrame:frame forComponent:component maintainSize:NO scale:scale];
 }
 
 - (CGRect)adjustedFrame:(CGRect)frame
-           forComponent:(AMComponentElement *)component
+           forComponent:(AMComponent *)component
            maintainSize:(BOOL)maintainSize
                   scale:(CGFloat)scale {
     return frame;

@@ -16,7 +16,7 @@
 #import <Foundation/Foundation.h>\n\
 #import \"AMComponentManagerProtocol.h\"\n\
 \n\
-@class AMComponentInstance;\n\
+@class AMComponent;\n\
 \n\
 @interface AMComponentManager : NSObject<AMComponentManager>\n\
 \n\
@@ -34,7 +34,7 @@
 
     return @"// DO NOT EDIT. This file is machine-generated and constantly overwritten.\n\
 #import \"AMComponentManager.h\"\n\
-#import \"AMComponentInstance.h\"\n\
+#import \"AMComponent.h\"\n\
 \n\
 @interface AMComponentManager()\n\
 \n\

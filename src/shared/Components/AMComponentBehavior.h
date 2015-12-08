@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
 
-#import "AMComponentInstance.h"
+#import "AMComponent.h"
 
 extern NSString * const kAMComponentBehaviorClassKey;
 

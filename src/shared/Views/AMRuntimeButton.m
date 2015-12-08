@@ -11,7 +11,7 @@
 
 @interface AMRuntimeButton()
 
-@property (nonatomic, strong) AMComponentInstance *component;
+@property (nonatomic, strong) AMComponent *component;
 @property (nonatomic, strong) AMRuntimeViewHelper *helper;
 
 @end
@@ -53,7 +53,7 @@
     return _helper;
 }
 
-- (void)setComponent:(AMComponentInstance *)component {
+- (void)setComponent:(AMComponent *)component {
     _component = component;
     [self.helper setComponent:component forView:self];
     [self setupButton];

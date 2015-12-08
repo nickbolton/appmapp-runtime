@@ -8,13 +8,13 @@
 
 #import "AMRuntimeLabel.h"
 #import "AMRuntimeViewHelper.h"
-#import "AMComponentInstance.h"
+#import "AMComponent.h"
 #import "AMCompositeTextDescriptor.h"
 
 @interface AMRuntimeLabel()
 
 @property (nonatomic, strong) AMLayout *layoutObject;
-@property (nonatomic, strong) AMComponentInstance *component;
+@property (nonatomic, strong) AMComponent *component;
 @property (nonatomic, strong) AMRuntimeViewHelper *helper;
 
 @end
@@ -23,7 +23,7 @@
 
 #pragma mark - Getters and Setters
 
-- (void)setComponent:(AMComponentInstance *)component {
+- (void)setComponent:(AMComponent *)component {
     _component = component;
     NSAssert(component.componentType == AMComponentText,
              @"component not an AMComponentText");

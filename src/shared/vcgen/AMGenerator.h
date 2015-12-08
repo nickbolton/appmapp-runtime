@@ -19,7 +19,7 @@ extern NSString * const kAMFrameworkImportToken;
 extern NSString * const kAMViewNameToken;
 extern NSString * const kAMViewBaseClassToken;
 
-@class AMComponentInstance;
+@class AMComponent;
 
 @interface AMGenerator : NSObject
 
@@ -43,7 +43,7 @@ extern NSString * const kAMViewBaseClassToken;
 baseViewControllerClassName:(NSString *)baseViewControllerClassName
 baseViewClassNames:(NSDictionary *)baseViewClassNames;
 
-- (NSString *)buildViewName:(AMComponentInstance *)component
+- (NSString *)buildViewName:(AMComponent *)component
                 classPrefix:(NSString *)classPrefix;
 
 - (NSString *)buildViewControllerName:(NSString *)name
@@ -53,16 +53,16 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames;
                              baseViewClassNames:(NSDictionary *)baseViewClassNames
                                             ios:(BOOL)ios;
 
-- (NSString *)buildRootViewName:(AMComponentInstance *)component;
+- (NSString *)buildRootViewName:(AMComponent *)component;
 
-- (NSString *)buildMachineProperties:(AMComponentInstance *)component
+- (NSString *)buildMachineProperties:(AMComponent *)component
                                  ios:(BOOL)ios
                            interface:(BOOL)interface
                        viewBaseClass:(NSString *)viewBaseClass
                          classPrefix:(NSString *)classPrefix
                   baseViewClassNames:(NSDictionary *)baseViewClassNames;
 
-- (NSString *)buildMachineProperty:(AMComponentInstance *)childComponent
+- (NSString *)buildMachineProperty:(AMComponent *)childComponent
                                ios:(BOOL)ios
                          interface:(BOOL)interface
                      viewBaseClass:(NSString *)viewBaseClass
@@ -74,7 +74,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames;
                          classPrefix:(NSString *)classPrefix
                   baseViewClassNames:(NSDictionary *)baseViewClassNames;
 
-- (NSString *)buildClassDeclaration:(AMComponentInstance *)component
+- (NSString *)buildClassDeclaration:(AMComponent *)component
                                 ios:(BOOL)ios
                         classPrefix:(NSString *)classPrefix
                  baseViewClassNames:(NSDictionary *)baseViewClassNames;
@@ -84,7 +84,7 @@ baseViewClassNames:(NSDictionary *)baseViewClassNames;
                     classPrefix:(NSString *)classPrefix
              baseViewClassNames:(NSDictionary *)baseViewClassNames;
 
-- (NSString *)buildClassImport:(AMComponentInstance *)component
+- (NSString *)buildClassImport:(AMComponent *)component
                            ios:(BOOL)ios
                    classPrefix:(NSString *)classPrefix
             baseViewClassNames:(NSDictionary *)baseViewClassNames;

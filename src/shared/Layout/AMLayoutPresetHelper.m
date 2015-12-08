@@ -7,7 +7,7 @@
 //
 
 #import "AMLayoutPresetHelper.h"
-#import "AMComponentInstance.h"
+#import "AMComponent.h"
 
 typedef NS_ENUM(NSInteger, AMLayoutHorizontalPosition) {
     
@@ -53,7 +53,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
     return self;
 }
 
-- (NSArray *)layoutTypesForComponent:(AMComponentElement *)component
+- (NSArray *)layoutTypesForComponent:(AMComponent *)component
                         layoutPreset:(AMLayoutPreset)layoutPreset {
 
     if (component != nil && layoutPreset < self.selectors.count) {
@@ -62,7 +62,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
         SEL selector = selectorValue.pointerValue;
         
         IMP imp = [self methodForSelector:selector];
-        NSArray * (*func)(id, SEL, AMComponentElement *component) = (void *)imp;
+        NSArray * (*func)(id, SEL, AMComponent *component) = (void *)imp;
         
         return func(self, selector, component);
     }
@@ -70,7 +70,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
     return nil;
 }
 
-- (AMLayoutHorizontalPosition)horizontalLayoutTypePosition:(AMComponentElement *)component
+- (AMLayoutHorizontalPosition)horizontalLayoutTypePosition:(AMComponent *)component
                                                     center:(BOOL)center {
  
     if (center) {
@@ -101,7 +101,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
     return AMLayoutHorizontalPositionLeft;
 }
 
-- (AMLayoutType)horizontalAnchoredLayoutTypeBasedOnPosition:(AMComponentElement *)component
+- (AMLayoutType)horizontalAnchoredLayoutTypeBasedOnPosition:(AMComponent *)component
                                                      center:(BOOL)center {
 
     AMLayoutHorizontalPosition position =
@@ -124,7 +124,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
     return AMLayoutTypeAnchoredLeft;
 }
 
-- (AMLayoutType)horizontalProportionalLayoutTypeBasedOnPosition:(AMComponentElement *)component {
+- (AMLayoutType)horizontalProportionalLayoutTypeBasedOnPosition:(AMComponent *)component {
     
     AMLayoutHorizontalPosition position =
     [self horizontalLayoutTypePosition:component center:NO];
@@ -136,7 +136,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
     return AMLayoutTypeProportionalLeft;
 }
 
-- (AMLayoutVerticalPosition)verticalLayoutTypePosition:(AMComponentElement *)component
+- (AMLayoutVerticalPosition)verticalLayoutTypePosition:(AMComponent *)component
                                                 center:(BOOL)center {
 
     if (center) {
@@ -168,7 +168,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
     return AMLayoutVerticalPositionTop;
 }
 
-- (AMLayoutType)verticalAnchoredLayoutTypeBasedOnPosition:(AMComponentElement *)component
+- (AMLayoutType)verticalAnchoredLayoutTypeBasedOnPosition:(AMComponent *)component
                                                    center:(BOOL)center {
     
     AMLayoutVerticalPosition position =
@@ -191,7 +191,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
     return AMLayoutTypeAnchoredTop;
 }
 
-- (AMLayoutType)verticalProportionalLayoutTypeBasedOnPosition:(AMComponentElement *)component {
+- (AMLayoutType)verticalProportionalLayoutTypeBasedOnPosition:(AMComponent *)component {
     
     AMLayoutVerticalPosition position =
     [self verticalLayoutTypePosition:component center:NO];
@@ -204,7 +204,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
 }
 
 //AMLayoutPresetFixedSizeNearestCorner = 0,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeNearestCorner:(AMComponentElement *)component {
+- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeNearestCorner:(AMComponent *)component {
     
     if (component.parentComponent == nil) {
         return @[@(AMLayoutTypePosition)];
@@ -228,7 +228,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
 }
 
 //AMLayoutPresetFixedSizeRelativePosition,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeRelativePosition:(AMComponentElement *)component {
+- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeRelativePosition:(AMComponent *)component {
     
     if (component.parentComponent == nil) {
         return @[@(AMLayoutTypePosition)];
@@ -252,7 +252,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
 }
 
 //AMLayoutPresetFixedSizeRelativeCenter,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeRelativeCenter:(AMComponentElement *)component {
+- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeRelativeCenter:(AMComponent *)component {
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
@@ -270,7 +270,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
 }
 
 //AMLayoutPresetFixedSizeFixedCenter,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeFixedCenter:(AMComponentElement *)component {
+- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeFixedCenter:(AMComponent *)component {
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
@@ -288,12 +288,12 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
 }
 
 //AMLayoutPresetFixedSizeFixedPosition,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeFixedPosition:(AMComponentElement *)component {
+- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeFixedPosition:(AMComponent *)component {
     return @[@(AMLayoutTypePosition)];
 }
 
 //AMLayoutPresetFixedYPosHeightLeftRightMargins,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedYPosHeightLeftRightMargins:(AMComponentElement *)component {
+- (NSArray *)layoutTypesForAMLayoutPresetFixedYPosHeightLeftRightMargins:(AMComponent *)component {
 
 //    return @[@(AMLayoutTypePosition)];
 
@@ -314,7 +314,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
 }
 
 //AMLayoutPresetFixedXPosWidthTopBottomMargins,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedXPosWidthTopBottomMargins:(AMComponentElement *)component {
+- (NSArray *)layoutTypesForAMLayoutPresetFixedXPosWidthTopBottomMargins:(AMComponent *)component {
     
 //    return @[@(AMLayoutTypePosition)];
 
@@ -335,7 +335,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
 }
 
 //AMLayoutPresetFixedMargins,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedMargins:(AMComponentElement *)component {
+- (NSArray *)layoutTypesForAMLayoutPresetFixedMargins:(AMComponent *)component {
 
 //    return @[@(AMLayoutTypePosition)];
 
@@ -354,7 +354,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
 }
 
 //AMLayoutPresetProportionalMargins,
-- (NSArray *)layoutTypesForAMLayoutPresetProportionalMargins:(AMComponentElement *)component {
+- (NSArray *)layoutTypesForAMLayoutPresetProportionalMargins:(AMComponent *)component {
 
 //    return @[@(AMLayoutTypePosition)];
 

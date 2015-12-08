@@ -7,7 +7,7 @@
 //
 
 #import "AMRuntimeViewHelper.h"
-#import "AMComponentInstance.h"
+#import "AMComponent.h"
 #import "AMRuntimeView.h"
 #import "AMLayoutFactory.h"
 #import "AMLayout.h"
@@ -19,23 +19,23 @@
 - (void)setBaseAttributes:(AMView <AMRuntimeView> *)view {
     
 #if TARGET_OS_IPHONE
-    view.alpha = view.component.alpha;
-    view.backgroundColor = view.component.backgroundColor;
+    view.alpha = view.component.attributes.alpha;
+    view.backgroundColor = view.component.attributes.backgroundColor;
 #else
     view.wantsLayer = YES;
     //    view.layer. = self.component.isClipped;
-    view.alphaValue = view.component.alpha;
-    view.layer.backgroundColor = view.component.backgroundColor.CGColor;
+    view.alphaValue = view.component.attributes.alpha;
+    view.layer.backgroundColor = view.component.attributes.backgroundColor.CGColor;
 #endif
     
-    view.layer.borderWidth = view.component.borderWidth;
-    view.layer.borderColor = view.component.borderColor.CGColor;
-    view.layer.cornerRadius = view.component.cornerRadius;
+    view.layer.borderWidth = view.component.attributes.borderWidth;
+    view.layer.borderColor = view.component.attributes.borderColor.CGColor;
+    view.layer.cornerRadius = view.component.attributes.cornerRadius;
 }
 
 #pragma mark - Getters and Setters
 
-- (void)setComponent:(AMComponentInstance *)component forView:(AMView<AMRuntimeView> *)view {
+- (void)setComponent:(AMComponent *)component forView:(AMView<AMRuntimeView> *)view {
     
     for (AMLayout *layout in component.layoutObjects) {
         layout.view = view;

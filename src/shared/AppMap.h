@@ -21,5 +21,5 @@
 
 #endif
 
-#import "AMComponentInstance.h"
+#import "AMComponent.h"
 #import "AMLayout.h"

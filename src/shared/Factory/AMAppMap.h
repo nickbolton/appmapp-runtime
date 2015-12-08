@@ -7,17 +7,17 @@
 //
 
 #import "AMRuntimeView.h"
-#import "AMComponentInstance.h"
+#import "AMComponent.h"
 #import "AMLayoutFactory.h"
 
 @interface AMAppMap : NSObject
 
 + (instancetype)sharedInstance;
 
-- (AMRuntimeView *)buildViewFromComponent:(AMComponentInstance *)component
+- (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
                               inContainer:(AMView *)container;
 
-- (AMRuntimeView *)buildViewFromComponent:(AMComponentInstance *)component
+- (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
                               inContainer:(AMView *)container
                             bindingObject:(id)bindingObject;
 

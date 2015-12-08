@@ -11,7 +11,7 @@
 #import "AMNavigatingButtonBehavior.h"
 
 @class AMLayout;
-@class AMComponentInstance;
+@class AMComponent;
 
 @protocol AMRuntimeDelegate <NSObject>
 
@@ -25,8 +25,8 @@
 
 @property (nonatomic, weak) id <AMRuntimeDelegate> runtimeDelegate;
 
-- (AMComponentInstance *)component;
-- (void)setComponent:(AMComponentInstance *)component;
+- (AMComponent *)component;
+- (void)setComponent:(AMComponent *)component;
 
 - (void)clearConstraints;
 - (void)setBaseAttributes;

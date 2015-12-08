@@ -9,7 +9,7 @@
 #import "NSLayoutConstraint+Utilities.h"
 #import "AppMapTypes.h"
 
-@class AMComponentInstance;
+@class AMComponent;
 
 @interface AMLayout : NSObject
 
@@ -38,12 +38,12 @@
                      animated:(BOOL)animated;
 
 - (CGRect)adjustedFrame:(CGRect)frame
-           forComponent:(AMComponentElement *)component
+           forComponent:(AMComponent *)component
            maintainSize:(BOOL)maintainSize
                   scale:(CGFloat)scale;
 
 - (CGRect)adjustedFrame:(CGRect)frame
-           forComponent:(AMComponentElement *)component
+           forComponent:(AMComponent *)component
                   scale:(CGFloat)scale;
 
 - (void)applyConstraintIfNecessary;
