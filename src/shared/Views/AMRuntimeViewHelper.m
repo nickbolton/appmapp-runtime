@@ -19,18 +19,18 @@
 - (void)setBaseAttributes:(AMView <AMRuntimeView> *)view {
     
 #if TARGET_OS_IPHONE
-    view.alpha = view.component.attributes.alpha;
-    view.backgroundColor = view.component.attributes.backgroundColor;
+    view.alpha = view.component.alpha;
+    view.backgroundColor = view.component.backgroundColor;
 #else
     view.wantsLayer = YES;
     //    view.layer. = self.component.isClipped;
-    view.alphaValue = view.component.attributes.alpha;
-    view.layer.backgroundColor = view.component.attributes.backgroundColor.CGColor;
+    view.alphaValue = view.component.alpha;
+    view.layer.backgroundColor = view.component.backgroundColor.CGColor;
 #endif
     
-    view.layer.borderWidth = view.component.attributes.borderWidth;
-    view.layer.borderColor = view.component.attributes.borderColor.CGColor;
-    view.layer.cornerRadius = view.component.attributes.cornerRadius;
+    view.layer.borderWidth = view.component.borderWidth;
+    view.layer.borderColor = view.component.borderColor.CGColor;
+    view.layer.cornerRadius = view.component.cornerRadius;
 }
 
 #pragma mark - Getters and Setters

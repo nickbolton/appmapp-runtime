@@ -5,7 +5,6 @@
 //  Created by Nick Bolton on 8/1/14.
 //  Copyright (c) 2014 Nick Bolton. All rights reserved.
 //
-#import "AMComponentAttributes.h"
 
 extern NSString *const kAMComponentIdentifierKey;
 extern NSString *const kAMComponentAttributesKey;
@@ -21,33 +20,40 @@ extern NSString *const kAMComponentClassPrefixKey;
 extern NSString *const kAMComponentLinkedComponentKey;
 extern NSString *const kAMComponentTextDescriptorKey;
 extern NSString *const kAMComponentDuplicateTypeKey;
+extern NSString *const kAMComponentDuplicateSourceKey;
+
+extern NSString *const kAMComponentFrameKey;
+extern NSString *const kAMComponentLayoutObjectsKey;
+extern NSString *const kAMComponentLayoutPresetKey;
+extern NSString *const kAMComponentClippedKey;
+extern NSString *const kAMComponentBackgroundColorKey;
+extern NSString *const kAMComponentBorderWidthKey;
+extern NSString *const kAMComponentBorderColorWidthKey;
+extern NSString *const kAMComponentAlphaKey;
+extern NSString *const kAMComponentCornerRadiusKey;
 
 @class AMComponentBehavior;
 @class AMCompositeTextDescriptor;
 
 @interface AMComponent : NSObject <NSCoding, NSCopying>
 
-@property (nonatomic, strong) NSString *identifier;
+@property (nonatomic, copy) NSString *identifier;
 @property (nonatomic) AMComponentType componentType;
 @property (nonatomic, readonly) BOOL isContainer;
-@property (nonatomic, strong) NSString *name;
+@property (nonatomic, copy) NSString *name;
 @property (nonatomic, readonly) NSString *exportedName;
 @property (nonatomic, readonly) NSString *defaultName;
 @property (nonatomic, readonly) AMComponentBehavior *behavor;
 @property (nonatomic, strong) AMCompositeTextDescriptor *textDescriptor;
 @property (nonatomic, readonly) AMComponent *parentInstance;
-@property (nonatomic, strong) AMComponentAttributes *attributes;
-@property (nonatomic) AMLayoutPreset layoutPreset;
-@property (nonatomic, strong) NSArray *layoutObjects;
-@property (nonatomic) CGRect frame;
 
 @property (nonatomic) AMDuplicateType duplicateType;
 @property (nonatomic, readonly) BOOL isMirrored;
 @property (nonatomic, readonly) BOOL isCopied;
 @property (nonatomic, readonly) BOOL isInherited;
-@property (nonatomic) BOOL duplicating;
+@property (nonatomic, copy) NSString *duplicateSourceIdentifier;
 
-@property (nonatomic, strong) NSString *classPrefix;
+@property (nonatomic, copy) NSString *classPrefix;
 @property (nonatomic) BOOL dropTarget;
 @property (nonatomic, weak) AMComponent *linkedComponent;
 @property (nonatomic, readonly) NSString *linkedComponentIdentifier;
@@ -56,19 +62,30 @@ extern NSString *const kAMComponentDuplicateTypeKey;
 
 @property (nonatomic, readonly) NSInteger depth;
 @property (nonatomic, readonly) NSInteger childIndex;
-@property (nonatomic, strong) NSArray *childComponents;
+@property (nonatomic, copy) NSArray *childComponents;
 @property (nonatomic, weak) AMComponent *parentComponent;
 @property (nonatomic, readonly) AMComponent *topLevelComponent;
 @property (nonatomic, readonly) NSArray *sizePresets;
 @property (nonatomic) CGFloat scale; // canvas scale
 @property (nonatomic, readonly) NSArray *allAncestors;
 
+// attributes
+@property (nonatomic) CGFloat cornerRadius;
+@property (nonatomic) CGFloat borderWidth;
+@property (nonatomic, getter=isClipped) BOOL clipped;
+@property (nonatomic) CGFloat alpha;
+@property (nonatomic, strong) AMColor *borderColor;
+@property (nonatomic, strong) AMColor *backgroundColor;
+@property (nonatomic) CGRect frame;
+@property (nonatomic, readonly) BOOL hasProportionalLayout;
+@property (nonatomic, strong) NSArray *layoutObjects;
+@property (nonatomic) AMLayoutPreset layoutPreset;
+
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)componentWithDictionary:(NSDictionary *)dict;
 + (NSDictionary *)exportComponents:(NSArray *)components;
 - (void)copyToComponent:(AMComponent *)component;
 - (instancetype)shallowCopy;
-+ (instancetype)buildComponent;
 - (instancetype)copyForPasting;
 - (instancetype)duplicate;
 
