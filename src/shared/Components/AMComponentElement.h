@@ -41,6 +41,7 @@ extern NSString * kAMComponentIdentifierKey;
 @property (nonatomic, readonly) BOOL hasProportionalLayout;
 @property (nonatomic) AMLayoutPreset layoutPreset;
 @property (nonatomic) CGFloat scale; // canvas scale
+@property (nonatomic, readonly) NSArray *allAncestors;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)componentWithDictionary:(NSDictionary *)dict;

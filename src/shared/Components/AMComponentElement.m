@@ -289,6 +289,21 @@ NSString * kAMComponentIdentifierKey = @"identifier";
 
 #pragma mark - Parent/Child
 
+- (NSArray *)allAncestors {
+    NSMutableArray *result = [NSMutableArray new];
+    [self appendAncestorOfComponent:self toArray:result];
+    
+    return result;
+}
+
+- (void)appendAncestorOfComponent:(AMComponentElement *)component toArray:(NSMutableArray *)array {
+    AMComponentElement *parent = component.parentComponent;
+    if (parent != nil) {
+        [array addObject:parent];
+        [self appendAncestorOfComponent:parent toArray:array];
+    }
+}
+
 - (NSArray *)childComponents {
     return
     [NSArray arrayWithArray:self.primChildComponents];
