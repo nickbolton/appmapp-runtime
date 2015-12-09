@@ -86,6 +86,54 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     return [self.class isProportionalLayoutType:self.layoutType];
 }
 
+- (BOOL)isHorizontal {
+    return [self.class isHorizontalLayoutType:self.layoutType];
+}
+
+- (BOOL)isVertical {
+    return [self.class isVerticalLayoutType:self.layoutType];
+}
+
++ (BOOL)isHorizontalLayoutType:(AMLayoutType)layoutType {
+    
+    switch (layoutType) {
+        case AMLayoutTypeFixedWidth:
+        case AMLayoutTypeAnchoredLeft:
+        case AMLayoutTypeAnchoredRight:
+        case AMLayoutTypeCenterHorizontally:
+        case AMLayoutTypeProportionalLeft:
+        case AMLayoutTypeProportionalRight:
+        case AMLayoutTypeProportionalHorizontalCenter:
+            return YES;
+            break;
+            
+        default:
+            break;
+    }
+    
+    return NO;
+}
+
++ (BOOL)isVerticalLayoutType:(AMLayoutType)layoutType {
+    
+    switch (layoutType) {
+        case AMLayoutTypeFixedHeight:
+        case AMLayoutTypeAnchoredTop:
+        case AMLayoutTypeAnchoredBottom:
+        case AMLayoutTypeCenterVertically:
+        case AMLayoutTypeProportionalTop:
+        case AMLayoutTypeProportionalBottom:
+        case AMLayoutTypeProportionalVerticalCenter:
+            return YES;
+            break;
+            
+        default:
+            break;
+    }
+    
+    return NO;
+}
+
 - (void)clearLayout {
     self.constraint = nil;
     self.layoutApplied = NO;

@@ -17,6 +17,8 @@
 @property (nonatomic, strong) NSLayoutConstraint *constraint;
 @property (nonatomic, readonly) AMLayoutType layoutType;
 @property (nonatomic) BOOL layoutApplied;
+@property (nonatomic, readonly) BOOL isHorizontal;
+@property (nonatomic, readonly) BOOL isVertical;
 @property (nonatomic, readonly) BOOL isProportional;
 @property (nonatomic, copy) NSString *viewIdentifier;
 
@@ -27,6 +29,8 @@
 - (NSDictionary *)exportLayout;
 
 + (BOOL)isProportionalLayoutType:(AMLayoutType)layoutType;
++ (BOOL)isHorizontalLayoutType:(AMLayoutType)layoutType;
++ (BOOL)isVerticalLayoutType:(AMLayoutType)layoutType;
 
 - (void)clearLayout;
 - (void)updateLayoutWithFrame:(CGRect)frame
