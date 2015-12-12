@@ -137,6 +137,7 @@
         return result;
     }
     
-    return frame;}
+    return frame;
+}
 
 @end

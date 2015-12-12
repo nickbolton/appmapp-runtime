@@ -942,8 +942,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 - (void)updateFrame {
     
-    //    NSLog(@"startingFrame: %@", NSStringFromCGRect(self.frame));
-    //    NSLog(@"parentFrame: %@", NSStringFromCGRect(self.parentInstance.frame));
+//        NSLog(@"startingFrame: %@", NSStringFromCGRect(self.frame));
+//        NSLog(@"parentFrame: %@", NSStringFromCGRect(self.parentInstance.frame));
     
     CGRect updatedFrame = self.frame;
     
@@ -955,11 +955,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
          forComponent:self
          scale:self.scale];
         
-        //        NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
+//                NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
     }
     
     updatedFrame = AMPixelAlignedCGRect(updatedFrame);
-    //    NSLog(@"endingFrame: %@", NSStringFromCGRect(updatedFrame));
+//        NSLog(@"endingFrame: %@", NSStringFromCGRect(updatedFrame));
     
     self.frame = updatedFrame;
     
