@@ -289,13 +289,24 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
 
 //AMLayoutPresetFixedSizeFixedPosition,
 - (NSArray *)layoutTypesForAMLayoutPresetFixedSizeFixedPosition:(AMComponent *)component {
-    return @[@(AMLayoutTypePosition)];
+    
+    NSMutableArray *layoutTypes = [NSMutableArray array];
+    
+    // horizontal
+    
+    [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
+    [layoutTypes addObject:@(AMLayoutTypeAnchoredLeft)];
+    
+    // vertical
+    
+    [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
+    [layoutTypes addObject:@(AMLayoutTypeAnchoredTop)];
+    
+    return layoutTypes;
 }
 
 //AMLayoutPresetFixedYPosHeightLeftRightMargins,
 - (NSArray *)layoutTypesForAMLayoutPresetFixedYPosHeightLeftRightMargins:(AMComponent *)component {
-
-//    return @[@(AMLayoutTypePosition)];
 
     if (component.parentComponent == nil) {
         return @[@(AMLayoutTypePosition)];
@@ -315,8 +326,6 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
 
 //AMLayoutPresetFixedXPosWidthTopBottomMargins,
 - (NSArray *)layoutTypesForAMLayoutPresetFixedXPosWidthTopBottomMargins:(AMComponent *)component {
-    
-//    return @[@(AMLayoutTypePosition)];
 
     if (component.parentComponent == nil) {
         return @[@(AMLayoutTypePosition)];
@@ -337,8 +346,6 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
 //AMLayoutPresetFixedMargins,
 - (NSArray *)layoutTypesForAMLayoutPresetFixedMargins:(AMComponent *)component {
 
-//    return @[@(AMLayoutTypePosition)];
-
     if (component.parentComponent == nil) {
         return @[@(AMLayoutTypePosition)];
     }
@@ -355,8 +362,6 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
 
 //AMLayoutPresetProportionalMargins,
 - (NSArray *)layoutTypesForAMLayoutPresetProportionalMargins:(AMComponent *)component {
-
-//    return @[@(AMLayoutTypePosition)];
 
     if (component.parentComponent == nil) {
         return @[@(AMLayoutTypePosition)];
