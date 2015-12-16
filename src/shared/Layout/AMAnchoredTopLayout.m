@@ -24,7 +24,7 @@
     [NSLayoutConstraint
      constraintWithItem:self.view
      attribute:NSLayoutAttributeTop
-     relatedBy:NSLayoutRelationEqual
+     relatedBy:self.layoutRelation
      toItem:self.view.superview
      attribute:NSLayoutAttributeTop
      multiplier:1.0f

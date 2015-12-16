@@ -20,7 +20,7 @@
     [NSLayoutConstraint
      constraintWithItem:self.view
      attribute:NSLayoutAttributeHeight
-     relatedBy:NSLayoutRelationEqual
+     relatedBy:self.layoutRelation
      toItem:nil
      attribute:NSLayoutAttributeNotAnAttribute
      multiplier:1.0f

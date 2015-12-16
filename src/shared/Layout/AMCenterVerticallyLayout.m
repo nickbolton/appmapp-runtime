@@ -20,7 +20,7 @@
     [NSLayoutConstraint
      constraintWithItem:self.view
      attribute:NSLayoutAttributeCenterY
-     relatedBy:NSLayoutRelationEqual
+     relatedBy:self.layoutRelation
      toItem:self.view.superview
      attribute:NSLayoutAttributeCenterY
      multiplier:1.0f

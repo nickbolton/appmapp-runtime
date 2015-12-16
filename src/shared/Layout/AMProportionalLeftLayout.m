@@ -20,7 +20,7 @@
     [NSLayoutConstraint
      constraintWithItem:self.view
      attribute:NSLayoutAttributeLeft
-     relatedBy:NSLayoutRelationEqual
+     relatedBy:self.layoutRelation
      toItem:self.view.superview
      attribute:NSLayoutAttributeLeft
      multiplier:multiplier

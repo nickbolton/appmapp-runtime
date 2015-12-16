@@ -16,6 +16,7 @@
 @property (nonatomic) CGFloat proportionalValue;
 @property (nonatomic, strong) NSLayoutConstraint *constraint;
 @property (nonatomic, readonly) AMLayoutType layoutType;
+@property (nonatomic) NSLayoutRelation layoutRelation;
 @property (nonatomic) BOOL layoutApplied;
 @property (nonatomic, readonly) BOOL isHorizontal;
 @property (nonatomic, readonly) BOOL isVertical;

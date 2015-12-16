@@ -9,8 +9,9 @@
 #import "AMLayout.h"
 #import "AMExpandingLayout.h"
 
-NSString * kAMLayoutClassNameKey = @"className";
-NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
+static NSString * kAMLayoutClassNameKey = @"className";
+static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
+static NSString * kAMLayoutLayoutRelationKey = @"layoutRelation";
 
 @interface AMLayout()
 
@@ -20,6 +21,7 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 - (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeFloat:self.proportionalValue forKey:kAMLayoutProportionalValueKey];
+    [coder encodeInteger:self.layoutRelation forKey:kAMLayoutLayoutRelationKey];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -28,6 +30,7 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
     if (self != nil) {
         self.proportionalValue = [decoder decodeFloatForKey:kAMLayoutProportionalValueKey];
+        self.layoutRelation = [decoder decodeIntegerForKey:kAMLayoutLayoutRelationKey];
     }
     
     return self;
@@ -39,6 +42,7 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
     if (self != nil) {
         self.proportionalValue = [dict[kAMLayoutProportionalValueKey] floatValue];
+        self.layoutRelation = [dict[kAMLayoutLayoutRelationKey] integerValue];
     }
     
     return self;
@@ -59,6 +63,7 @@ NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
     dict[kAMLayoutClassNameKey] = NSStringFromClass(self.class);
     dict[kAMLayoutProportionalValueKey] = @(self.proportionalValue);
+    dict[kAMLayoutLayoutRelationKey] = @(self.layoutRelation);
     
     return dict;
 }
