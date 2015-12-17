@@ -7,11 +7,15 @@
 //
 
 #import "AMLayout.h"
-#import "AMExpandingLayout.h"
 
 static NSString * kAMLayoutClassNameKey = @"className";
-static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
-static NSString * kAMLayoutLayoutRelationKey = @"layoutRelation";
+static NSString * kAMLayoutAttributeKey = @"attribute";
+static NSString * kAMLayoutRelationKey = @"relation";
+static NSString * kAMLayoutMultiplierKey = @"multiplier";
+static NSString * kAMLayoutRelatedComponentIdentifierKey = @"relatedComponentIdentifier";
+static NSString * kAMLayoutRelatedAttributeKey = @"relatedAttribute";
+static NSString * kAMLayoutOffsetKey = @"offset";
+static NSString * kAMLayoutPriorityKey = @"priority";
 
 @interface AMLayout()
 
@@ -20,8 +24,13 @@ static NSString * kAMLayoutLayoutRelationKey = @"layoutRelation";
 @implementation AMLayout
 
 - (void)encodeWithCoder:(NSCoder *)coder {
-    [coder encodeFloat:self.proportionalValue forKey:kAMLayoutProportionalValueKey];
-    [coder encodeInteger:self.layoutRelation forKey:kAMLayoutLayoutRelationKey];
+    [coder encodeInteger:self.attribute forKey:kAMLayoutAttributeKey];
+    [coder encodeInteger:self.relation forKey:kAMLayoutRelationKey];
+    [coder encodeFloat:self.multiplier forKey:kAMLayoutMultiplierKey];
+    [coder encodeObject:self.relatedComponentIdentifier forKey:kAMLayoutRelatedComponentIdentifierKey];
+    [coder encodeInteger:self.relatedAttribute forKey:kAMLayoutRelatedAttributeKey];
+    [coder encodeFloat:self.offset forKey:kAMLayoutOffsetKey];
+    [coder encodeFloat:self.priority forKey:kAMLayoutPriorityKey];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -29,8 +38,13 @@ static NSString * kAMLayoutLayoutRelationKey = @"layoutRelation";
     self = [super init];
     
     if (self != nil) {
-        self.proportionalValue = [decoder decodeFloatForKey:kAMLayoutProportionalValueKey];
-        self.layoutRelation = [decoder decodeIntegerForKey:kAMLayoutLayoutRelationKey];
+        self.attribute = [decoder decodeIntegerForKey:kAMLayoutAttributeKey];
+        self.relation = [decoder decodeIntegerForKey:kAMLayoutRelationKey];
+        self.multiplier = [decoder decodeFloatForKey:kAMLayoutMultiplierKey];
+        self.relatedComponentIdentifier = [decoder decodeObjectForKey:kAMLayoutRelatedComponentIdentifierKey];
+        self.relatedAttribute = [decoder decodeIntegerForKey:kAMLayoutRelatedAttributeKey];
+        self.offset = [decoder decodeFloatForKey:kAMLayoutOffsetKey];
+        self.priority = [decoder decodeFloatForKey:kAMLayoutPriorityKey];
     }
     
     return self;
@@ -41,8 +55,13 @@ static NSString * kAMLayoutLayoutRelationKey = @"layoutRelation";
     self = [super init];
     
     if (self != nil) {
-        self.proportionalValue = [dict[kAMLayoutProportionalValueKey] floatValue];
-        self.layoutRelation = [dict[kAMLayoutLayoutRelationKey] integerValue];
+        self.attribute = [dict[kAMLayoutAttributeKey] integerValue];
+        self.relation = [dict[kAMLayoutRelationKey] integerValue];
+        self.multiplier = [dict[kAMLayoutMultiplierKey] floatValue];
+        self.relatedComponentIdentifier = dict[kAMLayoutRelatedComponentIdentifierKey];
+        self.relatedAttribute = [dict[kAMLayoutRelatedAttributeKey] integerValue];
+        self.offset = [dict[kAMLayoutOffsetKey] floatValue];
+        self.priority = [dict[kAMLayoutPriorityKey] floatValue];
     }
     
     return self;
@@ -62,9 +81,14 @@ static NSString * kAMLayoutLayoutRelationKey = @"layoutRelation";
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     
     dict[kAMLayoutClassNameKey] = NSStringFromClass(self.class);
-    dict[kAMLayoutProportionalValueKey] = @(self.proportionalValue);
-    dict[kAMLayoutLayoutRelationKey] = @(self.layoutRelation);
-    
+    dict[kAMLayoutAttributeKey] = @(self.attribute);
+    dict[kAMLayoutRelationKey] = @(self.relation);
+    dict[kAMLayoutMultiplierKey] = @(self.multiplier);
+    dict[kAMLayoutRelatedComponentIdentifierKey] = self.relatedComponentIdentifier;
+    dict[kAMLayoutRelatedAttributeKey] = @(self.relatedAttribute);
+    dict[kAMLayoutOffsetKey] = @(self.offset);
+    dict[kAMLayoutPriorityKey] = @(self.priority);
+
     return dict;
 }
 
@@ -78,37 +102,15 @@ static NSString * kAMLayoutLayoutRelationKey = @"layoutRelation";
     return _viewIdentifier;
 }
 
-#pragma mark - Public
-
-+ (BOOL)isProportionalLayoutType:(AMLayoutType)layoutType {
-    
-    return
-    layoutType >= AMLayoutTypeProportionalTop &&
-    layoutType <= AMLayoutTypeProportionalVerticalCenter;
-}
-
-- (BOOL)isProportional {
-    return [self.class isProportionalLayoutType:self.layoutType];
-}
-
 - (BOOL)isHorizontal {
-    return [self.class isHorizontalLayoutType:self.layoutType];
-}
-
-- (BOOL)isVertical {
-    return [self.class isVerticalLayoutType:self.layoutType];
-}
-
-+ (BOOL)isHorizontalLayoutType:(AMLayoutType)layoutType {
     
-    switch (layoutType) {
-        case AMLayoutTypeFixedWidth:
-        case AMLayoutTypeAnchoredLeft:
-        case AMLayoutTypeAnchoredRight:
-        case AMLayoutTypeCenterHorizontally:
-        case AMLayoutTypeProportionalLeft:
-        case AMLayoutTypeProportionalRight:
-        case AMLayoutTypeProportionalHorizontalCenter:
+    switch (self.attribute) {
+        case NSLayoutAttributeLeft:
+        case NSLayoutAttributeLeading:
+        case NSLayoutAttributeCenterX:
+        case NSLayoutAttributeRight:
+        case NSLayoutAttributeTrailing:
+        case NSLayoutAttributeWidth:
             return YES;
             break;
             
@@ -119,68 +121,24 @@ static NSString * kAMLayoutLayoutRelationKey = @"layoutRelation";
     return NO;
 }
 
-+ (BOOL)isVerticalLayoutType:(AMLayoutType)layoutType {
-    
-    switch (layoutType) {
-        case AMLayoutTypeFixedHeight:
-        case AMLayoutTypeAnchoredTop:
-        case AMLayoutTypeAnchoredBottom:
-        case AMLayoutTypeCenterVertically:
-        case AMLayoutTypeProportionalTop:
-        case AMLayoutTypeProportionalBottom:
-        case AMLayoutTypeProportionalVerticalCenter:
-            return YES;
-            break;
-            
-        default:
-            break;
-    }
-    
-    return NO;
-}
+#pragma mark - Public
 
 - (void)clearLayout {
     self.constraint = nil;
-    self.layoutApplied = NO;
 }
 
-- (void)updateLayoutWithFrame:(CGRect)frame
-                   multiplier:(CGFloat)multiplier
-                     priority:(AMLayoutPriority)priority
-                  parentFrame:(CGRect)parentFrame
-             allLayoutObjects:(NSArray *)allLayoutObjects
-                       inView:(AMView *)view
-                     animated:(BOOL)animated {
-    self.view = view;
-    [self createConstraintsIfNecessaryWithMultiplier:multiplier priority:priority];
-}
-
-- (CGRect)adjustedFrame:(CGRect)frame
-           forComponent:(AMComponent *)component
-                  scale:(CGFloat)scale {
-    return [self adjustedFrame:frame forComponent:component maintainSize:NO scale:scale];
-}
-
-- (CGRect)adjustedFrame:(CGRect)frame
-           forComponent:(AMComponent *)component
-           maintainSize:(BOOL)maintainSize
-                  scale:(CGFloat)scale {
-    return frame;
-}
-
-- (void)createConstraintsIfNecessaryWithMultiplier:(CGFloat)multiplier
-                                          priority:(AMLayoutPriority)priority {
+- (void)createConstraintIfNecessary {
 
     if (self.view != nil &&
         (self.constraint == nil ||
-         self.constraint.multiplier != multiplier ||
-         self.constraint.priority != priority)) {
+         self.constraint.multiplier != self.multiplier ||
+         self.constraint.priority != self.priority)) {
             
         [self clearLayout];
             
         if (self.view.superview != nil) {
-            self.constraint = [self buildConstraintWithMultiplier:multiplier];
-            self.constraint.priority = priority;
+            self.constraint = [self buildConstraint];
+            self.constraint.priority = self.priority;
             
 #if DEBUG
             self.constraint.identifier =
@@ -192,14 +150,11 @@ static NSString * kAMLayoutLayoutRelationKey = @"layoutRelation";
     }
 }
 
-- (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame {
-}
-
-- (void)applyConstraintIfNecessary {    
+- (void)applyConstraintIfNecessary {
     [self doesNotRecognizeSelector:_cmd];
 }
 
-- (NSLayoutConstraint *)buildConstraintWithMultiplier:(CGFloat)multiplier {
+- (NSLayoutConstraint *)buildConstraint {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }

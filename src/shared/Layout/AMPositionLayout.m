@@ -7,15 +7,15 @@
 //
 
 #import "AMPositionLayout.h"
-#import "AMAnchoredLeftLayout.h"
-#import "AMAnchoredTopLayout.h"
+#import "AMLeftLayout.h"
+#import "AMTopLayout.h"
 #import "AMFixedWidthLayout.h"
 #import "AMFixedHeightLayout.h"
 
 @interface AMPositionLayout()
 
-@property (nonatomic, readwrite) AMAnchoredTopLayout *topLayout;
-@property (nonatomic, readwrite) AMAnchoredLeftLayout *leftLayout;
+@property (nonatomic, readwrite) AMTopLayout *topLayout;
+@property (nonatomic, readwrite) AMLeftLayout *leftLayout;
 @property (nonatomic, readwrite) AMFixedWidthLayout *widthLayout;
 @property (nonatomic, readwrite) AMFixedHeightLayout *heightLayout;
 
@@ -25,16 +25,16 @@
 
 #pragma mark - Getters and Setters
 
-- (AMAnchoredTopLayout *)topLayout {
+- (AMTopLayout *)topLayout {
     if (_topLayout == nil) {
-        _topLayout = [AMAnchoredTopLayout new];
+        _topLayout = [AMTopLayout new];
     }
     return _topLayout;
 }
 
-- (AMAnchoredLeftLayout *)leftLayout {
+- (AMLeftLayout *)leftLayout {
     if (_leftLayout == nil) {
-        _leftLayout = [AMAnchoredLeftLayout new];
+        _leftLayout = [AMLeftLayout new];
     }
     return _leftLayout;
 }

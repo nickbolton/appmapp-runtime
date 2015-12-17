@@ -8,18 +8,12 @@
 
 #import "AMLayoutFactory.h"
 #import "AMPositionLayout.h"
-#import "AMAnchoredTopLayout.h"
-#import "AMAnchoredBottomLayout.h"
-#import "AMAnchoredLeftLayout.h"
-#import "AMAnchoredRightLayout.h"
-#import "AMProportionalTopLayout.h"
-#import "AMProportionalBottomLayout.h"
-#import "AMProportionalLeftLayout.h"
-#import "AMProportionalRightLayout.h"
+#import "AMTopLayout.h"
+#import "AMBottomLayout.h"
+#import "AMLeftLayout.h"
+#import "AMRightLayout.h"
 #import "AMCenterHorizontallyLayout.h"
 #import "AMCenterVerticallyLayout.h"
-#import "AMProportionalHorizontalCenterLayout.h"
-#import "AMProportionalVerticalCenterLayout.h"
 #import "AMFixedHeightLayout.h"
 #import "AMFixedWidthLayout.h"
 
@@ -44,20 +38,14 @@
     self.classes =
     @{
       @(AMLayoutTypePosition) : NSStringFromClass([AMPositionLayout class]),
-      @(AMLayoutTypeAnchoredTop) : NSStringFromClass([AMAnchoredTopLayout class]),
-      @(AMLayoutTypeAnchoredBottom) : NSStringFromClass([AMAnchoredBottomLayout class]),
-      @(AMLayoutTypeAnchoredLeft) : NSStringFromClass([AMAnchoredLeftLayout class]),
-      @(AMLayoutTypeAnchoredRight) : NSStringFromClass([AMAnchoredRightLayout class]),
+      @(AMLayoutTypeTop) : NSStringFromClass([AMTopLayout class]),
+      @(AMLayoutTypeBottom) : NSStringFromClass([AMBottomLayout class]),
+      @(AMLayoutTypeLeft) : NSStringFromClass([AMLeftLayout class]),
+      @(AMLayoutTypeRight) : NSStringFromClass([AMRightLayout class]),
       @(AMLayoutTypeCenterHorizontally) : NSStringFromClass([AMCenterHorizontallyLayout class]),
       @(AMLayoutTypeCenterVertically) : NSStringFromClass([AMCenterVerticallyLayout class]),
       @(AMLayoutTypeFixedWidth) : NSStringFromClass([AMFixedWidthLayout class]),
       @(AMLayoutTypeFixedHeight) : NSStringFromClass([AMFixedHeightLayout class]),
-      @(AMLayoutTypeProportionalTop) : NSStringFromClass([AMProportionalTopLayout class]),
-      @(AMLayoutTypeProportionalBottom) : NSStringFromClass([AMProportionalBottomLayout class]),
-      @(AMLayoutTypeProportionalLeft) : NSStringFromClass([AMProportionalLeftLayout class]),
-      @(AMLayoutTypeProportionalRight) : NSStringFromClass([AMProportionalRightLayout class]),
-      @(AMLayoutTypeProportionalHorizontalCenter) : NSStringFromClass([AMProportionalHorizontalCenterLayout class]),
-      @(AMLayoutTypeProportionalVerticalCenter) : NSStringFromClass([AMProportionalVerticalCenterLayout class]),
       };
 }
 

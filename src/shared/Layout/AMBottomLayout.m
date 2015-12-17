@@ -1,37 +1,37 @@
 //
-//  AMAnchoredRightLayout.m
+//  AMBottomLayout.m
 //  AppMap
 //
 //  Created by Nick Bolton on 12/28/14.
 //  Copyright (c) 2014 Pixelbleed LLC. All rights reserved.
 //
 
-#import "AMAnchoredRightLayout.h"
-#import "AMAnchoredLeftLayout.h"
+#import "AMBottomLayout.h"
+#import "AMTopLayout.h"
 
-@interface AMAnchoredRightLayout()
+@interface AMBottomLayout()
 
 @property (nonatomic) CGFloat originalConstant;
-@property (nonatomic) CGFloat reduceThresholdWidth;
+@property (nonatomic) CGFloat reduceThresholdHeight;
 
 @end
 
-@implementation AMAnchoredRightLayout
+@implementation AMBottomLayout
 
 - (AMLayoutType)layoutType {
-    return AMLayoutTypeAnchoredRight;
+    return AMLayoutTypeBottom;
 }
 
 - (NSLayoutConstraint *)buildConstraintWithMultiplier:(CGFloat)multiplier {
-    
+
     return
     [NSLayoutConstraint
      constraintWithItem:self.view
-     attribute:NSLayoutAttributeRight
+     attribute:NSLayoutAttributeBottom
      relatedBy:self.layoutRelation
      toItem:self.view.superview
-     attribute:NSLayoutAttributeRight
-     multiplier:1.0f
+     attribute:NSLayoutAttributeBottom
+     multiplier:multiplier
      constant:0.0f];
 }
 
@@ -42,7 +42,6 @@
              allLayoutObjects:(NSArray *)allLayoutObjects
                        inView:(AMView *)view
                      animated:(BOOL)animated {
-
     [super
      updateLayoutWithFrame:frame
      multiplier:multiplier
@@ -52,35 +51,35 @@
      inView:view
      animated:animated];
     
-    CGFloat rightDistance = CGRectGetWidth(parentFrame) - CGRectGetMaxX(frame);
-
-    self.originalConstant = -rightDistance;
+    CGFloat bottomDistance = CGRectGetHeight(parentFrame) - CGRectGetMaxY(frame);
+    
+    self.originalConstant = -bottomDistance;
     
     if (animated) {
         self.constraint.animator.constant = self.originalConstant;
     } else {
         self.constraint.constant = self.originalConstant;
     }
-
+    
     [self applyConstraintIfNecessary];
     
-    CGFloat leftSpace = [self leftConstraintConstant:allLayoutObjects];
-    self.reduceThresholdWidth = leftSpace + rightDistance;
+    CGFloat topSpace = [self topConstraintConstant:allLayoutObjects];
+    self.reduceThresholdHeight = topSpace + bottomDistance;
 }
 
-- (CGFloat)leftConstraintConstant:(NSArray *)allLayoutObjects {
+- (CGFloat)topConstraintConstant:(NSArray *)allLayoutObjects {
     
-    CGFloat leftSpace = -MAXFLOAT;
+    CGFloat topSpace = -MAXFLOAT;
     
     for (AMLayout *layout in allLayoutObjects) {
-        if ([layout isKindOfClass:[AMAnchoredLeftLayout class]]) {
+        if ([layout isKindOfClass:[AMTopLayout class]]) {
             if (layout.constraint.isActive) {
-                leftSpace = layout.constraint.constant;
+                topSpace = layout.constraint.constant;
             }
         }
     }
-
-    return leftSpace;
+    
+    return topSpace;
 }
 
 - (void)adjustLayoutFromParentFrameChange:(CGRect)frame
@@ -90,19 +89,19 @@
                          allLayoutObjects:(NSArray *)allLayoutObjects
                                    inView:(AMView *)view {
     
-    CGFloat leftSpace = [self leftConstraintConstant:allLayoutObjects];
+    CGFloat topSpace = [self topConstraintConstant:allLayoutObjects];
     
-    if (leftSpace > -MAXFLOAT) {
+    if (topSpace > -MAXFLOAT) {
         
-        CGFloat rightDistance = -self.constraint.constant;
+        CGFloat bottomDistance = -self.constraint.constant;
         
-        CGFloat minWidth = leftSpace + rightDistance;
-        minWidth = MAX(minWidth, self.reduceThresholdWidth);
+        CGFloat minHeight = topSpace + bottomDistance;
+        minHeight = MAX(minHeight, self.reduceThresholdHeight);
         
-        if (CGRectGetWidth(parentFrame) < minWidth) {
-            rightDistance = CGRectGetWidth(parentFrame) - leftSpace;
+        if (CGRectGetHeight(parentFrame) < minHeight) {
+            bottomDistance = CGRectGetHeight(parentFrame) - topSpace;
             
-            self.constraint.constant = -rightDistance;
+            self.constraint.constant = -bottomDistance;
             [self applyConstraintIfNecessary];
         }
     }
@@ -112,31 +111,31 @@
            forComponent:(AMComponent *)component
            maintainSize:(BOOL)maintainSize
                   scale:(CGFloat)scale {
-    
+
     if (component.parentComponent != nil && scale > 0.0f) {
         
-        CGFloat leftSpace = [self leftConstraintConstant:component.layoutObjects];
+        CGFloat topSpace = [self topConstraintConstant:component.layoutObjects];
         
         CGRect result = frame;
         
-        if (maintainSize == NO && leftSpace > -MAXFLOAT) {
+        if (maintainSize == NO && topSpace > -MAXFLOAT) {
             
-            result.size.width =
-            CGRectGetWidth(component.parentComponent.frame) -
-            leftSpace +
+            result.size.height =
+            CGRectGetHeight(component.parentComponent.frame) -
+            topSpace +
             (self.constraint.constant/scale);
             
         } else {
             
-            result.origin.x =
-            CGRectGetWidth(component.parentComponent.frame) -
-            CGRectGetWidth(frame) +
+            result.origin.y =
+            CGRectGetHeight(component.parentComponent.frame) -
+            CGRectGetHeight(frame) +
             (self.constraint.constant/scale);
         }
         
         return result;
     }
-    
+
     return frame;
 }
 

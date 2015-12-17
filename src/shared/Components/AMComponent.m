@@ -10,12 +10,10 @@
 #import "AppMap.h"
 #import "AMView+Geometry.h"
 #import "AMLayoutPresetHelper.h"
-#import "AMLayoutFactory.h"
 #import "AMColor+AMColor.h"
 #import "AMCompositeTextDescriptor.h"
 #import "AMComponentBehavior.h"
 #import "AMLayout.h"
-#import "AMLayoutFactory.h"
 
 NSString *const kAMComponentIdentifierKey = @"identifier";
 NSString *const kAMComponentAttributesKey = @"attributes";
@@ -49,7 +47,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 @interface AMComponent()
 
 @property (nonatomic, strong) NSMutableArray *primChildComponents;
-@property (nonatomic, readwrite) BOOL hasProportionalLayout;
 @property (nonatomic, readwrite) NSString *defaultName;
 @property (nonatomic, readwrite) NSString *exportedName;
 @property (nonatomic, strong) NSMutableDictionary *behavors;
@@ -492,11 +489,12 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (void)setFrame:(CGRect)frame {
-    BOOL sizeChanged = (CGSizeEqualToSize(frame.size, self.frame.size) == NO);
-    _frame = frame;
-    if (sizeChanged) {
-        [self updateChildFrames];
-    }
+#warning TODO setFrame:
+//    BOOL sizeChanged = (CGSizeEqualToSize(frame.size, self.frame.size) == NO);
+//    _frame = frame;
+//    if (sizeChanged) {
+//        [self updateChildFrames];
+//    }
 }
 
 - (void)setScale:(CGFloat)scale {
@@ -507,32 +505,13 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
-- (void)resetLayout {
-    if (self.layoutPreset < AMLayoutPresetCustom) {
-        
-        AMLayoutPresetHelper *helper = [AMLayoutPresetHelper new];
-        
-        NSArray *layoutTypes = [helper layoutTypesForComponent:self layoutPreset:self.layoutPreset];
-        NSMutableArray *layoutObjects = [NSMutableArray array];
-        
-        for (NSNumber *layoutType in layoutTypes) {
-            
-            AMLayout *layoutObject =
-            [[AMLayoutFactory sharedInstance]
-             buildLayoutOfType:layoutType.integerValue];
-            
-            [layoutObjects addObject:layoutObject];
-        }
-        
-        self.layoutObjects = layoutObjects;
-    }
-}
-
 - (void)setLayoutPreset:(AMLayoutPreset)layoutPreset {
     _layoutPreset = layoutPreset;
     _layoutPreset = MAX(0, _layoutPreset);
     _layoutPreset = MIN(AMLayoutPresetCustom, _layoutPreset);
-    [self resetLayout];
+    
+    AMLayoutPresetHelper *helper = [AMLayoutPresetHelper new];
+    _layoutObjects = [helper layoutObjectsForComponent:self layoutPreset:_layoutPreset];
 }
 
 - (void)setLayoutObjects:(NSArray *)layoutObjects {
@@ -549,18 +528,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
     
     _layoutObjects = layoutObjects;
-    
-    [self updateProportionalLayouts];
-    
-    self.hasProportionalLayout = NO;
-    
-    for (AMLayout *layout in layoutObjects) {
-        
-        if (layout.isProportional) {
-            self.hasProportionalLayout = YES;
-            break;
-        }
-    }
+    _layoutPreset = AMLayoutPresetCustom;
 }
 
 - (NSString *)name {
@@ -912,61 +880,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [components enumerateObjectsUsingBlock:^(AMComponent *component, NSUInteger idx, BOOL *stop) {
         component.parentComponent = nil;
     }];
-}
-
-#pragma mark - Helpers
-
-- (void)updateProportionalLayouts {
-    
-    for (AMLayout *layout in self.layoutObjects) {
-        
-        if (self.parentComponent != nil) {
-            [layout
-             updateProportionalValueFromFrame:self.frame
-             parentFrame:self.parentComponent.frame];
-            
-            for (AMComponent *childComponent in self.childComponents) {
-                
-                [childComponent updateProportionalLayouts];
-            }
-        }
-    }
-}
-
-- (void)updateChildFrames {
-    
-    for (AMComponent *childComponent in self.childComponents) {
-        [childComponent updateFrame];
-    }
-}
-
-- (void)updateFrame {
-    
-//        NSLog(@"startingFrame: %@", NSStringFromCGRect(self.frame));
-//        NSLog(@"parentFrame: %@", NSStringFromCGRect(self.parentInstance.frame));
-    
-    CGRect updatedFrame = self.frame;
-    
-    for (AMLayout *layout in self.layoutObjects) {
-        
-        updatedFrame =
-        [layout
-         adjustedFrame:updatedFrame
-         forComponent:self
-         scale:self.scale];
-        
-//                NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
-    }
-    
-    updatedFrame = AMPixelAlignedCGRect(updatedFrame);
-//        NSLog(@"endingFrame: %@", NSStringFromCGRect(updatedFrame));
-    
-    self.frame = updatedFrame;
-    
-    
-    for (AMComponent *childComponent in self.childComponents) {
-        [childComponent updateFrame];
-    }
 }
 
 @end

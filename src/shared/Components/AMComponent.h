@@ -76,10 +76,9 @@ extern NSString *const kAMComponentCornerRadiusKey;
 @property (nonatomic) CGFloat alpha;
 @property (nonatomic, strong) AMColor *borderColor;
 @property (nonatomic, strong) AMColor *backgroundColor;
-@property (nonatomic) CGRect frame;
-@property (nonatomic, readonly) BOOL hasProportionalLayout;
 @property (nonatomic, strong) NSArray *layoutObjects;
 @property (nonatomic) AMLayoutPreset layoutPreset;
+@property (nonatomic) CGRect frame;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)componentWithDictionary:(NSDictionary *)dict;
@@ -96,10 +95,6 @@ extern NSString *const kAMComponentCornerRadiusKey;
 
 - (NSDictionary *)dictionaryRepresentation;
 
-- (void)updateProportionalLayouts;
-- (void)resetLayout;
-
-- (void)updateChildFrames;
 - (void)addChildComponent:(AMComponent *)component;
 - (void)addChildComponents:(NSArray *)components;
 - (void)removeChildComponent:(AMComponent *)component;

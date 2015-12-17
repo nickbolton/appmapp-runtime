@@ -1,33 +1,33 @@
 //
-//  AMAnchoredTopLayout.m
+//  AMLeftLayout.m
 //  AppMap
 //
 //  Created by Nick Bolton on 12/28/14.
 //  Copyright (c) 2014 Pixelbleed LLC. All rights reserved.
 //
 
-#import "AMAnchoredTopLayout.h"
+#import "AMLeftLayout.h"
 
-@interface AMAnchoredTopLayout()
+@interface AMLeftLayout()
 
 @end
 
-@implementation AMAnchoredTopLayout
+@implementation AMLeftLayout
 
 - (AMLayoutType)layoutType {
-    return AMLayoutTypeAnchoredTop;
+    return AMLayoutTypeLeft;
 }
 
 - (NSLayoutConstraint *)buildConstraintWithMultiplier:(CGFloat)multiplier {
-
+    
     return
     [NSLayoutConstraint
      constraintWithItem:self.view
-     attribute:NSLayoutAttributeTop
+     attribute:NSLayoutAttributeLeft
      relatedBy:self.layoutRelation
      toItem:self.view.superview
-     attribute:NSLayoutAttributeTop
-     multiplier:1.0f
+     attribute:NSLayoutAttributeLeft
+     multiplier:multiplier
      constant:0.0f];
 }
 
@@ -47,11 +47,11 @@
      allLayoutObjects:allLayoutObjects
      inView:view
      animated:animated];
-
+    
     if (animated) {
-        self.constraint.animator.constant = CGRectGetMinY(frame);
+        self.constraint.animator.constant = CGRectGetMinX(frame);
     } else {
-        self.constraint.constant = CGRectGetMinY(frame);
+        self.constraint.constant = CGRectGetMinX(frame);
     }
 
     [self applyConstraintIfNecessary];
@@ -65,7 +65,7 @@
     if (component.parentComponent != nil && scale > 0.0f) {
         
         CGRect result = frame;
-        result.origin.y = self.constraint.constant/scale;
+        result.origin.x = self.constraint.constant/scale;
         return result;
     }
     

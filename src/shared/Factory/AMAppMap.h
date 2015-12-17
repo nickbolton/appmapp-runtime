@@ -8,7 +8,6 @@
 
 #import "AMRuntimeView.h"
 #import "AMComponent.h"
-#import "AMLayoutFactory.h"
 
 @interface AMAppMap : NSObject
 

@@ -24,10 +24,10 @@ typedef NS_ENUM(NSInteger, AMLayoutType) {
     AMLayoutTypeExpanding,
     AMLayoutTypeFixedWidth,
     AMLayoutTypeFixedHeight,
-    AMLayoutTypeAnchoredTop,
-    AMLayoutTypeAnchoredBottom,
-    AMLayoutTypeAnchoredLeft,
-    AMLayoutTypeAnchoredRight,
+    AMLayoutTypeTop,
+    AMLayoutTypeBottom,
+    AMLayoutTypeLeft,
+    AMLayoutTypeRight,
     AMLayoutTypeCenterHorizontally,
     AMLayoutTypeCenterVertically,
     AMLayoutTypeProportionalTop,
@@ -48,6 +48,7 @@ typedef NS_ENUM(NSInteger, AMLayoutPreset) {
     AMLayoutPresetFixedXPosWidthTopBottomMargins,
     AMLayoutPresetFixedMargins,
     AMLayoutPresetProportionalMargins,
+    AMLayoutPresetExpanding,
     AMLayoutPresetCustom,
 };
 

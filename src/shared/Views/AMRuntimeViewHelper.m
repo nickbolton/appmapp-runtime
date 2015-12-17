@@ -9,10 +9,9 @@
 #import "AMRuntimeViewHelper.h"
 #import "AMComponent.h"
 #import "AMRuntimeView.h"
-#import "AMLayoutFactory.h"
 #import "AMLayout.h"
-#import "AMExpandingLayout.h"
 #import "AMView+Geometry.h"
+#import "AMLayoutPresetHelper.h"
 
 @implementation AMRuntimeViewHelper
 
@@ -42,12 +41,18 @@
     }
     
     if (component.layoutObjects.count <= 0) {
-        
-        AMLayout *layoutObject =
-        [[AMLayoutFactory sharedInstance] buildLayoutOfType:AMLayoutTypePosition];
 
-        layoutObject.view = view;
-        component.layoutObjects = @[layoutObject];
+        AMLayoutPresetHelper *presetHelper = [AMLayoutPresetHelper new];
+        NSArray *layoutObjects =
+        [presetHelper
+         layoutObjectsForComponent:component
+         layoutPreset:AMLayoutPresetFixedSizeFixedPosition];
+
+        for (AMLayout *layoutObject in layoutObjects) {
+            layoutObject.view = view;
+        }
+        
+        component.layoutObjects = layoutObjects;
     }
     
     [view setBaseAttributes];
@@ -96,14 +101,15 @@
     
     for (AMLayout *layoutObject in view.component.layoutObjects) {
         
-        [layoutObject
-         updateLayoutWithFrame:frame
-         multiplier:1.0f
-         priority:AMLayoutPriorityRequired
-         parentFrame:parentFrame
-         allLayoutObjects:view.component.layoutObjects
-         inView:view
-         animated:NO];
+#warning TODO AMLayout updateLayoutWithFrame
+//        [layoutObject
+//         updateLayoutWithFrame:frame
+//         multiplier:1.0f
+//         priority:AMLayoutPriorityRequired
+//         parentFrame:parentFrame
+//         allLayoutObjects:view.component.layoutObjects
+//         inView:view
+//         animated:NO];
         
 #if DEBUG
         layoutObject.viewIdentifier = view.component.name;

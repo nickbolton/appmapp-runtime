@@ -12,7 +12,7 @@
 
 @interface AMLayoutPresetHelper : NSObject
 
-- (NSArray *)layoutTypesForComponent:(AMComponent *)component
-                        layoutPreset:(AMLayoutPreset)layoutPreset;
+- (NSArray *)layoutObjectsForComponent:(AMComponent *)component
+                          layoutPreset:(AMLayoutPreset)layoutPreset;
 
 @end

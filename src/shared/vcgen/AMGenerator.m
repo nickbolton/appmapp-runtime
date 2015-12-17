@@ -9,9 +9,9 @@
 #import "AMGenerator.h"
 #import "AMViewGenerator.h"
 #import "AMComponent.h"
-#import "AMExpandingLayout.h"
 #import "NSString+NameUtilities.h"
 #import "AMComponentManagerTemplate.h"
+#import "AMLayoutPresetHelper.h"
 
 NSString * const kAMOSXFrameworkImport = @"#import <Cocoa/Cocoa.h>";
 NSString * const kAMIOSFrameworkImport = @"#import <UIKit/UIKit.h>";
@@ -47,14 +47,15 @@ NSString * const kAMComponentManagerClassName = @"AMComponentManager";
         return;
     }
     
-    AMExpandingLayout *expandingLayout = [AMExpandingLayout new];
-    
+    AMLayoutPresetHelper *presetHelper = [AMLayoutPresetHelper new];
     [componentsArray enumerateObjectsUsingBlock:^(NSDictionary *componentDict, NSUInteger idx, BOOL *stop) {
         
         // replace the top level components with an expanding layout
         
+        NSArray *layoutObjects = [presetHelper layoutObjectsForComponent:nil layoutPreset:AMLayoutPresetExpanding];
+        
         NSMutableDictionary *mutableDict = componentDict.mutableCopy;
-        mutableDict[@"layoutObjects"] = @[[expandingLayout exportLayout]];
+        mutableDict[@"layoutObjects"] = layoutObjects;
         
         BOOL result =
         [self
