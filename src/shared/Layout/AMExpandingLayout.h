@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
 
-#import "AMParentLayout.h"
+#import "AMLayout.h"
 
-@interface AMExpandingLayout : AMParentLayout
+@interface AMExpandingLayout : AMLayout
 
 @end

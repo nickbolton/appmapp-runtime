@@ -8,20 +8,7 @@
 
 #import "AMLayoutPresetHelper.h"
 #import "AMComponent.h"
-
-typedef NS_ENUM(NSInteger, AMLayoutHorizontalPosition) {
-    
-    AMLayoutHorizontalPositionLeft = 0,
-    AMLayoutHorizontalPositionRight,
-    AMLayoutHorizontalPositionCentered,
-};
-
-typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
-    
-    AMLayoutVerticalPositionTop = 0,
-    AMLayoutVerticalPositionBottom,
-    AMLayoutVerticalPositionCentered,
-};
+#import "AMLayout.h"
 
 @interface AMLayoutPresetHelper()
 
@@ -38,23 +25,23 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
         
         self.selectors =
         @[
-          [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedSizeNearestCorner:)],
-          [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedSizeRelativePosition:)],
-          [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedSizeRelativeCenter:)],
-          [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedSizeFixedCenter:)],
-          [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedSizeFixedPosition:)],
-          [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedYPosHeightLeftRightMargins:)],
-          [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedXPosWidthTopBottomMargins:)],
-          [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetFixedMargins:)],
-          [NSValue valueWithPointer:@selector(layoutTypesForAMLayoutPresetProportionalMargins:)],
+          [NSValue valueWithPointer:@selector(layoutObjectsForAMLayoutPresetFixedSizeNearestCorner:)],
+          [NSValue valueWithPointer:@selector(layoutObjectsForAMLayoutPresetFixedSizeRelativePosition:)],
+          [NSValue valueWithPointer:@selector(layoutObjectsForAMLayoutPresetFixedSizeRelativeCenter:)],
+          [NSValue valueWithPointer:@selector(layoutObjectsForAMLayoutPresetFixedSizeFixedCenter:)],
+          [NSValue valueWithPointer:@selector(layoutObjectsForAMLayoutPresetFixedSizeFixedPosition:)],
+          [NSValue valueWithPointer:@selector(layoutObjectsForAMLayoutPresetFixedYPosHeightLeftRightMargins:)],
+          [NSValue valueWithPointer:@selector(layoutObjectsForAMLayoutPresetFixedXPosWidthTopBottomMargins:)],
+          [NSValue valueWithPointer:@selector(layoutObjectsForAMLayoutPresetFixedMargins:)],
+          [NSValue valueWithPointer:@selector(layoutObjectsForAMLayoutPresetProportionalMargins:)],
           ];
     }
     
     return self;
 }
 
-- (NSArray *)layoutTypesForComponent:(AMComponent *)component
-                        layoutPreset:(AMLayoutPreset)layoutPreset {
+- (NSArray *)layoutObjectsForComponent:(AMComponent *)component
+                          layoutPreset:(AMLayoutPreset)layoutPreset {
 
     if (component != nil && layoutPreset < self.selectors.count) {
         
@@ -70,8 +57,8 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
     return nil;
 }
 
-- (AMLayoutHorizontalPosition)horizontalLayoutTypePosition:(AMComponent *)component
-                                                    center:(BOOL)center {
+- (NSLayoutAttribute)horizontalLayoutTypePosition:(AMComponent *)component
+                                           center:(BOOL)center {
  
     if (center) {
         static CGFloat const centeringThreshold = .01f;
@@ -85,7 +72,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
         }
         
         if (ABS(horizontalCenterPercent - .5f) <= centeringThreshold) {
-            return AMLayoutHorizontalPositionCentered;
+            return NSLayoutAttributeCenterX;
         }
     }
     
@@ -95,49 +82,42 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
     ABS(CGRectGetWidth(component.parentComponent.frame) - CGRectGetMaxX(component.frame));
     
     if (rightDistance < leftDistance) {
-        return AMLayoutHorizontalPositionRight;
+        return NSLayoutAttributeRight;
     }
     
-    return AMLayoutHorizontalPositionLeft;
+    return NSLayoutAttributeLeft;
 }
 
-- (AMLayoutType)horizontalAnchoredLayoutTypeBasedOnPosition:(AMComponent *)component
-                                                     center:(BOOL)center {
-
-    AMLayoutHorizontalPosition position =
+- (AMLayout *)horizontalLayoutBasedOnPosition:(AMComponent *)component
+                                       center:(BOOL)center {
+    NSLayoutAttribute attribute =
     [self horizontalLayoutTypePosition:component center:center];
     
-    switch (position) {
-        case AMLayoutHorizontalPositionLeft:
-            return AMLayoutTypeAnchoredLeft;
-            break;
-            
-        case AMLayoutHorizontalPositionRight:
-            return AMLayoutTypeAnchoredRight;
-            break;
-
-        case AMLayoutHorizontalPositionCentered:
-            return AMLayoutTypeCenterHorizontally;
-            break;
-    }
+    AMLayout *layoutObject = [AMLayout new];
+    layoutObject.attribute = attribute;
+    layoutObject.relatedAttribute = attribute;
     
-    return AMLayoutTypeAnchoredLeft;
+    return layoutObject;
 }
 
-- (AMLayoutType)horizontalProportionalLayoutTypeBasedOnPosition:(AMComponent *)component {
+- (AMLayout *)horizontalProportionalLayoutBasedOnPosition:(AMComponent *)component {
     
-    AMLayoutHorizontalPosition position =
+    NSLayoutAttribute attribute =
     [self horizontalLayoutTypePosition:component center:NO];
     
-    if (position == AMLayoutHorizontalPositionRight) {
-        return AMLayoutTypeProportionalRight;
+    if (attribute != NSLayoutAttributeRight) {
+        attribute = NSLayoutAttributeLeft;
     }
     
-    return AMLayoutTypeProportionalLeft;
+    AMLayout *layoutObject = [AMLayout new];
+    layoutObject.attribute = attribute;
+    layoutObject.relatedAttribute = attribute;
+    
+    return layoutObject;
 }
 
-- (AMLayoutVerticalPosition)verticalLayoutTypePosition:(AMComponent *)component
-                                                center:(BOOL)center {
+- (NSLayoutAttribute)verticalLayoutTypePosition:(AMComponent *)component
+                                         center:(BOOL)center {
 
     if (center) {
         
@@ -152,7 +132,7 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
         }
         
         if (ABS(verticalCenterPercent - .5f) <= centeringThreshold) {
-            return AMLayoutVerticalPositionCentered;
+            return NSLayoutAttributeCenterY;
         }
     }
     
@@ -162,217 +142,311 @@ typedef NS_ENUM(NSInteger, AMLayoutVerticalPosition) {
     ABS(CGRectGetHeight(component.parentComponent.frame) - CGRectGetMaxY(component.frame));
     
     if (bottomDistance < topDistance) {
-        return AMLayoutVerticalPositionBottom;
+        return NSLayoutAttributeBottom;
     }
     
-    return AMLayoutVerticalPositionTop;
+    return NSLayoutAttributeTop;
 }
 
-- (AMLayoutType)verticalAnchoredLayoutTypeBasedOnPosition:(AMComponent *)component
-                                                   center:(BOOL)center {
+- (AMLayout *)verticalLayoutBasedOnPosition:(AMComponent *)component
+                                     center:(BOOL)center {
     
-    AMLayoutVerticalPosition position =
+    NSLayoutAttribute attribute =
     [self verticalLayoutTypePosition:component center:center];
     
-    switch (position) {
-        case AMLayoutVerticalPositionTop:
-            return AMLayoutTypeAnchoredTop;
-            break;
-            
-        case AMLayoutVerticalPositionBottom:
-            return AMLayoutTypeAnchoredBottom;
-            break;
-            
-        case AMLayoutVerticalPositionCentered:
-            return AMLayoutTypeCenterVertically;
-            break;
-    }
+    AMLayout *layoutObject = [AMLayout new];
+    layoutObject.attribute = attribute;
+    layoutObject.relatedAttribute = attribute;
     
-    return AMLayoutTypeAnchoredTop;
+    return layoutObject;
 }
 
-- (AMLayoutType)verticalProportionalLayoutTypeBasedOnPosition:(AMComponent *)component {
+- (AMLayout *)verticalProportionalLayoutBasedOnPosition:(AMComponent *)component {
     
-    AMLayoutVerticalPosition position =
+    NSLayoutAttribute attribute =
     [self verticalLayoutTypePosition:component center:NO];
     
-    if (position == AMLayoutVerticalPositionBottom) {
-        return AMLayoutTypeProportionalBottom;
+    if (attribute != NSLayoutAttributeBottom) {
+        attribute = NSLayoutAttributeTop;
     }
     
-    return AMLayoutTypeProportionalTop;
+    AMLayout *layoutObject = [AMLayout new];
+    layoutObject.attribute = attribute;
+    layoutObject.relatedAttribute = attribute;
+
+    return layoutObject;
 }
 
 //AMLayoutPresetFixedSizeNearestCorner = 0,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeNearestCorner:(AMComponent *)component {
+- (NSArray *)layoutObjectsForAMLayoutPresetFixedSizeNearestCorner:(AMComponent *)component {
     
     if (component.parentComponent == nil) {
-        return @[@(AMLayoutTypePosition)];
+        return [self layoutObjectsForAMLayoutPresetFixedSizeFixedPosition:component];
     }
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
     // horizontal
     
-    AMLayoutType leftOrRightLayout = [self horizontalAnchoredLayoutTypeBasedOnPosition:component center:NO];
-    [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
-    [layoutTypes addObject:@(leftOrRightLayout)];
+    AMLayout* leftOrRightLayout = [self horizontalLayoutBasedOnPosition:component center:NO];
+    
+    AMLayout *widthLayout = [AMLayout new];
+    widthLayout.attribute = NSLayoutAttributeWidth;
+    
+    [layoutTypes addObject:leftOrRightLayout];
+    [layoutTypes addObject:widthLayout];
     
     // vertical
     
-    AMLayoutType topOrBottomLayout = [self verticalAnchoredLayoutTypeBasedOnPosition:component center:NO];
-    [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
-    [layoutTypes addObject:@(topOrBottomLayout)];
+    AMLayout *topOrBottomLayout = [self verticalLayoutBasedOnPosition:component center:NO];
+    
+    AMLayout *heightLayout = [AMLayout new];
+    heightLayout.attribute = NSLayoutAttributeHeight;
+    
+    [layoutTypes addObject:topOrBottomLayout];
+    [layoutTypes addObject:heightLayout];
     
     return layoutTypes;
 }
 
 //AMLayoutPresetFixedSizeRelativePosition,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeRelativePosition:(AMComponent *)component {
+- (NSArray *)layoutObjectsForAMLayoutPresetFixedSizeRelativePosition:(AMComponent *)component {
     
     if (component.parentComponent == nil) {
-        return @[@(AMLayoutTypePosition)];
+        return [self layoutObjectsForAMLayoutPresetFixedSizeFixedPosition:component];
     }
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
     // horizontal
     
-    AMLayoutType leftOrRightLayout = [self horizontalProportionalLayoutTypeBasedOnPosition:component];
-    [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
-    [layoutTypes addObject:@(leftOrRightLayout)];
+    AMLayout* leftOrRightLayout = [self horizontalProportionalLayoutBasedOnPosition:component];
+    
+    AMLayout *widthLayout = [AMLayout new];
+    widthLayout.attribute = NSLayoutAttributeWidth;
+    
+    [layoutTypes addObject:leftOrRightLayout];
+    [layoutTypes addObject:widthLayout];
     
     // vertical
     
-    AMLayoutType topOrBottomLayout = [self verticalProportionalLayoutTypeBasedOnPosition:component];
-    [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
-    [layoutTypes addObject:@(topOrBottomLayout)];
+    AMLayout *topOrBottomLayout = [self verticalProportionalLayoutBasedOnPosition:component];
+    
+    AMLayout *heightLayout = [AMLayout new];
+    heightLayout.attribute = NSLayoutAttributeHeight;
+    
+    [layoutTypes addObject:topOrBottomLayout];
+    [layoutTypes addObject:heightLayout];
     
     return layoutTypes;
 }
 
 //AMLayoutPresetFixedSizeRelativeCenter,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeRelativeCenter:(AMComponent *)component {
+- (NSArray *)layoutObjectsForAMLayoutPresetFixedSizeRelativeCenter:(AMComponent *)component {
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
-    // horizontal
+    AMLayout *centerXLayout = [AMLayout new];
+    centerXLayout.attribute = NSLayoutAttributeCenterX;
+    centerXLayout.relatedAttribute = centerXLayout.attribute;
     
-    [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
-    [layoutTypes addObject:@(AMLayoutTypeProportionalHorizontalCenter)];
+    AMLayout *centerYLayout = [AMLayout new];
+    centerYLayout.attribute = NSLayoutAttributeCenterY;
+    centerYLayout.relatedAttribute = centerYLayout.attribute;
     
-    // vertical
+    AMLayout *widthLayout = [AMLayout new];
+    widthLayout.attribute = NSLayoutAttributeWidth;
     
-    [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
-    [layoutTypes addObject:@(AMLayoutTypeProportionalVerticalCenter)];
+    AMLayout *heightLayout = [AMLayout new];
+    heightLayout.attribute = NSLayoutAttributeHeight;
+    
+    [layoutTypes addObject:centerXLayout];
+    [layoutTypes addObject:centerYLayout];
+    [layoutTypes addObject:widthLayout];
+    [layoutTypes addObject:heightLayout];
     
     return layoutTypes;
 }
 
 //AMLayoutPresetFixedSizeFixedCenter,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeFixedCenter:(AMComponent *)component {
+- (NSArray *)layoutObjectsForAMLayoutPresetFixedSizeFixedCenter:(AMComponent *)component {
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
-    // horizontal
+    AMLayout *centerXLayout = [AMLayout new];
+    centerXLayout.attribute = NSLayoutAttributeCenterX;
+    centerXLayout.relatedAttribute = centerXLayout.attribute;
     
-    [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
-    [layoutTypes addObject:@(AMLayoutTypeCenterHorizontally)];
+    AMLayout *centerYLayout = [AMLayout new];
+    centerYLayout.attribute = NSLayoutAttributeCenterY;
+    centerYLayout.relatedAttribute = centerYLayout.attribute;
     
-    // vertical
+    AMLayout *widthLayout = [AMLayout new];
+    widthLayout.attribute = NSLayoutAttributeWidth;
     
-    [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
-    [layoutTypes addObject:@(AMLayoutTypeCenterVertically)];
+    AMLayout *heightLayout = [AMLayout new];
+    heightLayout.attribute = NSLayoutAttributeHeight;
+    
+    [layoutTypes addObject:centerXLayout];
+    [layoutTypes addObject:centerYLayout];
+    [layoutTypes addObject:widthLayout];
+    [layoutTypes addObject:heightLayout];
     
     return layoutTypes;
 }
 
 //AMLayoutPresetFixedSizeFixedPosition,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedSizeFixedPosition:(AMComponent *)component {
+- (NSArray *)layoutObjectsForAMLayoutPresetFixedSizeFixedPosition:(AMComponent *)component {
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
-    // horizontal
+    AMLayout* leftLayout = [AMLayout new];
+    leftLayout.attribute = NSLayoutAttributeLeft;
+    leftLayout.relatedAttribute = leftLayout.attribute;
     
-    [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
-    [layoutTypes addObject:@(AMLayoutTypeAnchoredLeft)];
+    AMLayout *widthLayout = [AMLayout new];
+    widthLayout.attribute = NSLayoutAttributeWidth;
+    
+    [layoutTypes addObject:leftLayout];
+    [layoutTypes addObject:widthLayout];
     
     // vertical
     
-    [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
-    [layoutTypes addObject:@(AMLayoutTypeAnchoredTop)];
+    AMLayout *topLayout = [AMLayout new];
+    topLayout.attribute = NSLayoutAttributeTop;
+    topLayout.relatedAttribute = topLayout.attribute;
+    
+    AMLayout *heightLayout = [AMLayout new];
+    heightLayout.attribute = NSLayoutAttributeHeight;
+    
+    [layoutTypes addObject:topLayout];
+    [layoutTypes addObject:heightLayout];
     
     return layoutTypes;
 }
 
 //AMLayoutPresetFixedYPosHeightLeftRightMargins,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedYPosHeightLeftRightMargins:(AMComponent *)component {
+- (NSArray *)layoutObjectsForAMLayoutPresetFixedYPosHeightLeftRightMargins:(AMComponent *)component {
 
     if (component.parentComponent == nil) {
-        return @[@(AMLayoutTypePosition)];
+        return [self layoutObjectsForAMLayoutPresetFixedSizeFixedPosition:component];
     }
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
-    AMLayoutType topOrBottomLayout = [self verticalAnchoredLayoutTypeBasedOnPosition:component center:NO];
+    AMLayout *topOrBottomLayout = [self verticalLayoutBasedOnPosition:component center:NO];
+
+    AMLayout *leftLayout = [AMLayout new];
+    leftLayout.attribute = NSLayoutAttributeLeft;
+    leftLayout.relatedAttribute = leftLayout.attribute;
     
-    [layoutTypes addObject:@(AMLayoutTypeAnchoredLeft)];
-    [layoutTypes addObject:@(AMLayoutTypeAnchoredRight)];
-    [layoutTypes addObject:@(topOrBottomLayout)];
-    [layoutTypes addObject:@(AMLayoutTypeFixedHeight)];
+    AMLayout *rightLayout = [AMLayout new];
+    rightLayout.attribute = NSLayoutAttributeRight;
+    rightLayout.relatedAttribute = rightLayout.attribute;
+    
+    AMLayout *heightLayout = [AMLayout new];
+    heightLayout.attribute = NSLayoutAttributeHeight;
+    
+    [layoutTypes addObject:topOrBottomLayout];
+    [layoutTypes addObject:leftLayout];
+    [layoutTypes addObject:rightLayout];
+    [layoutTypes addObject:heightLayout];
     
     return layoutTypes;
 }
 
 //AMLayoutPresetFixedXPosWidthTopBottomMargins,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedXPosWidthTopBottomMargins:(AMComponent *)component {
+- (NSArray *)layoutObjectsForAMLayoutPresetFixedXPosWidthTopBottomMargins:(AMComponent *)component {
 
     if (component.parentComponent == nil) {
-        return @[@(AMLayoutTypePosition)];
+        return [self layoutObjectsForAMLayoutPresetFixedSizeFixedPosition:component];
     }
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
-    AMLayoutType leftOrRightLayout = [self horizontalAnchoredLayoutTypeBasedOnPosition:component center:YES];
+    AMLayout* leftOrRightLayout = [self horizontalLayoutBasedOnPosition:component center:NO];
     
-    [layoutTypes addObject:@(AMLayoutTypeAnchoredTop)];
-    [layoutTypes addObject:@(AMLayoutTypeAnchoredBottom)];
-    [layoutTypes addObject:@(leftOrRightLayout)];
-    [layoutTypes addObject:@(AMLayoutTypeFixedWidth)];
+    AMLayout *topLayout = [AMLayout new];
+    topLayout.attribute = NSLayoutAttributeTop;
+    topLayout.relatedAttribute = topLayout.attribute;
+    
+    AMLayout *bottomLayout = [AMLayout new];
+    bottomLayout.attribute = NSLayoutAttributeBottom;
+    bottomLayout.relatedAttribute = bottomLayout.attribute;
+
+    AMLayout *widthLayout = [AMLayout new];
+    widthLayout.attribute = NSLayoutAttributeWidth;
+    
+    [layoutTypes addObject:topLayout];
+    [layoutTypes addObject:bottomLayout];
+    [layoutTypes addObject:leftOrRightLayout];
+    [layoutTypes addObject:widthLayout];
     
     return layoutTypes;
 }
 
 //AMLayoutPresetFixedMargins,
-- (NSArray *)layoutTypesForAMLayoutPresetFixedMargins:(AMComponent *)component {
+- (NSArray *)layoutObjectsForAMLayoutPresetFixedMargins:(AMComponent *)component {
 
     if (component.parentComponent == nil) {
-        return @[@(AMLayoutTypePosition)];
+        return [self layoutObjectsForAMLayoutPresetFixedSizeFixedPosition:component];
     }
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
-    [layoutTypes addObject:@(AMLayoutTypeAnchoredLeft)];
-    [layoutTypes addObject:@(AMLayoutTypeAnchoredRight)];
-    [layoutTypes addObject:@(AMLayoutTypeAnchoredTop)];
-    [layoutTypes addObject:@(AMLayoutTypeAnchoredBottom)];
+    AMLayout *topLayout = [AMLayout new];
+    topLayout.attribute = NSLayoutAttributeTop;
+    topLayout.relatedAttribute = topLayout.attribute;
+    
+    AMLayout *bottomLayout = [AMLayout new];
+    bottomLayout.attribute = NSLayoutAttributeBottom;
+    bottomLayout.relatedAttribute = bottomLayout.attribute;
+    
+    AMLayout *leftLayout = [AMLayout new];
+    leftLayout.attribute = NSLayoutAttributeLeft;
+    leftLayout.relatedAttribute = leftLayout.attribute;
+    
+    AMLayout *rightLayout = [AMLayout new];
+    rightLayout.attribute = NSLayoutAttributeRight;
+    rightLayout.relatedAttribute = rightLayout.attribute;
+
+    [layoutTypes addObject:topLayout];
+    [layoutTypes addObject:bottomLayout];
+    [layoutTypes addObject:leftLayout];
+    [layoutTypes addObject:rightLayout];
     
     return layoutTypes;
 }
 
 //AMLayoutPresetProportionalMargins,
-- (NSArray *)layoutTypesForAMLayoutPresetProportionalMargins:(AMComponent *)component {
+- (NSArray *)layoutObjectsForAMLayoutPresetProportionalMargins:(AMComponent *)component {
 
     if (component.parentComponent == nil) {
-        return @[@(AMLayoutTypePosition)];
+        return [self layoutObjectsForAMLayoutPresetFixedSizeFixedPosition:component];
     }
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
-    [layoutTypes addObject:@(AMLayoutTypeProportionalLeft)];
-    [layoutTypes addObject:@(AMLayoutTypeProportionalRight)];
-    [layoutTypes addObject:@(AMLayoutTypeProportionalTop)];
-    [layoutTypes addObject:@(AMLayoutTypeProportionalBottom)];
+    AMLayout *topLayout = [AMLayout new];
+    topLayout.attribute = NSLayoutAttributeTop;
+    topLayout.relatedAttribute = topLayout.attribute;
+    
+    AMLayout *bottomLayout = [AMLayout new];
+    bottomLayout.attribute = NSLayoutAttributeBottom;
+    bottomLayout.relatedAttribute = bottomLayout.attribute;
+    
+    AMLayout *leftLayout = [AMLayout new];
+    leftLayout.attribute = NSLayoutAttributeLeft;
+    leftLayout.relatedAttribute = leftLayout.attribute;
+    
+    AMLayout *rightLayout = [AMLayout new];
+    rightLayout.attribute = NSLayoutAttributeRight;
+    rightLayout.relatedAttribute = rightLayout.attribute;
+    
+    [layoutTypes addObject:topLayout];
+    [layoutTypes addObject:bottomLayout];
+    [layoutTypes addObject:leftLayout];
+    [layoutTypes addObject:rightLayout];
     
     return layoutTypes;
 }

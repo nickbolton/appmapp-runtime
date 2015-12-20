@@ -11,49 +11,48 @@
 
 @class AMComponent;
 
-@interface AMLayout : NSObject
+@protocol AMViewProvider <NSObject>
 
-@property (nonatomic) CGFloat proportionalValue;
+- (AMView *)viewWithComponentIdentifier:(NSString *)componentIdentifier;
+
+@end
+
+@interface AMLayout : NSObject<NSCoding>
+
+@property (nonatomic) NSLayoutAttribute attribute;
+@property (nonatomic) NSLayoutRelation relation;
+@property (nonatomic) CGFloat multiplier;
+@property (nonatomic, copy) NSString *componentIdentifier;
+@property (nonatomic, copy) NSString *relatedComponentIdentifier;
+@property (nonatomic, copy) NSString *commonAncestorComponentIdentifier;
+@property (nonatomic) NSLayoutAttribute relatedAttribute;
+@property (nonatomic) CGFloat offset;
+@property (nonatomic) AMLayoutPriority priority;
+@property (nonatomic) CGRect referenceFrame;
+
 @property (nonatomic, strong) NSLayoutConstraint *constraint;
-@property (nonatomic, readonly) AMLayoutType layoutType;
-@property (nonatomic) NSLayoutRelation layoutRelation;
-@property (nonatomic) BOOL layoutApplied;
 @property (nonatomic, readonly) BOOL isHorizontal;
 @property (nonatomic, readonly) BOOL isVertical;
-@property (nonatomic, readonly) BOOL isProportional;
+@property (nonatomic, readonly) BOOL isSizing;
 @property (nonatomic, copy) NSString *viewIdentifier;
 
-@property (nonatomic, weak) AMView *view;
+@property (nonatomic, weak) id <AMViewProvider> viewProvider;
+
+@property (nonatomic, weak, readonly) AMView *view;
+@property (nonatomic, weak, readonly) AMView *relatedView;
+@property (nonatomic, weak, readonly) AMView *commonAncestorView;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)layoutWithDictionary:(NSDictionary *)dict;
 - (NSDictionary *)exportLayout;
+- (NSDictionary *)debuggingDictionary;
 
-+ (BOOL)isProportionalLayoutType:(AMLayoutType)layoutType;
-+ (BOOL)isHorizontalLayoutType:(AMLayoutType)layoutType;
-+ (BOOL)isVerticalLayoutType:(AMLayoutType)layoutType;
++ (BOOL)isHorizontalLayoutType:(NSLayoutAttribute)layoutType;
++ (BOOL)isVerticalLayoutType:(NSLayoutAttribute)layoutType;
 
-- (void)clearLayout;
 - (void)updateLayoutWithFrame:(CGRect)frame
-                   multiplier:(CGFloat)multiplier
-                     priority:(AMLayoutPriority)priority
-                  parentFrame:(CGRect)parentFrame
-             allLayoutObjects:(NSArray *)allLayoutObjects
-                       inView:(AMView *)view
-                     animated:(BOOL)animated;
+                  inAnimation:(BOOL)inAnimation;
+- (void)clearLayout;
+- (void)addLayout;
 
-- (CGRect)adjustedFrame:(CGRect)frame
-           forComponent:(AMComponent *)component
-           maintainSize:(BOOL)maintainSize
-                  scale:(CGFloat)scale;
-
-- (CGRect)adjustedFrame:(CGRect)frame
-           forComponent:(AMComponent *)component
-                  scale:(CGFloat)scale;
-
-- (void)applyConstraintIfNecessary;
-- (void)updateProportionalValueFromFrame:(CGRect)frame parentFrame:(CGRect)parentFrame;
-- (void)createConstraintsIfNecessaryWithMultiplier:(CGFloat)multiplier
-                                          priority:(AMLayoutPriority)priority;
-- (NSLayoutConstraint *)buildConstraintWithMultiplier:(CGFloat)multiplier;
 @end

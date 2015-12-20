@@ -8,7 +8,6 @@
 
 #import "AMRuntimeView.h"
 #import "AMComponent.h"
-#import "AMLayoutFactory.h"
 #import "AMRuntimeViewHelper.h"
 
 NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeViewConstraintsDidChangeNotification";

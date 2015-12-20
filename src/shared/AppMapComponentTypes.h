@@ -18,26 +18,6 @@ typedef NS_ENUM(NSInteger, AMComponentType) {
     AMComponentTypeCount,
 };
 
-typedef NS_ENUM(NSInteger, AMLayoutType) {
-    
-    AMLayoutTypePosition = 0,
-    AMLayoutTypeExpanding,
-    AMLayoutTypeFixedWidth,
-    AMLayoutTypeFixedHeight,
-    AMLayoutTypeAnchoredTop,
-    AMLayoutTypeAnchoredBottom,
-    AMLayoutTypeAnchoredLeft,
-    AMLayoutTypeAnchoredRight,
-    AMLayoutTypeCenterHorizontally,
-    AMLayoutTypeCenterVertically,
-    AMLayoutTypeProportionalTop,
-    AMLayoutTypeProportionalBottom,
-    AMLayoutTypeProportionalLeft,
-    AMLayoutTypeProportionalRight,
-    AMLayoutTypeProportionalHorizontalCenter,
-    AMLayoutTypeProportionalVerticalCenter,
-};
-
 typedef NS_ENUM(NSInteger, AMLayoutPreset) {
     AMLayoutPresetFixedSizeNearestCorner = 0,
     AMLayoutPresetFixedSizeRelativeCorner,

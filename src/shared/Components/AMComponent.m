@@ -10,12 +10,10 @@
 #import "AppMap.h"
 #import "AMView+Geometry.h"
 #import "AMLayoutPresetHelper.h"
-#import "AMLayoutFactory.h"
 #import "AMColor+AMColor.h"
 #import "AMCompositeTextDescriptor.h"
 #import "AMComponentBehavior.h"
 #import "AMLayout.h"
-#import "AMLayoutFactory.h"
 
 NSString *const kAMComponentIdentifierKey = @"identifier";
 NSString *const kAMComponentAttributesKey = @"attributes";
@@ -83,12 +81,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [coder encodeFloat:self.borderWidth forKey:kAMComponentBorderWidthKey];
     [coder encodeInteger:self.layoutPreset forKey:kAMComponentLayoutPresetKey];
     [coder encodeObject:self.layoutObjects forKey:kAMComponentLayoutObjectsKey];
-    
-#if TARGET_OS_IPHONE
     [coder encodeObject:NSStringFromCGRect(self.frame) forKey:kAMComponentFrameKey];
-#else
-    [coder encodeObject:NSStringFromRect(self.frame) forKey:kAMComponentFrameKey];
-#endif
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -96,31 +89,26 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     self = [super init];
     
     if (self != nil) {
-        self.identifier = [decoder decodeObjectForKey:kAMComponentIdentifierKey];
-        self.componentType = [decoder decodeIntegerForKey:kAMComponentTypeKey];
-        self.name = [decoder decodeObjectForKey:kAMComponentNameKey];
-        self.classPrefix = [decoder decodeObjectForKey:kAMComponentClassPrefixKey];
-        self.useCustomViewClass = [decoder decodeBoolForKey:kAMComponentUseCustomViewClassKey];
-        self.linkedComponentIdentifier = [decoder decodeObjectForKey:kAMComponentLinkedComponentKey];
-        self.textDescriptor = [decoder decodeObjectForKey:kAMComponentTextDescriptorKey];
-        self.duplicateType = [decoder decodeIntegerForKey:kAMComponentDuplicateTypeKey];
-        self.duplicateSourceIdentifier = [decoder decodeObjectForKey:kAMComponentDuplicateSourceKey];
+        _identifier = [decoder decodeObjectForKey:kAMComponentIdentifierKey];
+        _componentType = [decoder decodeIntegerForKey:kAMComponentTypeKey];
+        _name = [decoder decodeObjectForKey:kAMComponentNameKey];
+        _classPrefix = [decoder decodeObjectForKey:kAMComponentClassPrefixKey];
+        _useCustomViewClass = [decoder decodeBoolForKey:kAMComponentUseCustomViewClassKey];
+        _linkedComponentIdentifier = [decoder decodeObjectForKey:kAMComponentLinkedComponentKey];
+        _textDescriptor = [decoder decodeObjectForKey:kAMComponentTextDescriptorKey];
+        _duplicateType = [decoder decodeIntegerForKey:kAMComponentDuplicateTypeKey];
+        _duplicateSourceIdentifier = [decoder decodeObjectForKey:kAMComponentDuplicateSourceKey];
         
         // attributes
-        self.clipped = [decoder decodeBoolForKey:kAMComponentClippedKey];
-        self.backgroundColor = [decoder decodeObjectForKey:kAMComponentBackgroundColorKey];
-        self.alpha = [decoder decodeFloatForKey:kAMComponentAlphaKey];
-        self.cornerRadius = [decoder decodeFloatForKey:kAMComponentCornerRadiusKey];
-        self.borderWidth = [decoder decodeFloatForKey:kAMComponentBorderWidthKey];
-        self.borderColor = [decoder decodeObjectForKey:kAMComponentBorderColorWidthKey];
-        self.layoutPreset = [decoder decodeIntegerForKey:kAMComponentLayoutPresetKey];
-        self.layoutObjects = [decoder decodeObjectForKey:kAMComponentLayoutObjectsKey];
-        
-#if TARGET_OS_IPHONE
-        self.frame = CGRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
-#else
-        self.frame = NSRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
-#endif
+        _clipped = [decoder decodeBoolForKey:kAMComponentClippedKey];
+        _backgroundColor = [decoder decodeObjectForKey:kAMComponentBackgroundColorKey];
+        _alpha = [decoder decodeFloatForKey:kAMComponentAlphaKey];
+        _cornerRadius = [decoder decodeFloatForKey:kAMComponentCornerRadiusKey];
+        _borderWidth = [decoder decodeFloatForKey:kAMComponentBorderWidthKey];
+        _borderColor = [decoder decodeObjectForKey:kAMComponentBorderColorWidthKey];
+        _layoutPreset = [decoder decodeIntegerForKey:kAMComponentLayoutPresetKey];
+        _layoutObjects = [decoder decodeObjectForKey:kAMComponentLayoutObjectsKey];
+        _frame = CGRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
         
         AMComponentBehavior *behavior = [decoder decodeObjectForKey:kAMComponentBehavorKey];
         
@@ -143,19 +131,19 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     self = [super init];
     
     if (self != nil) {
-        self.identifier = dict[kAMComponentIdentifierKey];
-        self.componentType = [dict[kAMComponentTypeKey] integerValue];
-        self.name = dict[kAMComponentNameKey];
-        self.classPrefix = dict[kAMComponentClassPrefixKey];
-        self.useCustomViewClass = [dict[kAMComponentUseCustomViewClassKey] boolValue];
-        self.linkedComponentIdentifier = dict[kAMComponentLinkedComponentKey];
-        self.duplicateType = [dict[kAMComponentDuplicateTypeKey] integerValue];
-        self.duplicateSourceIdentifier = dict[kAMComponentDuplicateSourceKey];
+        _identifier = dict[kAMComponentIdentifierKey];
+        _componentType = [dict[kAMComponentTypeKey] integerValue];
+        _name = dict[kAMComponentNameKey];
+        _classPrefix = dict[kAMComponentClassPrefixKey];
+        _useCustomViewClass = [dict[kAMComponentUseCustomViewClassKey] boolValue];
+        _linkedComponentIdentifier = dict[kAMComponentLinkedComponentKey];
+        _duplicateType = [dict[kAMComponentDuplicateTypeKey] integerValue];
+        _duplicateSourceIdentifier = dict[kAMComponentDuplicateSourceKey];
         
         NSDictionary *descriptorDict = dict[kAMComponentTextDescriptorKey];
         
         if (descriptorDict != nil) {
-            self.textDescriptor = [[AMCompositeTextDescriptor alloc] initWithDictionary:descriptorDict];
+            _textDescriptor = [[AMCompositeTextDescriptor alloc] initWithDictionary:descriptorDict];
         }
         
         // attributes
@@ -163,19 +151,15 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         NSString *backgroundColorString = dict[kAMComponentBackgroundColorKey];
         NSString *borderColorString = dict[kAMComponentBorderColorWidthKey];
         
-        self.layoutPreset = [dict[kAMComponentLayoutPresetKey] integerValue];
-        self.clipped = [dict[kAMComponentClippedKey] boolValue];
-        self.alpha = [dict[kAMComponentAlphaKey] floatValue];
-        self.cornerRadius = [dict[kAMComponentCornerRadiusKey] floatValue];
-        self.borderWidth = [dict[kAMComponentBorderWidthKey] floatValue];
-        self.borderColor = [AMColor colorWithHexcodePlusAlpha:borderColorString];
-        self.backgroundColor = [AMColor colorWithHexcodePlusAlpha:backgroundColorString];
+        _layoutPreset = [dict[kAMComponentLayoutPresetKey] integerValue];
+        _clipped = [dict[kAMComponentClippedKey] boolValue];
+        _alpha = [dict[kAMComponentAlphaKey] floatValue];
+        _cornerRadius = [dict[kAMComponentCornerRadiusKey] floatValue];
+        _borderWidth = [dict[kAMComponentBorderWidthKey] floatValue];
+        _borderColor = [AMColor colorWithHexcodePlusAlpha:borderColorString];
+        _backgroundColor = [AMColor colorWithHexcodePlusAlpha:backgroundColorString];
         
-#if TARGET_OS_IPHONE
-        self.frame = CGRectFromString(dict[kAMComponentFrameKey]);
-#else
-        self.frame = NSRectFromString(dict[kAMComponentFrameKey]);
-#endif
+        _frame = CGRectFromString(dict[kAMComponentFrameKey]);
         
         // layout objects
         
@@ -188,7 +172,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
             [layoutObjects addObject:layout];
         }
         
-        self.layoutObjects = layoutObjects;
+        _layoutObjects = layoutObjects;
         
         // behaviors
         
@@ -304,8 +288,10 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.borderWidth = self.borderWidth;
     component.borderColor = self.borderColor;
     component.layoutPreset = self.layoutPreset;
-    component.layoutObjects = self.layoutObjects.copy;
+
     component.frame = self.frame;
+    NSArray *layoutObjects = [[NSArray alloc] initWithArray:self.layoutObjects copyItems:YES];
+    [component setLayoutObjects:layoutObjects clearLayouts:YES customPreset:NO];
 
     // only used to refer back to original parent
     // children will have this reset with the next loop
@@ -328,6 +314,12 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 - (void)resetIdentifiers:(AMComponent *)component {
     component.identifier = [[NSUUID UUID] UUIDString];
     
+    for (AMLayout *layoutObject in component.layoutObjects) {
+        layoutObject.componentIdentifier = nil;
+        layoutObject.relatedComponentIdentifier = nil;
+        layoutObject.commonAncestorComponentIdentifier = nil;
+    }
+    
     for (AMComponent *childComponent in component.childComponents) {
         [self resetIdentifiers:childComponent];
     }
@@ -344,8 +336,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     component.duplicateSourceIdentifier = sourceComponent.identifier;
     component.defaultName = nil;
-    component.layoutObjects = nil;
-    component.layoutPreset = component.layoutPreset;
     
     if ([component.name hasPrefix:kAMComponentDefaultNamePrefix]) {
         component.name = nil;
@@ -437,12 +427,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     dict[kAMComponentCornerRadiusKey] = @(self.cornerRadius);
     dict[kAMComponentBorderWidthKey] = @(self.borderWidth);
     dict[kAMComponentLayoutPresetKey] = @(self.layoutPreset);
-    
-#if TARGET_OS_IPHONE
     dict[kAMComponentFrameKey] = NSStringFromCGRect(self.frame);
-#else
-    dict[kAMComponentFrameKey] = NSStringFromRect(self.frame);
-#endif
     
     NSMutableArray *layoutObjectDicts = [NSMutableArray array];
     
@@ -457,11 +442,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (NSString *)description {
-#if TARGET_OS_IPHONE
     NSString *frameString = NSStringFromCGRect(self.frame);
-#else
-    NSString *frameString = NSStringFromRect(self.frame);
-#endif
+    
     return [NSString stringWithFormat:@"\
             Instance(%d): %p %@ %@\
             Parent: %@\
@@ -492,10 +474,20 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (void)setFrame:(CGRect)frame {
+    [self setFrame:frame inAnimation:NO];
+}
+
+- (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation {
     BOOL sizeChanged = (CGSizeEqualToSize(frame.size, self.frame.size) == NO);
     _frame = frame;
+    
+    for (AMLayout *layoutObject in self.layoutObjects) {
+        layoutObject.referenceFrame = frame;
+        [layoutObject updateLayoutWithFrame:frame inAnimation:inAnimation];
+    }
+    
     if (sizeChanged) {
-        [self updateChildFrames];
+//        [self updateChildFrames];
     }
 }
 
@@ -507,39 +499,23 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
-- (void)resetLayout {
-    if (self.layoutPreset < AMLayoutPresetCustom) {
-        
-        AMLayoutPresetHelper *helper = [AMLayoutPresetHelper new];
-        
-        NSArray *layoutTypes = [helper layoutTypesForComponent:self layoutPreset:self.layoutPreset];
-        NSMutableArray *layoutObjects = [NSMutableArray array];
-        
-        for (NSNumber *layoutType in layoutTypes) {
-            
-            AMLayout *layoutObject =
-            [[AMLayoutFactory sharedInstance]
-             buildLayoutOfType:layoutType.integerValue];
-            
-            [layoutObjects addObject:layoutObject];
-        }
-        
-        self.layoutObjects = layoutObjects;
-    }
-}
-
 - (void)setLayoutPreset:(AMLayoutPreset)layoutPreset {
     _layoutPreset = layoutPreset;
     _layoutPreset = MAX(0, _layoutPreset);
     _layoutPreset = MIN(AMLayoutPresetCustom, _layoutPreset);
-    [self resetLayout];
+    
+    AMLayoutPresetHelper *helper = [AMLayoutPresetHelper new];
+    NSArray *layoutObjects = [helper layoutObjectsForComponent:self layoutPreset:_layoutPreset];
+    [self setLayoutObjects:layoutObjects clearLayouts:YES customPreset:NO];
 }
 
 - (void)setLayoutObjects:(NSArray *)layoutObjects {
-    [self setLayoutObjects:layoutObjects clearLayouts:YES];
+    [self setLayoutObjects:layoutObjects clearLayouts:YES customPreset:YES];
 }
 
-- (void)setLayoutObjects:(NSArray *)layoutObjects clearLayouts:(BOOL)clearLayouts {
+- (void)setLayoutObjects:(NSArray *)layoutObjects
+            clearLayouts:(BOOL)clearLayouts
+            customPreset:(BOOL)customPreset {
     
     if (clearLayouts) {
         
@@ -549,18 +525,14 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
     
     _layoutObjects = layoutObjects;
-    
-    [self updateProportionalLayouts];
-    
-    self.hasProportionalLayout = NO;
-    
-    for (AMLayout *layout in layoutObjects) {
-        
-        if (layout.isProportional) {
-            self.hasProportionalLayout = YES;
-            break;
-        }
+
+    if (customPreset) {
+        _layoutPreset = AMLayoutPresetCustom;
     }
+}
+
+- (void)restoreLayoutObjects:(NSArray *)layoutObjects {
+    _layoutObjects = layoutObjects.copy;
 }
 
 - (NSString *)name {
@@ -661,10 +633,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     AMComponentBehavior *result = self.behavors[@(self.componentType)];
     return result;
-}
-
-- (AMComponent *)parentInstance {
-    return (id)self.parentComponent;
 }
 
 - (void)setLinkedComponent:(AMComponent *)linkedComponent {
@@ -916,57 +884,57 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 #pragma mark - Helpers
 
-- (void)updateProportionalLayouts {
-    
-    for (AMLayout *layout in self.layoutObjects) {
-        
-        if (self.parentComponent != nil) {
-            [layout
-             updateProportionalValueFromFrame:self.frame
-             parentFrame:self.parentComponent.frame];
-            
-            for (AMComponent *childComponent in self.childComponents) {
-                
-                [childComponent updateProportionalLayouts];
-            }
-        }
-    }
-}
-
-- (void)updateChildFrames {
-    
-    for (AMComponent *childComponent in self.childComponents) {
-        [childComponent updateFrame];
-    }
-}
-
-- (void)updateFrame {
-    
-//        NSLog(@"startingFrame: %@", NSStringFromCGRect(self.frame));
-//        NSLog(@"parentFrame: %@", NSStringFromCGRect(self.parentInstance.frame));
-    
-    CGRect updatedFrame = self.frame;
-    
-    for (AMLayout *layout in self.layoutObjects) {
-        
-        updatedFrame =
-        [layout
-         adjustedFrame:updatedFrame
-         forComponent:self
-         scale:self.scale];
-        
-//                NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
-    }
-    
-    updatedFrame = AMPixelAlignedCGRect(updatedFrame);
-//        NSLog(@"endingFrame: %@", NSStringFromCGRect(updatedFrame));
-    
-    self.frame = updatedFrame;
-    
-    
-    for (AMComponent *childComponent in self.childComponents) {
-        [childComponent updateFrame];
-    }
-}
+//- (void)updateProportionalLayouts {
+//    
+//    for (AMLayout *layout in self.layoutObjects) {
+//        
+//        if (self.parentComponent != nil) {
+//            [layout
+//             updateProportionalValueFromFrame:self.frame
+//             parentFrame:self.parentComponent.frame];
+//            
+//            for (AMComponent *childComponent in self.childComponents) {
+//                
+//                [childComponent updateProportionalLayouts];
+//            }
+//        }
+//    }
+//}
+//
+//- (void)updateChildFrames {
+//    
+//    for (AMComponent *childComponent in self.childComponents) {
+//        [childComponent updateFrame];
+//    }
+//}
+//
+//- (void)updateFrame {
+//    
+////        NSLog(@"startingFrame: %@", NSStringFromCGRect(self.frame));
+////        NSLog(@"parentFrame: %@", NSStringFromCGRect(self.parentComponent.frame));
+//    
+//    CGRect updatedFrame = self.frame;
+//    
+//    for (AMLayout *layout in self.layoutObjects) {
+//        
+//        updatedFrame =
+//        [layout
+//         adjustedFrame:updatedFrame
+//         forComponent:self
+//         scale:self.scale];
+//        
+////                NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
+//    }
+//    
+//    updatedFrame = AMPixelAlignedCGRect(updatedFrame);
+////        NSLog(@"endingFrame: %@", NSStringFromCGRect(updatedFrame));
+//    
+//    self.frame = updatedFrame;
+//    
+//    
+//    for (AMComponent *childComponent in self.childComponents) {
+//        [childComponent updateFrame];
+//    }
+//}
 
 @end

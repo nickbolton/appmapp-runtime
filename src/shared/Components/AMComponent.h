@@ -45,7 +45,6 @@ extern NSString *const kAMComponentCornerRadiusKey;
 @property (nonatomic, readonly) NSString *defaultName;
 @property (nonatomic, readonly) AMComponentBehavior *behavor;
 @property (nonatomic, strong) AMCompositeTextDescriptor *textDescriptor;
-@property (nonatomic, readonly) AMComponent *parentInstance;
 
 @property (nonatomic) AMDuplicateType duplicateType;
 @property (nonatomic, readonly) BOOL isMirrored;
@@ -89,6 +88,10 @@ extern NSString *const kAMComponentCornerRadiusKey;
 - (instancetype)copyForPasting;
 - (instancetype)duplicate;
 
+- (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation;
+
+- (void)restoreLayoutObjects:(NSArray *)layoutObjects;
+
 - (void)addBehavor:(AMComponentBehavior *)behavior;
 - (void)removeBehavior:(AMComponentBehavior *)behavior;
 
@@ -96,10 +99,10 @@ extern NSString *const kAMComponentCornerRadiusKey;
 
 - (NSDictionary *)dictionaryRepresentation;
 
-- (void)updateProportionalLayouts;
-- (void)resetLayout;
+//- (void)updateProportionalLayouts;
+//- (void)resetLayout;
 
-- (void)updateChildFrames;
+//- (void)updateChildFrames;
 - (void)addChildComponent:(AMComponent *)component;
 - (void)addChildComponents:(NSArray *)components;
 - (void)removeChildComponent:(AMComponent *)component;

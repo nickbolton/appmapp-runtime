@@ -16,10 +16,6 @@
 
 @implementation AMExpandingLayout
 
-- (AMLayoutType)layoutType {
-    return AMLayoutTypeExpanding;
-}
-
 - (void)clearLayout {
     [super clearLayout];
     
@@ -55,26 +51,6 @@
         
         self.constraints = constraints;
     }
-}
-
-- (void)updateLayoutWithFrame:(CGRect)frame
-                   multiplier:(CGFloat)multiplier
-                     priority:(AMLayoutPriority)priority
-                  parentFrame:(CGRect)parentFrame
-             allLayoutObjects:(NSArray *)allLayoutObjects
-                       inView:(AMView *)view
-                     animated:(BOOL)animated {
-
-    [super
-     updateLayoutWithFrame:frame
-     multiplier:multiplier
-     priority:priority
-     parentFrame:parentFrame
-     allLayoutObjects:allLayoutObjects
-     inView:view
-     animated:animated];
-
-    [self applyConstraintIfNecessary];
 }
 
 @end
