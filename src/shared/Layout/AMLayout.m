@@ -358,7 +358,7 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
              toComponent:relatedComponent
              relatedAttribute:self.relatedAttribute];
             
-            NSLog(@"frame: %@, attribute: %ld, offset: %f", NSStringFromCGRect(component.frame), self.attribute, offset);
+//            NSLog(@"frame: %@, attribute: %ld, offset: %f", NSStringFromCGRect(component.frame), self.attribute, offset);
         }
     }
     
