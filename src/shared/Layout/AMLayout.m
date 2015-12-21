@@ -35,7 +35,7 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
     self = [super init];
     if (self) {
         self.multiplier = 1.0f;
-        self.priority = NSLayoutPriorityRequired;
+        self.priority = AMLayoutPriorityRequired;
     }
     return self;
 }
@@ -162,7 +162,7 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
     return _viewIdentifier;
 }
 
-- (void)setPriority:(NSLayoutPriority)priority {
+- (void)setPriority:(AMLayoutPriority)priority {
     _priority = priority;
     self.constraint.priority = priority;
     [self.view layoutIfNeeded];
