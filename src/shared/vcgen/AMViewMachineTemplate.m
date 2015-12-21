@@ -86,6 +86,7 @@ MACHINE_PROPERTIES\n\
         [[AMAppMap sharedInstance]\n\
          buildViewFromComponent:childComponent\n\
          inContainer:self\n\
+         layoutProvider:self\n\
          bindingObject:self];\n\
     }\n\
 \n\

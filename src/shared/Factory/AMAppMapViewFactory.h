@@ -15,6 +15,7 @@
 
 - (AMView <AMRuntimeView> *)buildViewFromComponent:(AMComponent *)component
                                        inContainer:(AMView *)container
+                                    layoutProvider:(id<AMLayoutProvider>)layoutProvider
                                      bindingObject:(id)bindingObject;
 
 @end

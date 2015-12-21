@@ -33,7 +33,6 @@ MACHINE_PROPERTIES\n\
 \n\
 #import \"_VIEW_CONTROLLER_NAME.h\"\n\
 #import \"AMAppMap.h\"\n\
-#import \"AMLayouts.h\"\n\
 #import \"AMComponentManager.h\"\n\
 #import \"AMRuntimeView.h\"\n\
 CLASS_IMPORTS\n\
@@ -102,7 +101,6 @@ MACHINE_PROPERTIES\n\
 \n\
 #import \"_VIEW_CONTROLLER_NAME.h\"\n\
 #import \"AMAppMap.h\"\n\
-#import \"AMLayouts.h\"\n\
 #import \"AMComponentManager.h\"\n\
 #import \"AMRuntimeView.h\"\n\
 CLASS_IMPORTS\n\

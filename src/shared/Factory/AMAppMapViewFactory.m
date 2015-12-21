@@ -16,6 +16,7 @@
 
 - (AMView <AMRuntimeView> *)buildViewFromComponent:(AMComponent *)component
                                        inContainer:(AMView *)container
+                                    layoutProvider:(id<AMLayoutProvider>)layoutProvider
                                      bindingObject:(id)bindingObject {
 
     NSAssert(component != nil, @"no component given");
@@ -59,7 +60,9 @@
     [container addSubview:view];
     
     view.component = component;
-    
+    view.layoutProvider = layoutProvider;
+    [view resetLayout];
+
     NSString *setterName =
     [NSString stringWithFormat:@"set%@:", viewName];
     
@@ -81,6 +84,7 @@
         [[AMAppMap sharedInstance]
          buildViewFromComponent:childComponent
          inContainer:view
+         layoutProvider:layoutProvider
          bindingObject:view];
     }];
     

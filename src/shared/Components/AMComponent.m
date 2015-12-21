@@ -82,7 +82,12 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [coder encodeFloat:self.borderWidth forKey:kAMComponentBorderWidthKey];
     [coder encodeInteger:self.layoutPreset forKey:kAMComponentLayoutPresetKey];
     [coder encodeObject:self.layoutObjects forKey:kAMComponentLayoutObjectsKey];
+    
+#if TARGET_OS_IPHONE
     [coder encodeObject:NSStringFromCGRect(self.frame) forKey:kAMComponentFrameKey];
+#else
+    [coder encodeObject:NSStringFromRect(self.frame) forKey:kAMComponentFrameKey];
+#endif
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -109,8 +114,12 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         _borderColor = [decoder decodeObjectForKey:kAMComponentBorderColorWidthKey];
         _layoutPreset = [decoder decodeIntegerForKey:kAMComponentLayoutPresetKey];
         _layoutObjects = [decoder decodeObjectForKey:kAMComponentLayoutObjectsKey];
+#if TARGET_OS_IPHONE
         _frame = CGRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
-        
+#else
+        _frame = NSRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
+#endif
+
         AMComponentBehavior *behavior = [decoder decodeObjectForKey:kAMComponentBehavorKey];
         
         if (behavior != nil) {
@@ -160,7 +169,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         _borderColor = [AMColor colorWithHexcodePlusAlpha:borderColorString];
         _backgroundColor = [AMColor colorWithHexcodePlusAlpha:backgroundColorString];
         
+#if TARGET_OS_IPHONE
         _frame = CGRectFromString(dict[kAMComponentFrameKey]);
+#else
+        _frame = NSRectFromString(dict[kAMComponentFrameKey]);
+#endif
         
         // layout objects
         
@@ -431,7 +444,12 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     dict[kAMComponentCornerRadiusKey] = @(self.cornerRadius);
     dict[kAMComponentBorderWidthKey] = @(self.borderWidth);
     dict[kAMComponentLayoutPresetKey] = @(self.layoutPreset);
+    
+#if TARGET_OS_IPHONE
     dict[kAMComponentFrameKey] = NSStringFromCGRect(self.frame);
+#else
+    dict[kAMComponentFrameKey] = NSStringFromRect(self.frame);
+#endif
     
     NSMutableArray *layoutObjectDicts = [NSMutableArray array];
     
@@ -446,7 +464,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (NSString *)description {
+#if TARGET_OS_IPHONE
     NSString *frameString = NSStringFromCGRect(self.frame);
+#else
+    NSString *frameString = NSStringFromRect(self.frame);
+#endif
     
     return [NSString stringWithFormat:@"\
             Instance(%d): %p %@ %@\

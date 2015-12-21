@@ -22,12 +22,14 @@
 
 @end
 
-@protocol AMRuntimeView <AMRuntimeDelegate, AMComponentAware>
+@protocol AMRuntimeView <AMRuntimeDelegate, AMComponentAware, AMLayoutProvider>
 
+@property (nonatomic, weak) id <AMLayoutProvider> layoutProvider;
 @property (nonatomic, weak) id <AMRuntimeDelegate> runtimeDelegate;
 
 - (void)clearConstraints;
 - (void)setBaseAttributes;
+- (void)resetLayout;
 
 @end
 

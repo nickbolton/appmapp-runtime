@@ -38,16 +38,19 @@
 }
 
 - (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
-                              inContainer:(AMView *)container {
+                              inContainer:(AMView *)container
+                           layoutProvider:(id<AMLayoutProvider>)layoutProvider {
     return
     [self
      buildViewFromComponent:component
      inContainer:container
+     layoutProvider:layoutProvider
      bindingObject:nil];
 }
 
 - (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
                               inContainer:(AMView *)container
+                           layoutProvider:(id<AMLayoutProvider>)layoutProvider
                             bindingObject:(id)bindingObject {
 
     NSString *classString = self.factoryClasses[@(component.componentType)];
@@ -57,7 +60,12 @@
              (int)component.componentType);
     
     Class clazz = NSClassFromString(classString);
-    return [[clazz new] buildViewFromComponent:component inContainer:container bindingObject:bindingObject];
+    return
+    [[clazz new]
+     buildViewFromComponent:component
+     inContainer:container
+     layoutProvider:layoutProvider
+     bindingObject:bindingObject];
 }
 
 #pragma mark - Singleton Methods

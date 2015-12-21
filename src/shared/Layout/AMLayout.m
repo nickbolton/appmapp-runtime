@@ -50,7 +50,11 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
     [coder encodeInteger:self.relatedAttribute forKey:kAMLayoutRelatedAttributeKey];
     [coder encodeFloat:self.offset forKey:kAMLayoutOffsetKey];
     [coder encodeFloat:self.priority forKey:kAMLayoutPriorityKey];
+#if TARGET_OS_IPHONE
     [coder encodeObject:NSStringFromCGRect(self.referenceFrame) forKey:kAMLayoutReferenceFrameKey];
+#else
+    [coder encodeObject:NSStringFromRect(self.referenceFrame) forKey:kAMLayoutReferenceFrameKey];
+#endif
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -67,7 +71,11 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
         _relatedAttribute = [decoder decodeIntegerForKey:kAMLayoutRelatedAttributeKey];
         _offset = [decoder decodeFloatForKey:kAMLayoutOffsetKey];
         _priority = [decoder decodeFloatForKey:kAMLayoutPriorityKey];
+#if TARGET_OS_IPHONE
         _referenceFrame = CGRectFromString([decoder decodeObjectForKey:kAMLayoutReferenceFrameKey]);
+#else
+        _referenceFrame = NSRectFromString([decoder decodeObjectForKey:kAMLayoutReferenceFrameKey]);
+#endif
     }
     
     return self;
@@ -87,7 +95,11 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
         _relatedAttribute = [dict[kAMLayoutRelatedAttributeKey] integerValue];
         _offset = [dict[kAMLayoutOffsetKey] floatValue];
         _priority = [dict[kAMLayoutPriorityKey] floatValue];
+#if TARGET_OS_IPHONE
         _referenceFrame = CGRectFromString(dict[kAMLayoutReferenceFrameKey]);
+#else
+        _referenceFrame = NSRectFromString(dict[kAMLayoutReferenceFrameKey]);
+#endif
     }
     
     return self;
@@ -116,8 +128,12 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
     dict[kAMLayoutRelatedAttributeKey] = @(self.relatedAttribute);
     dict[kAMLayoutOffsetKey] = @(self.offset);
     dict[kAMLayoutPriorityKey] = @(self.priority);
+#if TARGET_OS_IPHONE
     dict[kAMLayoutReferenceFrameKey] = NSStringFromCGRect(self.referenceFrame);
-    
+#else
+    dict[kAMLayoutReferenceFrameKey] = NSStringFromRect(self.referenceFrame);
+#endif
+
     return dict;
 }
 
@@ -165,7 +181,11 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
 - (void)setPriority:(AMLayoutPriority)priority {
     _priority = priority;
     self.constraint.priority = priority;
+#if TARGET_OS_IPHONE
     [self.view layoutIfNeeded];
+#else
+    [self.view layoutSubtreeIfNeeded];
+#endif
 }
 
 - (void)setOffset:(CGFloat)offset {
@@ -179,7 +199,11 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
     } else {
         self.constraint.constant = offset;
     }
+#if TARGET_OS_IPHONE
     [self.view layoutIfNeeded];
+#else
+    [self.view layoutSubtreeIfNeeded];
+#endif
 }
 
 - (void)setComponentIdentifier:(NSString *)componentIdentifier {
@@ -363,7 +387,11 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
     }
     
     [self setOffset:offset inAnimation:inAnimation];
+#if TARGET_OS_IPHONE
     [self.view layoutIfNeeded];
+#else
+    [self.view layoutSubtreeIfNeeded];
+#endif
 }
 
 - (CGRect)adjustedFrame:(CGRect)frame
@@ -391,7 +419,11 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
             [self deactivatePreviousConstraints];
             
             [self.commonAncestorView addConstraint:self.constraint];
+#if TARGET_OS_IPHONE
             [self.view layoutIfNeeded];
+#else
+            [self.view layoutSubtreeIfNeeded];
+#endif
             
 #if DEBUG
             self.constraint.identifier =

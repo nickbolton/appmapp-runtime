@@ -21,6 +21,9 @@ NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeVi
 
 @implementation AMRuntimeView
 
+@synthesize layoutProvider = _layoutProvider;
+@synthesize runtimeDelegate = _runtimeDelegate;
+
 #pragma mark - Getters and Setters
 
 - (AMRuntimeViewHelper *)helper {
@@ -37,6 +40,10 @@ NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeVi
     [self.helper setComponent:component forView:self];
 }
 
+- (BOOL)isFlipped {
+    return YES;
+}
+
 #pragma mark - AMRuntimeDelegate Conformance
 
 - (void)navigateToComponentWithIdentifier:(NSString *)componentIdentifier
@@ -50,6 +57,37 @@ NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeVi
      navigationType:navigationType];
 }
 
+#pragma mark - AMLayoutProvider
+
+- (AMView<AMComponentAware> *)viewWithComponentIdentifier:(NSString *)componentIdentifier {
+ 
+    // breadth-first
+    
+    for (AMRuntimeView *childView in self.subviews) {
+        if ([childView isKindOfClass:[AMRuntimeView class]]) {
+            if ([childView.component.identifier isEqualToString:componentIdentifier]) {
+                return childView;
+            }
+        }
+    }
+    for (AMRuntimeView *childView in self.subviews) {
+        if ([childView isKindOfClass:[AMRuntimeView class]]) {
+            
+            AMView<AMComponentAware> *result = [childView viewWithComponentIdentifier:componentIdentifier];
+            if (result != nil) {
+                return result;
+            }
+        }
+    }
+    
+    return nil;
+}
+
+- (AMComponent *)componentWithComponentIdentifier:(NSString *)componentIdentifier {
+    AMView<AMComponentAware> *view = [self viewWithComponentIdentifier:componentIdentifier];
+    return view.component;
+}
+
 #pragma mark - Private
 
 - (void)setBaseAttributes {
@@ -58,13 +96,22 @@ NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeVi
 
 #pragma mark - Layout
 
-//- (void)layout {
-//    [self.helper layoutView:self];
-//}
-//
-//- (void)layoutSubviews {
-//    [self.helper layoutView:self];
-//}
+- (void)resetLayout {
+    
+    [self clearLayout];
+    
+    for (AMLayout *layout in self.component.layoutObjects) {
+        layout.layoutProvider = self.layoutProvider;
+        [layout addLayout];
+    }
+}
+
+- (void)clearLayout {
+    
+    for (AMLayout *layoutObject in self.component.layoutObjects) {
+        [layoutObject clearLayout];
+    }
+}
 
 #pragma mark - Constraints
 

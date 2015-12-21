@@ -5,6 +5,8 @@
 //  Created by Nick Bolton on 8/1/14.
 //  Copyright (c) 2014 Nick Bolton. All rights reserved.
 //
+#import "AppMap.h"
+#import "AppMapTypes.h"
 
 extern NSString *const kAMComponentIdentifierKey;
 extern NSString *const kAMComponentAttributesKey;

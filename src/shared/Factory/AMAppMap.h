@@ -14,10 +14,12 @@
 + (instancetype)sharedInstance;
 
 - (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
-                              inContainer:(AMView *)container;
+                              inContainer:(AMView *)container
+                           layoutProvider:(id<AMLayoutProvider>)layoutProvider;
 
 - (AMRuntimeView *)buildViewFromComponent:(AMComponent *)component
                               inContainer:(AMView *)container
+                           layoutProvider:(id<AMLayoutProvider>)layoutProvider
                             bindingObject:(id)bindingObject;
 
 @end
