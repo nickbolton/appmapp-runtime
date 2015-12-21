@@ -61,6 +61,10 @@ NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeVi
 
 - (AMView<AMComponentAware> *)viewWithComponentIdentifier:(NSString *)componentIdentifier {
  
+    if ([self.component.identifier isEqualToString:componentIdentifier]) {
+        return self;
+    }
+    
     // breadth-first
     
     for (AMRuntimeView *childView in self.subviews) {
