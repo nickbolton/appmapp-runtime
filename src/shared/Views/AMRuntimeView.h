@@ -9,6 +9,7 @@
 #import "AppMap.h"
 #import "AppMapTypes.h"
 #import "AMNavigatingButtonBehavior.h"
+#import "AMComponentAware.h"
 
 @class AMLayout;
 @class AMComponent;
@@ -21,12 +22,9 @@
 
 @end
 
-@protocol AMRuntimeView <AMRuntimeDelegate>
+@protocol AMRuntimeView <AMRuntimeDelegate, AMComponentAware>
 
 @property (nonatomic, weak) id <AMRuntimeDelegate> runtimeDelegate;
-
-- (AMComponent *)component;
-- (void)setComponent:(AMComponent *)component;
 
 - (void)clearConstraints;
 - (void)setBaseAttributes;

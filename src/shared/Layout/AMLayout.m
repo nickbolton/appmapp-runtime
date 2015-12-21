@@ -23,8 +23,8 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
 
 @interface AMLayout()
 
-@property (nonatomic, weak, readwrite) AMView *view;
-@property (nonatomic, weak, readwrite) AMView *relatedView;
+@property (nonatomic, weak, readwrite) AMView<AMComponentAware> *view;
+@property (nonatomic, weak, readwrite) AMView<AMComponentAware> *relatedView;
 @property (nonatomic, weak, readwrite) AMView *commonAncestorView;
 
 @end
@@ -169,6 +169,7 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
 }
 
 - (void)setOffset:(CGFloat)offset {
+    [self setOffset:offset inAnimation:NO];
 }
 
 - (void)setOffset:(CGFloat)offset inAnimation:(BOOL)inAnimation {
@@ -193,7 +194,7 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
 
 - (AMView *)view {
     if (_view == nil) {
-        _view = [self.viewProvider viewWithComponentIdentifier:self.componentIdentifier];
+        _view = [self.layoutProvider viewWithComponentIdentifier:self.componentIdentifier];
     }
     
     return _view;
@@ -201,7 +202,7 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
 
 - (AMView *)relatedView {
     if (_relatedView == nil && self.attribute != NSLayoutAttributeWidth && self.attribute != NSLayoutAttributeHeight) {
-        _relatedView = [self.viewProvider viewWithComponentIdentifier:self.relatedComponentIdentifier];
+        _relatedView = [self.layoutProvider viewWithComponentIdentifier:self.relatedComponentIdentifier];
     }
     
     return _relatedView;
@@ -209,7 +210,7 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
 
 - (AMView *)commonAncestorView {
     if (_commonAncestorView == nil) {
-        _commonAncestorView = [self.viewProvider viewWithComponentIdentifier:self.commonAncestorComponentIdentifier];
+        _commonAncestorView = [self.layoutProvider viewWithComponentIdentifier:self.commonAncestorComponentIdentifier];
     }
     
     return _commonAncestorView;
@@ -265,10 +266,26 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
     if (self.constraint != nil) {
         [self.commonAncestorView removeConstraint:self.constraint];
     }
+    [self clearAllConstraints];
     self.view = nil;
     self.relatedView = nil;
     self.commonAncestorView = nil;
     self.constraint = nil;
+}
+
+- (void)clearAllConstraints {
+        
+    for (NSLayoutConstraint *constraint in self.view.constraints) {
+        if (constraint.firstItem == self.view && constraint.secondItem == nil) {
+            [self.view removeConstraint:constraint];
+        }
+    }
+    for (NSLayoutConstraint *constraint in self.commonAncestorView.constraints) {
+        if ((constraint.firstItem == self.view && constraint.secondItem == self.relatedView) ||
+            (constraint.firstItem == self.relatedView && constraint.secondItem == self.view)) {
+            [self.commonAncestorView removeConstraint:constraint];
+        }
+    }
 }
 
 - (void)addLayout {
@@ -276,34 +293,76 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
     self.constraint.priority = self.priority;
 }
 
-- (void)updateLayoutWithFrame:(CGRect)frame
-                  inAnimation:(BOOL)inAnimation {
+- (void)updateLayoutInAnimation:(BOOL)inAnimation {
     [self createConstraintIfNecessary];
     self.constraint.priority = self.priority;
     
 //    NSLog(@"update with frame: %@", NSStringFromCGRect(frame));
     
-    switch (self.attribute) {
-        case NSLayoutAttributeLeft:
-            [self setOffset:CGRectGetMinX(frame) inAnimation:inAnimation];
-            break;
-            
-        case NSLayoutAttributeTop:
-            [self setOffset:CGRectGetMinY(frame) inAnimation:inAnimation];
-            break;
-            
-        case NSLayoutAttributeWidth:
-            [self setOffset:CGRectGetWidth(frame) inAnimation:inAnimation];
-            break;
-
-        case NSLayoutAttributeHeight:
-            [self setOffset:CGRectGetHeight(frame) inAnimation:inAnimation];
-            break;
-
-        default:
-            break;
+    AMComponent *component = [self.layoutProvider componentWithComponentIdentifier:self.componentIdentifier];
+    AMComponent *relatedComponent = [self.layoutProvider componentWithComponentIdentifier:self.relatedComponentIdentifier];
+    
+    if (component == nil) {
+        return;
     }
     
+    CGFloat offset = 0.0f;
+
+    if (component.parentComponent == nil) {
+        
+        // top level component
+        
+        switch (self.attribute) {
+            case NSLayoutAttributeTop:
+                offset = CGRectGetMinY(component.frame);
+                break;
+                
+            case NSLayoutAttributeLeft:
+                offset = CGRectGetMinX(component.frame);
+                break;
+                
+            case NSLayoutAttributeWidth:
+                offset = CGRectGetWidth(component.frame);
+                break;
+                
+            case NSLayoutAttributeHeight:
+                offset = CGRectGetHeight(component.frame);
+                break;
+                
+            default:
+                break;
+        }
+        
+    } else {
+        
+        if (self.isSizing) {
+            
+            switch (self.attribute) {
+                case NSLayoutAttributeWidth:
+                    offset = CGRectGetWidth(component.frame);
+                    break;
+                    
+                case NSLayoutAttributeHeight:
+                    offset = CGRectGetHeight(component.frame);
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+        } else {
+            
+            offset =
+            [component
+             distanceFromAttribute:self.attribute
+             toComponent:relatedComponent
+             relatedAttribute:self.relatedAttribute];
+            
+            NSLog(@"frame: %@, attribute: %ld, offset: %f", NSStringFromCGRect(component.frame), self.attribute, offset);
+        }
+    }
+    
+    [self setOffset:offset inAnimation:inAnimation];
     [self.view layoutIfNeeded];
 }
 
@@ -345,6 +404,7 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
 }
 
 - (void)deactivatePreviousConstraints {
+    
     if (self.isSizing) {
         for (NSLayoutConstraint *constraint in self.view.constraints) {
             if (constraint.firstItem == self.view && constraint.firstAttribute == self.attribute) {
@@ -362,6 +422,7 @@ static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
 }
 
 - (NSLayoutConstraint *)buildConstraint {
+    
     return
     [NSLayoutConstraint
      constraintWithItem:self.view

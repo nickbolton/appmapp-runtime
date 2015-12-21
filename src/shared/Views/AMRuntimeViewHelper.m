@@ -90,16 +90,13 @@
 
 - (void)updateConstraintsFromComponent:(AMView<AMRuntimeView> *)view {
     
-    CGRect frame = AMPixelAlignedCGRect(view.component.frame);
-    CGRect parentFrame = AMPixelAlignedCGRect(view.component.parentComponent.frame);
-    
     for (AMLayout *layoutObject in view.component.layoutObjects) {
-#warning TODO update layout
-        
+        [layoutObject updateLayoutInAnimation:NO];
 #if DEBUG
         layoutObject.viewIdentifier = view.component.name;
 #endif
     }
+
     [self constraintsDidChange:view];
 }
 

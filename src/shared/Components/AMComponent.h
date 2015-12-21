@@ -89,8 +89,9 @@ extern NSString *const kAMComponentCornerRadiusKey;
 - (instancetype)duplicate;
 
 - (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation;
+- (void)updateFrame:(CGRect)frame;
 
-- (void)restoreLayoutObjects:(NSArray *)layoutObjects;
+- (void)restoreLayoutObjects:(NSArray *)layoutObjects preset:(AMLayoutPreset)preset;
 
 - (void)addBehavor:(AMComponentBehavior *)behavior;
 - (void)removeBehavior:(AMComponentBehavior *)behavior;
@@ -118,5 +119,9 @@ extern NSString *const kAMComponentCornerRadiusKey;
 + (BOOL)doesHaveCommonTopLevelComponent:(NSArray *)components;
 + (BOOL)doesHaveCommonTopLevelComponent:(NSArray *)components
                           withComponent:(AMComponent *)component;
+
+- (CGFloat)distanceFromAttribute:(NSLayoutAttribute)attribute
+                     toComponent:(AMComponent *)relatedComponent
+                relatedAttribute:(NSLayoutAttribute)relatedAttribute;
 
 @end

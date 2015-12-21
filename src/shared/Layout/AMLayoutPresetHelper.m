@@ -93,9 +93,16 @@
     NSLayoutAttribute attribute =
     [self horizontalLayoutTypePosition:component center:center];
     
+    CGFloat offset =
+    [component
+     distanceFromAttribute:attribute
+     toComponent:component.parentComponent
+     relatedAttribute:attribute];
+    
     AMLayout *layoutObject = [AMLayout new];
     layoutObject.attribute = attribute;
     layoutObject.relatedAttribute = attribute;
+    layoutObject.offset = offset;
     
     return layoutObject;
 }
@@ -109,9 +116,16 @@
         attribute = NSLayoutAttributeLeft;
     }
     
+    CGFloat offset =
+    [component
+     distanceFromAttribute:attribute
+     toComponent:component.parentComponent
+     relatedAttribute:attribute];
+    
     AMLayout *layoutObject = [AMLayout new];
     layoutObject.attribute = attribute;
     layoutObject.relatedAttribute = attribute;
+    layoutObject.offset = offset;
     
     return layoutObject;
 }
@@ -154,9 +168,16 @@
     NSLayoutAttribute attribute =
     [self verticalLayoutTypePosition:component center:center];
     
+    CGFloat offset =
+    [component
+     distanceFromAttribute:attribute
+     toComponent:component.parentComponent
+     relatedAttribute:attribute];
+    
     AMLayout *layoutObject = [AMLayout new];
     layoutObject.attribute = attribute;
     layoutObject.relatedAttribute = attribute;
+    layoutObject.offset = offset;
     
     return layoutObject;
 }
@@ -170,9 +191,16 @@
         attribute = NSLayoutAttributeTop;
     }
     
+    CGFloat offset =
+    [component
+     distanceFromAttribute:attribute
+     toComponent:component.parentComponent
+     relatedAttribute:attribute];
+    
     AMLayout *layoutObject = [AMLayout new];
     layoutObject.attribute = attribute;
     layoutObject.relatedAttribute = attribute;
+    layoutObject.offset = offset;
 
     return layoutObject;
 }
@@ -192,6 +220,7 @@
     
     AMLayout *widthLayout = [AMLayout new];
     widthLayout.attribute = NSLayoutAttributeWidth;
+    widthLayout.offset = CGRectGetWidth(component.frame);
     
     [layoutTypes addObject:leftOrRightLayout];
     [layoutTypes addObject:widthLayout];
@@ -202,6 +231,7 @@
     
     AMLayout *heightLayout = [AMLayout new];
     heightLayout.attribute = NSLayoutAttributeHeight;
+    heightLayout.offset = CGRectGetHeight(component.frame);
     
     [layoutTypes addObject:topOrBottomLayout];
     [layoutTypes addObject:heightLayout];
@@ -224,6 +254,7 @@
     
     AMLayout *widthLayout = [AMLayout new];
     widthLayout.attribute = NSLayoutAttributeWidth;
+    widthLayout.offset = CGRectGetWidth(component.frame);
     
     [layoutTypes addObject:leftOrRightLayout];
     [layoutTypes addObject:widthLayout];
@@ -234,7 +265,8 @@
     
     AMLayout *heightLayout = [AMLayout new];
     heightLayout.attribute = NSLayoutAttributeHeight;
-    
+    heightLayout.offset = CGRectGetHeight(component.frame);
+
     [layoutTypes addObject:topOrBottomLayout];
     [layoutTypes addObject:heightLayout];
     
@@ -249,17 +281,29 @@
     AMLayout *centerXLayout = [AMLayout new];
     centerXLayout.attribute = NSLayoutAttributeCenterX;
     centerXLayout.relatedAttribute = centerXLayout.attribute;
+    centerXLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeCenterX
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeCenterX];
     
     AMLayout *centerYLayout = [AMLayout new];
     centerYLayout.attribute = NSLayoutAttributeCenterY;
     centerYLayout.relatedAttribute = centerYLayout.attribute;
+    centerYLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeCenterY
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeCenterY];
     
     AMLayout *widthLayout = [AMLayout new];
     widthLayout.attribute = NSLayoutAttributeWidth;
-    
+    widthLayout.offset = CGRectGetWidth(component.frame);
+
     AMLayout *heightLayout = [AMLayout new];
     heightLayout.attribute = NSLayoutAttributeHeight;
-    
+    heightLayout.offset = CGRectGetHeight(component.frame);
+
     [layoutTypes addObject:centerXLayout];
     [layoutTypes addObject:centerYLayout];
     [layoutTypes addObject:widthLayout];
@@ -276,17 +320,29 @@
     AMLayout *centerXLayout = [AMLayout new];
     centerXLayout.attribute = NSLayoutAttributeCenterX;
     centerXLayout.relatedAttribute = centerXLayout.attribute;
+    centerXLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeCenterX
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeCenterX];
     
     AMLayout *centerYLayout = [AMLayout new];
     centerYLayout.attribute = NSLayoutAttributeCenterY;
     centerYLayout.relatedAttribute = centerYLayout.attribute;
+    centerYLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeCenterY
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeCenterY];
     
     AMLayout *widthLayout = [AMLayout new];
     widthLayout.attribute = NSLayoutAttributeWidth;
-    
+    widthLayout.offset = CGRectGetWidth(component.frame);
+
     AMLayout *heightLayout = [AMLayout new];
     heightLayout.attribute = NSLayoutAttributeHeight;
-    
+    heightLayout.offset = CGRectGetHeight(component.frame);
+
     [layoutTypes addObject:centerXLayout];
     [layoutTypes addObject:centerYLayout];
     [layoutTypes addObject:widthLayout];
@@ -303,10 +359,16 @@
     AMLayout* leftLayout = [AMLayout new];
     leftLayout.attribute = NSLayoutAttributeLeft;
     leftLayout.relatedAttribute = leftLayout.attribute;
+    leftLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeLeft
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeLeft];
     
     AMLayout *widthLayout = [AMLayout new];
     widthLayout.attribute = NSLayoutAttributeWidth;
-    
+    widthLayout.offset = CGRectGetWidth(component.frame);
+
     [layoutTypes addObject:leftLayout];
     [layoutTypes addObject:widthLayout];
     
@@ -315,10 +377,16 @@
     AMLayout *topLayout = [AMLayout new];
     topLayout.attribute = NSLayoutAttributeTop;
     topLayout.relatedAttribute = topLayout.attribute;
+    topLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeTop
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeTop];
     
     AMLayout *heightLayout = [AMLayout new];
     heightLayout.attribute = NSLayoutAttributeHeight;
-    
+    heightLayout.offset = CGRectGetHeight(component.frame);
+
     [layoutTypes addObject:topLayout];
     [layoutTypes addObject:heightLayout];
     
@@ -339,14 +407,25 @@
     AMLayout *leftLayout = [AMLayout new];
     leftLayout.attribute = NSLayoutAttributeLeft;
     leftLayout.relatedAttribute = leftLayout.attribute;
-    
+    leftLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeLeft
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeLeft];
+
     AMLayout *rightLayout = [AMLayout new];
     rightLayout.attribute = NSLayoutAttributeRight;
     rightLayout.relatedAttribute = rightLayout.attribute;
-    
+    rightLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeRight
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeRight];
+
     AMLayout *heightLayout = [AMLayout new];
     heightLayout.attribute = NSLayoutAttributeHeight;
-    
+    heightLayout.offset = CGRectGetHeight(component.frame);
+
     [layoutTypes addObject:topOrBottomLayout];
     [layoutTypes addObject:leftLayout];
     [layoutTypes addObject:rightLayout];
@@ -369,14 +448,25 @@
     AMLayout *topLayout = [AMLayout new];
     topLayout.attribute = NSLayoutAttributeTop;
     topLayout.relatedAttribute = topLayout.attribute;
+    topLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeTop
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeTop];
     
     AMLayout *bottomLayout = [AMLayout new];
     bottomLayout.attribute = NSLayoutAttributeBottom;
     bottomLayout.relatedAttribute = bottomLayout.attribute;
+    bottomLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeBottom
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeBottom];
 
     AMLayout *widthLayout = [AMLayout new];
     widthLayout.attribute = NSLayoutAttributeWidth;
-    
+    widthLayout.offset = CGRectGetWidth(component.frame);
+
     [layoutTypes addObject:topLayout];
     [layoutTypes addObject:bottomLayout];
     [layoutTypes addObject:leftOrRightLayout];
@@ -397,18 +487,38 @@
     AMLayout *topLayout = [AMLayout new];
     topLayout.attribute = NSLayoutAttributeTop;
     topLayout.relatedAttribute = topLayout.attribute;
+    topLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeTop
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeTop];
     
     AMLayout *bottomLayout = [AMLayout new];
     bottomLayout.attribute = NSLayoutAttributeBottom;
     bottomLayout.relatedAttribute = bottomLayout.attribute;
+    bottomLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeBottom
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeBottom];
     
     AMLayout *leftLayout = [AMLayout new];
     leftLayout.attribute = NSLayoutAttributeLeft;
     leftLayout.relatedAttribute = leftLayout.attribute;
+    leftLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeLeft
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeLeft];
     
     AMLayout *rightLayout = [AMLayout new];
     rightLayout.attribute = NSLayoutAttributeRight;
     rightLayout.relatedAttribute = rightLayout.attribute;
+    rightLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeRight
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeRight];
 
     [layoutTypes addObject:topLayout];
     [layoutTypes addObject:bottomLayout];
@@ -430,18 +540,38 @@
     AMLayout *topLayout = [AMLayout new];
     topLayout.attribute = NSLayoutAttributeTop;
     topLayout.relatedAttribute = topLayout.attribute;
+    topLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeTop
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeTop];
     
     AMLayout *bottomLayout = [AMLayout new];
     bottomLayout.attribute = NSLayoutAttributeBottom;
     bottomLayout.relatedAttribute = bottomLayout.attribute;
+    bottomLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeBottom
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeBottom];
     
     AMLayout *leftLayout = [AMLayout new];
     leftLayout.attribute = NSLayoutAttributeLeft;
     leftLayout.relatedAttribute = leftLayout.attribute;
+    leftLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeLeft
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeLeft];
     
     AMLayout *rightLayout = [AMLayout new];
     rightLayout.attribute = NSLayoutAttributeRight;
     rightLayout.relatedAttribute = rightLayout.attribute;
+    rightLayout.offset =
+    [component
+     distanceFromAttribute:NSLayoutAttributeRight
+     toComponent:component.parentComponent
+     relatedAttribute:NSLayoutAttributeRight];
     
     [layoutTypes addObject:topLayout];
     [layoutTypes addObject:bottomLayout];

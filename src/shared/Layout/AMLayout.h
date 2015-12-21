@@ -8,12 +8,14 @@
 #import "AppMap.h"
 #import "NSLayoutConstraint+Utilities.h"
 #import "AppMapTypes.h"
+#import "AMComponentAware.h"
 
 @class AMComponent;
 
-@protocol AMViewProvider <NSObject>
+@protocol AMLayoutProvider <NSObject>
 
-- (AMView *)viewWithComponentIdentifier:(NSString *)componentIdentifier;
+- (AMView<AMComponentAware> *)viewWithComponentIdentifier:(NSString *)componentIdentifier;
+- (AMComponent *)componentWithComponentIdentifier:(NSString *)componentIdentifier;
 
 @end
 
@@ -36,10 +38,10 @@
 @property (nonatomic, readonly) BOOL isSizing;
 @property (nonatomic, copy) NSString *viewIdentifier;
 
-@property (nonatomic, weak) id <AMViewProvider> viewProvider;
+@property (nonatomic, weak) id <AMLayoutProvider> layoutProvider;
 
-@property (nonatomic, weak, readonly) AMView *view;
-@property (nonatomic, weak, readonly) AMView *relatedView;
+@property (nonatomic, weak, readonly) AMView<AMComponentAware> *view;
+@property (nonatomic, weak, readonly) AMView<AMComponentAware> *relatedView;
 @property (nonatomic, weak, readonly) AMView *commonAncestorView;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
@@ -50,8 +52,7 @@
 + (BOOL)isHorizontalLayoutType:(NSLayoutAttribute)layoutType;
 + (BOOL)isVerticalLayoutType:(NSLayoutAttribute)layoutType;
 
-- (void)updateLayoutWithFrame:(CGRect)frame
-                  inAnimation:(BOOL)inAnimation;
+- (void)updateLayoutInAnimation:(BOOL)inAnimation;
 - (void)clearLayout;
 - (void)addLayout;
 

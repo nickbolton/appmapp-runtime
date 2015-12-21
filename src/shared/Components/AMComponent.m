@@ -52,6 +52,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 @property (nonatomic, readwrite) NSString *exportedName;
 @property (nonatomic, strong) NSMutableDictionary *behavors;
 @property (nonatomic, readwrite) NSString *linkedComponentIdentifier;
+@property (nonatomic) BOOL ignoreUpdates;
 
 @end
 
@@ -287,9 +288,12 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.alpha = self.alpha;
     component.borderWidth = self.borderWidth;
     component.borderColor = self.borderColor;
+    
+    component.ignoreUpdates = YES;
     component.layoutPreset = self.layoutPreset;
-
     component.frame = self.frame;
+    component.ignoreUpdates = NO;
+    
     NSArray *layoutObjects = [[NSArray alloc] initWithArray:self.layoutObjects copyItems:YES];
     [component setLayoutObjects:layoutObjects clearLayouts:YES customPreset:NO];
 
@@ -477,17 +481,31 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [self setFrame:frame inAnimation:NO];
 }
 
-- (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation {
-    BOOL sizeChanged = (CGSizeEqualToSize(frame.size, self.frame.size) == NO);
+- (void)updateFrame:(CGRect)frame {
     _frame = frame;
     
     for (AMLayout *layoutObject in self.layoutObjects) {
         layoutObject.referenceFrame = frame;
-        [layoutObject updateLayoutWithFrame:frame inAnimation:inAnimation];
+    }
+}
+
+- (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation {
+    BOOL sizeChanged = (CGSizeEqualToSize(frame.size, self.frame.size) == NO);
+    _frame = frame;
+    
+    if (self.ignoreUpdates) {
+        return;
+    }
+    
+    [self clearLayouts];
+    
+    for (AMLayout *layoutObject in self.layoutObjects) {
+        layoutObject.referenceFrame = frame;
+        [layoutObject updateLayoutInAnimation:inAnimation];
     }
     
     if (sizeChanged) {
-//        [self updateChildFrames];
+        [self updateChildFramesInAnimation:inAnimation];
     }
 }
 
@@ -499,10 +517,26 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
+- (void)clearLayouts {
+    
+    for (AMLayout *layoutObject in _layoutObjects) {
+        [layoutObject clearLayout];
+    }
+}
+
 - (void)setLayoutPreset:(AMLayoutPreset)layoutPreset {
     _layoutPreset = layoutPreset;
     _layoutPreset = MAX(0, _layoutPreset);
     _layoutPreset = MIN(AMLayoutPresetCustom, _layoutPreset);
+    
+    if ([self.identifier isEqualToString:@"359D8DC6-ECA1-4D1E-AFAC-7B30181692FD"] &&
+        layoutPreset != AMLayoutPresetFixedSizeNearestCorner) {
+        NSLog(@"ZZZ");
+    }
+    
+    if (self.ignoreUpdates) {
+        return;
+    }
     
     AMLayoutPresetHelper *helper = [AMLayoutPresetHelper new];
     NSArray *layoutObjects = [helper layoutObjectsForComponent:self layoutPreset:_layoutPreset];
@@ -518,10 +552,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
             customPreset:(BOOL)customPreset {
     
     if (clearLayouts) {
-        
-        for (AMLayout *layoutObject in _layoutObjects) {
-            [layoutObject clearLayout];
-        }
+        [self clearLayouts];
     }
     
     _layoutObjects = layoutObjects;
@@ -531,7 +562,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
-- (void)restoreLayoutObjects:(NSArray *)layoutObjects {
+- (void)restoreLayoutObjects:(NSArray *)layoutObjects preset:(AMLayoutPreset)preset {
+    _layoutPreset = preset;
     _layoutObjects = layoutObjects.copy;
 }
 
@@ -882,6 +914,112 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }];
 }
 
+#pragma mark - Distance Helpers
+
+- (CGRect)_convertFrameToComponent:(AMComponent *)targetComponent {
+
+    CGFloat dx = 0.0f;
+    CGFloat dy = 0.0f;
+    
+    AMComponent *parentComponent = self.parentComponent;
+    while (parentComponent != nil) {
+        dx += CGRectGetMinX(parentComponent.frame);
+        dy += CGRectGetMinY(parentComponent.frame);
+        if ([targetComponent isEqualToComponent:parentComponent]) {
+            break;
+        }
+        parentComponent = parentComponent.parentComponent;
+    }
+    
+    CGRect result = CGRectOffset(self.frame, dx, dy);
+    
+    return result;
+}
+
+- (CGFloat)distanceFromAttribute:(NSLayoutAttribute)attribute
+                     toComponent:(AMComponent *)relatedComponent
+                relatedAttribute:(NSLayoutAttribute)relatedAttribute {
+    
+    CGFloat sourcePosition = 0.0f;
+    CGFloat targetPosition = 0.0f;;
+    
+    CGRect frameInContainer;
+    CGRect relatedFrameInContainer;
+    
+    if (relatedComponent != nil) {
+        frameInContainer = [self _convertFrameToComponent:relatedComponent.parentComponent];
+        relatedFrameInContainer = [relatedComponent _convertFrameToComponent:relatedComponent.parentComponent];
+        
+        CGRect containerFrame = relatedComponent.parentComponent.frame;
+        if (relatedComponent.parentComponent == nil) {
+            containerFrame = relatedFrameInContainer;
+        }
+
+        sourcePosition =
+        [self
+         positionForFrame:frameInContainer
+         atAttribute:attribute
+         inContainerFrame:containerFrame];
+        
+        targetPosition =
+        [self
+         positionForFrame:relatedFrameInContainer
+         atAttribute:relatedAttribute
+         inContainerFrame:containerFrame];
+    } else {
+        frameInContainer = self.frame;
+    }
+    
+    switch (attribute) {
+        case NSLayoutAttributeTop:
+        case NSLayoutAttributeLeft:
+        case NSLayoutAttributeCenterX:
+        case NSLayoutAttributeCenterY:
+        default:
+            break;
+    }
+    
+    return sourcePosition - targetPosition;
+}
+
+- (CGFloat)positionForFrame:(CGRect)frame
+                atAttribute:(NSLayoutAttribute)attribute
+           inContainerFrame:(CGRect)containerFrame {
+    
+    CGFloat result = 0.0f;
+    
+    switch (attribute) {
+        case NSLayoutAttributeLeft:
+            result = CGRectGetMinX(frame);
+            break;
+            
+        case NSLayoutAttributeRight:
+            result = CGRectGetMaxX(frame) - CGRectGetWidth(containerFrame);
+            break;
+            
+        case NSLayoutAttributeCenterX:
+            result = CGRectGetMidX(frame) - (CGRectGetWidth(containerFrame) / 2.0f);
+            break;
+            
+        case NSLayoutAttributeTop:
+            result = CGRectGetMinY(frame);
+            break;
+            
+        case NSLayoutAttributeBottom:
+            result = CGRectGetMaxY(frame) - CGRectGetHeight(containerFrame);
+            break;
+            
+        case NSLayoutAttributeCenterY:
+            result = CGRectGetMidY(frame) - (CGRectGetHeight(containerFrame) / 2.0f);
+            break;
+            
+        default:
+            break;
+    }
+    
+    return result;
+}
+
 #pragma mark - Helpers
 
 //- (void)updateProportionalLayouts {
@@ -901,40 +1039,18 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 //    }
 //}
 //
-//- (void)updateChildFrames {
-//    
-//    for (AMComponent *childComponent in self.childComponents) {
-//        [childComponent updateFrame];
-//    }
-//}
-//
-//- (void)updateFrame {
-//    
-////        NSLog(@"startingFrame: %@", NSStringFromCGRect(self.frame));
-////        NSLog(@"parentFrame: %@", NSStringFromCGRect(self.parentComponent.frame));
-//    
+
+- (void)updateChildFramesInAnimation:(BOOL)inAnimation {
+    
+    for (AMComponent *childComponent in self.childComponents) {
+        [childComponent updateFrameInAnimation:inAnimation];
+    }
+}
+
+- (void)updateFrameInAnimation:(BOOL)inAnimation {
 //    CGRect updatedFrame = self.frame;
-//    
-//    for (AMLayout *layout in self.layoutObjects) {
-//        
-//        updatedFrame =
-//        [layout
-//         adjustedFrame:updatedFrame
-//         forComponent:self
-//         scale:self.scale];
-//        
-////                NSLog(@"%@ - %@", NSStringFromClass(layout.class), NSStringFromCGRect(updatedFrame));
-//    }
-//    
-//    updatedFrame = AMPixelAlignedCGRect(updatedFrame);
-////        NSLog(@"endingFrame: %@", NSStringFromCGRect(updatedFrame));
-//    
-//    self.frame = updatedFrame;
-//    
-//    
-//    for (AMComponent *childComponent in self.childComponents) {
-//        [childComponent updateFrame];
-//    }
-//}
+//    [self setFrame:updatedFrame inAnimation:inAnimation];
+    [self updateChildFramesInAnimation:inAnimation];
+}
 
 @end
