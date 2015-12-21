@@ -187,7 +187,7 @@ NSString * kAMDocumentExtension = @"am";
     
     for (AMComponent *component in self.components) {
         
-        NSDictionary *componentDict = [component exportComponent];
+        NSDictionary *componentDict = [component dictionaryRepresentation];
         
         if (componentDict != nil) {
             [components addObject:componentDict];
