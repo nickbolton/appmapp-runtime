@@ -6,7 +6,7 @@
 //  Copyright © 2015 Pixelbleed LLC. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "AppMap.h"
 
 @class AMComponent;
 
