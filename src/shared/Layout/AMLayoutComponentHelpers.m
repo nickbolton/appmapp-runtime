@@ -96,10 +96,10 @@
     CGFloat result = 0.0f;
     
     CGRect frame = component.frame;
-    CGRect relatedFrame = relatedComponent.frame;
+    CGRect commonFrame = commonAncestorComponent.frame;
     
     NSLayoutAttribute proportionalAttribute = [self proportionalAttribute:relatedAttribute];
-    CGFloat relatedValue = [self relatedValueForFrame:relatedFrame attribute:proportionalAttribute];
+    CGFloat relatedValue = [self relatedValueForFrame:commonFrame attribute:proportionalAttribute];
     
     switch (attribute) {
             
