@@ -8,31 +8,10 @@
 #import "AppMap.h"
 #import "AppMapTypes.h"
 
-extern NSString *const kAMComponentIdentifierKey;
-extern NSString *const kAMComponentAttributesKey;
-extern NSString *const kAMComponentClassNameKey;
 extern NSString *const kAMComponentsKey;
 extern NSString *const kAMComponentChildComponentsKey;
 extern NSString *const kAMComponentTopLevelComponentKey;
-extern NSString *const kAMComponentTypeKey;
-
-extern NSString *const kAMComponentNameKey;
-extern NSString *const kAMComponentBehavorKey;
 extern NSString *const kAMComponentClassPrefixKey;
-extern NSString *const kAMComponentLinkedComponentKey;
-extern NSString *const kAMComponentTextDescriptorKey;
-extern NSString *const kAMComponentDuplicateTypeKey;
-extern NSString *const kAMComponentDuplicateSourceKey;
-
-extern NSString *const kAMComponentFrameKey;
-extern NSString *const kAMComponentLayoutObjectsKey;
-extern NSString *const kAMComponentLayoutPresetKey;
-extern NSString *const kAMComponentClippedKey;
-extern NSString *const kAMComponentBackgroundColorKey;
-extern NSString *const kAMComponentBorderWidthKey;
-extern NSString *const kAMComponentBorderColorWidthKey;
-extern NSString *const kAMComponentAlphaKey;
-extern NSString *const kAMComponentCornerRadiusKey;
 
 @class AMComponentBehavior;
 @class AMCompositeTextDescriptor;
@@ -81,6 +60,7 @@ extern NSString *const kAMComponentCornerRadiusKey;
 @property (nonatomic, readonly) BOOL hasProportionalLayout;
 @property (nonatomic, strong) NSArray *layoutObjects;
 @property (nonatomic) AMLayoutPreset layoutPreset;
+@property (nonatomic, readonly) NSArray *dependentRelatedComponents;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)componentWithDictionary:(NSDictionary *)dict;
@@ -102,10 +82,6 @@ extern NSString *const kAMComponentCornerRadiusKey;
 
 - (NSDictionary *)dictionaryRepresentation;
 
-//- (void)updateProportionalLayouts;
-//- (void)resetLayout;
-
-//- (void)updateChildFrames;
 - (void)addChildComponent:(AMComponent *)component;
 - (void)addChildComponents:(NSArray *)components;
 - (void)removeChildComponent:(AMComponent *)component;
@@ -125,5 +101,8 @@ extern NSString *const kAMComponentCornerRadiusKey;
 - (CGFloat)distanceFromAttribute:(NSLayoutAttribute)attribute
                      toComponent:(AMComponent *)relatedComponent
                 relatedAttribute:(NSLayoutAttribute)relatedAttribute;
+
+- (CGRect)convertComponentFrameToAncestorComponent:(AMComponent *)targetComponent;
+- (CGRect)convertAncestorFrame:(CGRect)frame toComponent:(AMComponent *)targetComponent;
 
 @end

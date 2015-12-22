@@ -14,6 +14,7 @@
 #import "AMCompositeTextDescriptor.h"
 #import "AMComponentBehavior.h"
 #import "AMLayout.h"
+#import "AMLayoutComponentHelpers.h"
 
 NSString *const kAMComponentIdentifierKey = @"identifier";
 NSString *const kAMComponentAttributesKey = @"attributes";
@@ -490,6 +491,29 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 #pragma mark - Getters and Setters
 
+- (NSArray *)dependentRelatedComponents {
+    NSMutableArray *result = [NSMutableArray new];
+    [self findDependentRelatedComponentsOfComponent:self fromComponent:self.topLevelComponent result:result];
+    
+    return result;
+}
+
+- (void)findDependentRelatedComponentsOfComponent:(AMComponent *)component
+                                    fromComponent:(AMComponent *)fromComponent
+                                             result:(NSMutableArray *)result {
+    
+    for (AMLayout *layoutObject in fromComponent.layoutObjects) {
+        if ([layoutObject.relatedComponentIdentifier isEqualToString:component.identifier]) {
+            [result addObject:fromComponent];
+            break;
+        }
+    }
+    
+    for (AMComponent *childComponent in fromComponent.childComponents) {
+        [self findDependentRelatedComponentsOfComponent:component fromComponent:childComponent result:result];
+    }
+}
+
 - (BOOL)isEqualToComponent:(AMComponent *)object {
     return
     [self.identifier isEqualToString:object.identifier];
@@ -512,7 +536,10 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation {
-    BOOL sizeChanged = (CGSizeEqualToSize(frame.size, self.frame.size) == NO);
+
+    CGFloat deltaWidth = CGRectGetWidth(frame) - CGRectGetWidth(self.frame);
+    CGFloat deltaHeight = CGRectGetHeight(frame) - CGRectGetHeight(self.frame);
+    
     _frame = frame;
     
     if (self.ignoreUpdates) {
@@ -526,8 +553,61 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         [layoutObject updateLayoutInAnimation:inAnimation];
     }
     
-    if (sizeChanged) {
-        [self updateChildFramesInAnimation:inAnimation];
+    NSMutableSet *dependents = [NSMutableSet new];
+    [dependents addObjectsFromArray:self.childComponents];
+    [dependents addObjectsFromArray:self.dependentRelatedComponents];
+    
+    for (AMComponent *dependentComponent in dependents) {
+                
+        UIEdgeInsets updatedFrameBoundaries;
+        updatedFrameBoundaries.top = CGRectGetMinY(dependentComponent.frame);
+        updatedFrameBoundaries.bottom = CGRectGetMaxY(dependentComponent.frame);
+        updatedFrameBoundaries.left = CGRectGetMinX(dependentComponent.frame);
+        updatedFrameBoundaries.right = CGRectGetMaxX(dependentComponent.frame);
+
+        CGRect originalFrame = dependentComponent.frame;
+        
+        // need to process the bottom and right constraints first
+        NSArray *sortedLayoutObjects =
+        [dependentComponent.layoutObjects sortedArrayUsingComparator:^NSComparisonResult(AMLayout *obj1, AMLayout *obj2) {
+            if (obj1.attribute == NSLayoutAttributeRight || obj1.attribute == NSLayoutAttributeBottom) {
+                return NSOrderedAscending;
+            } else if (obj2.attribute == NSLayoutAttributeRight || obj2.attribute == NSLayoutAttributeBottom) {
+                return NSOrderedDescending;
+            }
+            return NSOrderedSame;
+        }];
+        
+        for (AMLayout *layoutObject in sortedLayoutObjects) {
+            updatedFrameBoundaries =
+            [layoutObject
+             updateProportionalFrameBoundaries:updatedFrameBoundaries
+             basedOnRelatedAttributeWithRelatedSize:frame.size
+             originalFrame:originalFrame];
+        }
+        
+        CGRect updatedFrame;
+        updatedFrame.origin.x += updatedFrameBoundaries.left;
+        updatedFrame.origin.y += updatedFrameBoundaries.top;
+        updatedFrame.size.width  = (updatedFrameBoundaries.right - updatedFrameBoundaries.left);
+        updatedFrame.size.height = (updatedFrameBoundaries.bottom - updatedFrameBoundaries.top);
+        
+        for (AMLayout *layoutObject in dependentComponent.layoutObjects) {
+            if (layoutObject.isProportional == NO) {
+                if (layoutObject.attribute == NSLayoutAttributeWidth) {
+                    updatedFrame.size.width = layoutObject.offset;
+                } else if (layoutObject.attribute == NSLayoutAttributeHeight) {
+                    updatedFrame.size.height = layoutObject.offset;
+                }
+            }
+        }
+        
+//        updatedFrame = AMPixelAlignedCGRect(updatedFrame);
+//        NSLog(@"updatedFrame: %@", NSStringFromCGRect(updatedFrame));
+        
+        if (CGRectEqualToRect(updatedFrame, dependentComponent.frame) == NO) {
+            [dependentComponent setFrame:updatedFrame inAnimation:inAnimation];
+        }
     }
 }
 
@@ -550,11 +630,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     _layoutPreset = layoutPreset;
     _layoutPreset = MAX(0, _layoutPreset);
     _layoutPreset = MIN(AMLayoutPresetCustom, _layoutPreset);
-    
-    if ([self.identifier isEqualToString:@"359D8DC6-ECA1-4D1E-AFAC-7B30181692FD"] &&
-        layoutPreset != AMLayoutPresetFixedSizeNearestCorner) {
-        NSLog(@"ZZZ");
-    }
     
     if (self.ignoreUpdates) {
         return;
@@ -938,7 +1013,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 #pragma mark - Distance Helpers
 
-- (CGRect)_convertFrameToComponent:(AMComponent *)targetComponent {
+- (CGRect)convertComponentFrameToAncestorComponent:(AMComponent *)targetComponent {
 
     CGFloat dx = 0.0f;
     CGFloat dy = 0.0f;
@@ -958,6 +1033,18 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     return result;
 }
 
+- (CGRect)convertAncestorFrame:(CGRect)frame toComponent:(AMComponent *)targetComponent {
+    
+    CGRect referenceFrame = [targetComponent convertComponentFrameToAncestorComponent:self];
+    
+    CGFloat dx = referenceFrame.origin.x - targetComponent.frame.origin.x;
+    CGFloat dy = referenceFrame.origin.y - targetComponent.frame.origin.y;
+
+    CGRect result = CGRectOffset(frame, dx, dy);
+    
+    return result;
+}
+
 - (CGFloat)distanceFromAttribute:(NSLayoutAttribute)attribute
                      toComponent:(AMComponent *)relatedComponent
                 relatedAttribute:(NSLayoutAttribute)relatedAttribute {
@@ -969,8 +1056,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     CGRect relatedFrameInContainer;
     
     if (relatedComponent != nil) {
-        frameInContainer = [self _convertFrameToComponent:relatedComponent.parentComponent];
-        relatedFrameInContainer = [relatedComponent _convertFrameToComponent:relatedComponent.parentComponent];
+        frameInContainer = [self convertComponentFrameToAncestorComponent:relatedComponent.parentComponent];
+        relatedFrameInContainer = [relatedComponent convertComponentFrameToAncestorComponent:relatedComponent.parentComponent];
         
         CGRect containerFrame = relatedComponent.parentComponent.frame;
         if (relatedComponent.parentComponent == nil) {
@@ -1040,39 +1127,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
     
     return result;
-}
-
-#pragma mark - Helpers
-
-//- (void)updateProportionalLayouts {
-//    
-//    for (AMLayout *layout in self.layoutObjects) {
-//        
-//        if (self.parentComponent != nil) {
-//            [layout
-//             updateProportionalValueFromFrame:self.frame
-//             parentFrame:self.parentComponent.frame];
-//            
-//            for (AMComponent *childComponent in self.childComponents) {
-//                
-//                [childComponent updateProportionalLayouts];
-//            }
-//        }
-//    }
-//}
-//
-
-- (void)updateChildFramesInAnimation:(BOOL)inAnimation {
-    
-    for (AMComponent *childComponent in self.childComponents) {
-        [childComponent updateFrameInAnimation:inAnimation];
-    }
-}
-
-- (void)updateFrameInAnimation:(BOOL)inAnimation {
-//    CGRect updatedFrame = self.frame;
-//    [self setFrame:updatedFrame inAnimation:inAnimation];
-    [self updateChildFramesInAnimation:inAnimation];
 }
 
 @end

@@ -17,6 +17,7 @@
 #else
 #import <Cocoa/Cocoa.h>
 #import "NSColor+AppMap.h"
+typedef NSEdgeInsets UIEdgeInsets;
 #endif
 
 #endif

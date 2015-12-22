@@ -31,6 +31,8 @@
 @property (nonatomic) CGFloat offset;
 @property (nonatomic) AMLayoutPriority priority;
 @property (nonatomic) CGRect referenceFrame;
+@property (nonatomic, getter=isProportional) BOOL proportional;
+@property (nonatomic) CGFloat proportionalValue;
 
 @property (nonatomic, strong) NSLayoutConstraint *constraint;
 @property (nonatomic, readonly) BOOL isHorizontal;
@@ -42,7 +44,7 @@
 
 @property (nonatomic, weak, readonly) AMView<AMComponentAware> *view;
 @property (nonatomic, weak, readonly) AMView<AMComponentAware> *relatedView;
-@property (nonatomic, weak, readonly) AMView *commonAncestorView;
+@property (nonatomic, weak, readonly) AMView<AMComponentAware> *commonAncestorView;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)layoutWithDictionary:(NSDictionary *)dict;
@@ -55,5 +57,9 @@
 - (void)updateLayoutInAnimation:(BOOL)inAnimation;
 - (void)clearLayout;
 - (void)addLayout;
+
+- (UIEdgeInsets)updateProportionalFrameBoundaries:(UIEdgeInsets)frameBoundaries
+           basedOnRelatedAttributeWithRelatedSize:(CGSize)relatedSize
+                                    originalFrame:(CGRect)originalFrame;
 
 @end
