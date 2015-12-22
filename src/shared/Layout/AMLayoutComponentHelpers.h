@@ -14,16 +14,13 @@
 
 + (CGFloat)proportionalValueForComponent:(AMComponent *)component
                                attribute:(NSLayoutAttribute)attribute
-                        relatedComponent:(AMComponent *)relatedComponent
-                        relatedAttribute:(NSLayoutAttribute)relatedAttribute
-                 commonAncestorComponent:(AMComponent *)commonAncestorComponent;
+                   proportionalComponent:(AMComponent *)proportionalComponent;
 
 + (CGFloat)relatedValueForFrame:(CGRect)frame attribute:(NSLayoutAttribute)attribute;
 
 + (CGFloat)proportionalOffsetForComponent:(AMComponent *)component
                                 attribute:(NSLayoutAttribute)attribute
-                         relatedComponent:(AMComponent *)relatedComponent
-                         relatedAttribute:(NSLayoutAttribute)relatedAttribute
+                    proportionalComponent:(AMComponent *)proportionalComponent
                         proportionalValue:(CGFloat)proportionalValue;
 
 @end

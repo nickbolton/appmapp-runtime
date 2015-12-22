@@ -388,16 +388,13 @@
 - (AMLayout *)proportionalLayoutForComponent:(AMComponent *)component
                                    attribute:(NSLayoutAttribute)attribute {
     
-    AMComponent *relatedComponent = component.parentComponent;
     AMComponent *commonAncestorComponent = component.parentComponent;
     
     CGFloat proportionalValue =
     [AMLayoutComponentHelpers
      proportionalValueForComponent:component
      attribute:attribute
-     relatedComponent:relatedComponent
-     relatedAttribute:attribute
-     commonAncestorComponent:commonAncestorComponent];
+     proportionalComponent:commonAncestorComponent];
     
 //    CGFloat offset =
 //    [AMLayoutComponentHelpers
@@ -412,6 +409,7 @@
     layoutObject.relatedAttribute = attribute;
     layoutObject.proportional = YES;
     layoutObject.proportionalValue = proportionalValue;
+    layoutObject.proportionalComponentIdentifier = commonAncestorComponent.identifier;
     
     return layoutObject;
 }

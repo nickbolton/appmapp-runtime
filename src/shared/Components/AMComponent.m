@@ -514,9 +514,28 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
+- (BOOL)isEqual:(id)object {
+    if ([object isKindOfClass:[AMComponent class]]) {
+        return [self isEqualToComponent:object];
+    }
+    
+    return NO;
+}
+
+- (BOOL)isEqualTo:(id)object {
+    if ([object isKindOfClass:[AMComponent class]]) {
+        return [self isEqualToComponent:object];
+    }
+    
+    return NO;
+}
+
+- (NSUInteger)hash {
+    return self.identifier.hash;
+}
+
 - (BOOL)isEqualToComponent:(AMComponent *)object {
-    return
-    [self.identifier isEqualToString:object.identifier];
+    return [self.identifier isEqualToString:object.identifier];
 }
 
 - (BOOL)isContainer {
@@ -782,6 +801,15 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 #pragma mark - Public
+
+- (AMLayout *)layoutObjectWithIdentifier:(NSString *)identifier {
+    for (AMLayout *layout in self.layoutObjects) {
+        if ([layout.identifier isEqualToString:identifier]) {
+            return layout;
+        }
+    }
+    return nil;
+}
 
 - (void)addBehavor:(AMComponentBehavior *)behavior {
     

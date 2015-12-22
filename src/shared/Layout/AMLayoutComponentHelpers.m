@@ -89,16 +89,14 @@
 
 + (CGFloat)proportionalValueForComponent:(AMComponent *)component
                                attribute:(NSLayoutAttribute)attribute
-                        relatedComponent:(AMComponent *)relatedComponent
-                        relatedAttribute:(NSLayoutAttribute)relatedAttribute
-                 commonAncestorComponent:(AMComponent *)commonAncestorComponent {
+                   proportionalComponent:(AMComponent *)proportionalComponent {
     
     CGFloat result = 0.0f;
     
     CGRect frame = component.frame;
-    CGRect commonFrame = commonAncestorComponent.frame;
+    CGRect commonFrame = proportionalComponent.frame;
     
-    NSLayoutAttribute proportionalAttribute = [self proportionalAttribute:relatedAttribute];
+    NSLayoutAttribute proportionalAttribute = [self proportionalAttribute:attribute];
     CGFloat relatedValue = [self relatedValueForFrame:commonFrame attribute:proportionalAttribute];
     
     switch (attribute) {
@@ -198,17 +196,16 @@
 
 + (CGFloat)proportionalOffsetForComponent:(AMComponent *)component
                                 attribute:(NSLayoutAttribute)attribute
-                         relatedComponent:(AMComponent *)relatedComponent
-                         relatedAttribute:(NSLayoutAttribute)relatedAttribute
+                    proportionalComponent:(AMComponent *)proportionalComponent
                         proportionalValue:(CGFloat)proportionalValue {
     
     CGFloat result = 0.0f;
     
-    if (component != nil && relatedComponent != nil) {
+    if (component != nil) {
         
-        CGRect relatedFrame = relatedComponent.frame;
+        CGRect relatedFrame = proportionalComponent.frame;
         
-        NSLayoutAttribute proportionalAttribute = [self proportionalAttribute:relatedAttribute];
+        NSLayoutAttribute proportionalAttribute = [self proportionalAttribute:attribute];
         CGFloat relatedValue = [self relatedValueForFrame:relatedFrame attribute:proportionalAttribute];
         
         result = proportionalValue * relatedValue;

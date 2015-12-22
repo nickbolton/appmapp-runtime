@@ -14,6 +14,7 @@ static NSString * kAMLayoutClassNameKey = @"className";
 static NSString * kAMLayoutAttributeKey = @"attribute";
 static NSString * kAMLayoutRelationKey = @"relation";
 static NSString * kAMLayoutMultiplierKey = @"multiplier";
+static NSString * kAMLayoutIdentifierKey = @"identifier";
 static NSString * kAMLayoutComponentIdentifierKey = @"componentIdentifier";
 static NSString * kAMLayoutRelatedComponentIdentifierKey = @"relatedComponentIdentifier";
 static NSString * kAMLayoutCommonAncestorComponentIdentifier = @"commonAncestorComponentIdentifier";
@@ -21,6 +22,7 @@ static NSString * kAMLayoutRelatedAttributeKey = @"relatedAttribute";
 static NSString * kAMLayoutOffsetKey = @"offset";
 static NSString * kAMLayoutPriorityKey = @"priority";
 static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
+static NSString * kAMLayoutProportionalComponentIdentifierKey = @"proportionalComponentIdentifier";
 static NSString * kAMLayoutProportionalKey = @"proportional";
 static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
@@ -29,6 +31,12 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 @property (nonatomic, weak, readwrite) AMView<AMComponentAware> *view;
 @property (nonatomic, weak, readwrite) AMView<AMComponentAware> *relatedView;
 @property (nonatomic, weak, readwrite) AMView<AMComponentAware> *commonAncestorView;
+@property (nonatomic, weak, readwrite) AMView<AMComponentAware> *proportionalView;
+
+@property (nonatomic, weak, readwrite) AMComponent *component;
+@property (nonatomic, weak, readwrite) AMComponent *relatedComponent;
+@property (nonatomic, weak, readwrite) AMComponent *commonAncestorComponent;
+@property (nonatomic, weak, readwrite) AMComponent *proportionalComponent;
 
 @end
 
@@ -44,6 +52,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {
+    [coder encodeObject:self.identifier forKey:kAMLayoutIdentifierKey];
     [coder encodeInteger:self.attribute forKey:kAMLayoutAttributeKey];
     [coder encodeInteger:self.relation forKey:kAMLayoutRelationKey];
     [coder encodeFloat:self.multiplier forKey:kAMLayoutMultiplierKey];
@@ -53,6 +62,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     [coder encodeInteger:self.relatedAttribute forKey:kAMLayoutRelatedAttributeKey];
     [coder encodeFloat:self.offset forKey:kAMLayoutOffsetKey];
     [coder encodeFloat:self.priority forKey:kAMLayoutPriorityKey];
+    [coder encodeObject:self.proportionalComponentIdentifier forKey:kAMLayoutProportionalComponentIdentifierKey];
     [coder encodeBool:self.isProportional forKey:kAMLayoutProportionalKey];
     [coder encodeFloat:self.proportionalValue forKey:kAMLayoutProportionalValueKey];
 #if TARGET_OS_IPHONE
@@ -67,6 +77,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     self = [super init];
     
     if (self != nil) {
+        _identifier = [decoder decodeObjectForKey:kAMLayoutIdentifierKey];
         _attribute = [decoder decodeIntegerForKey:kAMLayoutAttributeKey];
         _relation = [decoder decodeIntegerForKey:kAMLayoutRelationKey];
         _multiplier = [decoder decodeFloatForKey:kAMLayoutMultiplierKey];
@@ -76,6 +87,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
         _relatedAttribute = [decoder decodeIntegerForKey:kAMLayoutRelatedAttributeKey];
         _offset = [decoder decodeFloatForKey:kAMLayoutOffsetKey];
         _priority = [decoder decodeFloatForKey:kAMLayoutPriorityKey];
+        _proportionalComponentIdentifier = [decoder decodeObjectForKey:kAMLayoutProportionalComponentIdentifierKey];
         _proportional = [decoder decodeBoolForKey:kAMLayoutProportionalKey];
         _proportionalValue = [decoder decodeFloatForKey:kAMLayoutProportionalValueKey];
 #if TARGET_OS_IPHONE
@@ -93,6 +105,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     self = [super init];
     
     if (self != nil) {
+        _identifier = dict[kAMLayoutIdentifierKey];
         _attribute = [dict[kAMLayoutAttributeKey] integerValue];
         _relation = [dict[kAMLayoutRelationKey] integerValue];
         _multiplier = [dict[kAMLayoutMultiplierKey] floatValue];
@@ -102,6 +115,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
         _relatedAttribute = [dict[kAMLayoutRelatedAttributeKey] integerValue];
         _offset = [dict[kAMLayoutOffsetKey] floatValue];
         _priority = [dict[kAMLayoutPriorityKey] floatValue];
+        _proportionalComponentIdentifier = dict[kAMLayoutProportionalComponentIdentifierKey];
         _proportional = [dict[kAMLayoutProportionalKey] boolValue];
         _proportionalValue = [dict[kAMLayoutProportionalValueKey] floatValue];
 #if TARGET_OS_IPHONE
@@ -127,6 +141,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     
+    dict[kAMLayoutIdentifierKey] = self.identifier;
     dict[kAMLayoutClassNameKey] = NSStringFromClass(self.class);
     dict[kAMLayoutAttributeKey] = @(self.attribute);
     dict[kAMLayoutRelationKey] = @(self.relation);
@@ -137,6 +152,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     dict[kAMLayoutRelatedAttributeKey] = @(self.relatedAttribute);
     dict[kAMLayoutOffsetKey] = @(self.offset);
     dict[kAMLayoutPriorityKey] = @(self.priority);
+    dict[kAMLayoutProportionalComponentIdentifierKey] = self.proportionalComponentIdentifier;
     dict[kAMLayoutProportionalKey] = @(self.isProportional);
     dict[kAMLayoutProportionalValueKey] = @(self.proportionalValue);
 #if TARGET_OS_IPHONE
@@ -165,16 +181,18 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 - (instancetype)copy {
     
     AMLayout *result = [[self.class alloc] init];
+    result.identifier = self.identifier;
     result.attribute = self.attribute;
     result.relation = self.relation;
     result.multiplier = self.multiplier;
-    result.componentIdentifier = self.commonAncestorComponentIdentifier;
+    result.componentIdentifier = self.componentIdentifier;
     result.relatedComponentIdentifier = self.relatedComponentIdentifier;
     result.commonAncestorComponentIdentifier = self.commonAncestorComponentIdentifier;
     result.relatedAttribute = self.relatedAttribute;
     result.offset = self.offset;
     result.priority = self.priority;
     result.referenceFrame = self.referenceFrame;
+    result.proportionalComponentIdentifier = self.proportionalComponentIdentifier;
     result.proportional = self.isProportional;
     result.proportionalValue = self.proportionalValue;
 
@@ -189,6 +207,15 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
         _viewIdentifier = NSStringFromClass(self.view.class);
     }
     return _viewIdentifier;
+}
+
+- (NSString *)identifier {
+    
+    if (_identifier == nil) {
+        _identifier = [[NSUUID UUID] UUIDString];
+    }
+    
+    return _identifier;
 }
 
 - (void)setPriority:(AMLayoutPriority)priority {
@@ -219,17 +246,60 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 #endif
 }
 
-- (void)setComponentIdentifier:(NSString *)componentIdentifier {
-    _componentIdentifier = componentIdentifier;
-}
+- (void)changeProportional:(BOOL)proportional {
 
-- (void)setRelatedComponentIdentifier:(NSString *)relatedComponentIdentifier {
-    _relatedComponentIdentifier = relatedComponentIdentifier;
+    CGFloat proportionalOffset = [self proportionalOffset];
+    self.proportional = proportional;
+    
+    CGFloat offset = 0.0f;
+    
+    if (proportional) {
+        if (self.proportionalComponentIdentifier.length <= 0) {
+            self.proportionalComponentIdentifier = self.component.parentComponent.identifier;
+        }
+        
+        self.proportionalValue =
+        [AMLayoutComponentHelpers
+         proportionalValueForComponent:self.component
+         attribute:self.attribute
+         proportionalComponent:self.commonAncestorComponent];
+        
+        proportionalOffset = [self proportionalOffset];
+        
+    } else {
+        offset = proportionalOffset;
+    }
+    
+    [self setOffset:offset proportionalOffset:proportionalOffset inAnimation:NO];
 }
 
 #pragma mark - Public
 
-- (AMView *)view {
+- (BOOL)isEqual:(id)object {
+    if ([object isKindOfClass:[AMLayout class]]) {
+        return [self isEqualToLayout:object];
+    }
+    
+    return NO;
+}
+
+- (BOOL)isEqualTo:(id)object {
+    if ([object isKindOfClass:[AMLayout class]]) {
+        return [self isEqualToLayout:object];
+    }
+    
+    return NO;
+}
+
+- (NSUInteger)hash {
+    return self.identifier.hash;
+}
+
+- (BOOL)isEqualToLayout:(AMLayout *)object {
+    return [self.identifier isEqualToString:object.identifier];
+}
+
+- (AMView<AMComponentAware> *)view {
     if (_view == nil) {
         _view = [self.layoutProvider viewWithComponentIdentifier:self.componentIdentifier];
     }
@@ -237,7 +307,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     return _view;
 }
 
-- (AMView *)relatedView {
+- (AMView<AMComponentAware> *)relatedView {
     if (_relatedView == nil && self.attribute != NSLayoutAttributeWidth && self.attribute != NSLayoutAttributeHeight) {
         _relatedView = [self.layoutProvider viewWithComponentIdentifier:self.relatedComponentIdentifier];
     }
@@ -245,12 +315,52 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     return _relatedView;
 }
 
-- (AMView *)commonAncestorView {
+- (AMView<AMComponentAware> *)commonAncestorView {
     if (_commonAncestorView == nil) {
         _commonAncestorView = [self.layoutProvider viewWithComponentIdentifier:self.commonAncestorComponentIdentifier];
     }
     
     return _commonAncestorView;
+}
+
+- (AMView<AMComponentAware> *)proportionalView {
+    if (_proportionalView == nil) {
+        _proportionalView = [self.layoutProvider viewWithComponentIdentifier:self.proportionalComponentIdentifier];
+    }
+    
+    return _proportionalView;
+}
+
+- (AMComponent *)component {
+    if (_component == nil) {
+        _component = [self.layoutProvider componentWithComponentIdentifier:self.componentIdentifier];
+    }
+    
+    return _component;
+}
+
+- (AMComponent *)relatedComponent {
+    if (_relatedComponent == nil) {
+        _relatedComponent = [self.layoutProvider componentWithComponentIdentifier:self.relatedComponentIdentifier];
+    }
+    
+    return _relatedComponent;
+}
+
+- (AMComponent *)commonAncestorComponent {
+    if (_commonAncestorComponent == nil) {
+        _commonAncestorComponent = [self.layoutProvider componentWithComponentIdentifier:self.commonAncestorComponentIdentifier];
+    }
+    
+    return _commonAncestorComponent;
+}
+
+- (AMComponent *)proportionalComponent {
+    if (_proportionalComponent == nil) {
+        _proportionalComponent = [self.layoutProvider componentWithComponentIdentifier:self.proportionalComponentIdentifier];
+    }
+    
+    return _proportionalComponent;
 }
 
 - (BOOL)isSizing {
@@ -336,9 +446,8 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
 //    NSLog(@"update with frame: %@", NSStringFromCGRect(frame));
     
-    AMComponent *component = [self.layoutProvider componentWithComponentIdentifier:self.componentIdentifier];
-    AMComponent *relatedComponent = [self.layoutProvider componentWithComponentIdentifier:self.relatedComponentIdentifier];
-    AMComponent *commonComponent = [self.layoutProvider componentWithComponentIdentifier:self.commonAncestorComponentIdentifier];
+    AMComponent *component = self.component;
+    AMComponent *relatedComponent = self.relatedComponent;
     
     if (component == nil) {
         return;
@@ -353,9 +462,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
         [AMLayoutComponentHelpers
          proportionalValueForComponent:component
          attribute:self.attribute
-         relatedComponent:relatedComponent
-         relatedAttribute:self.relatedAttribute
-         commonAncestorComponent:commonComponent];
+         proportionalComponent:self.proportionalComponent];
 
         proportionalOffset = [self proportionalOffset];
     } else {
@@ -507,15 +614,11 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
     if (self.isProportional) {
 
-        AMComponent *component = self.view.component;
-        AMComponent *relatedComponent = self.relatedView.component;
-
         result =
         [AMLayoutComponentHelpers
-         proportionalOffsetForComponent:component
+         proportionalOffsetForComponent:self.component
          attribute:self.attribute
-         relatedComponent:relatedComponent
-         relatedAttribute:self.relatedAttribute
+         proportionalComponent:self.proportionalComponent
          proportionalValue:self.proportionalValue];
     }
     

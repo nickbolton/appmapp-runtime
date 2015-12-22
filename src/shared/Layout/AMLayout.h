@@ -24,9 +24,11 @@
 @property (nonatomic) NSLayoutAttribute attribute;
 @property (nonatomic) NSLayoutRelation relation;
 @property (nonatomic) CGFloat multiplier;
+@property (nonatomic, copy) NSString *identifier;
 @property (nonatomic, copy) NSString *componentIdentifier;
 @property (nonatomic, copy) NSString *relatedComponentIdentifier;
 @property (nonatomic, copy) NSString *commonAncestorComponentIdentifier;
+@property (nonatomic, copy) NSString *proportionalComponentIdentifier;
 @property (nonatomic) NSLayoutAttribute relatedAttribute;
 @property (nonatomic) CGFloat offset;
 @property (nonatomic) AMLayoutPriority priority;
@@ -45,11 +47,19 @@
 @property (nonatomic, weak, readonly) AMView<AMComponentAware> *view;
 @property (nonatomic, weak, readonly) AMView<AMComponentAware> *relatedView;
 @property (nonatomic, weak, readonly) AMView<AMComponentAware> *commonAncestorView;
+@property (nonatomic, weak, readonly) AMView<AMComponentAware> *proportionalView;
+
+@property (nonatomic, weak, readonly) AMComponent *component;
+@property (nonatomic, weak, readonly) AMComponent *relatedComponent;
+@property (nonatomic, weak, readonly) AMComponent *commonAncestorComponent;
+@property (nonatomic, weak, readonly) AMComponent *proportionalComponent;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)layoutWithDictionary:(NSDictionary *)dict;
 - (NSDictionary *)exportLayout;
 - (NSDictionary *)debuggingDictionary;
+
+- (BOOL)isEqualToLayout:(AMLayout *)object;
 
 + (BOOL)isHorizontalLayoutType:(NSLayoutAttribute)layoutType;
 + (BOOL)isVerticalLayoutType:(NSLayoutAttribute)layoutType;
@@ -57,6 +67,8 @@
 - (void)updateLayoutInAnimation:(BOOL)inAnimation;
 - (void)clearLayout;
 - (void)addLayout;
+
+- (void)changeProportional:(BOOL)proportional;
 
 - (UIEdgeInsets)updateProportionalFrameBoundaries:(UIEdgeInsets)frameBoundaries
            basedOnRelatedAttributeWithRelatedSize:(CGSize)relatedSize

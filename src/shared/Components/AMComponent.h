@@ -15,6 +15,7 @@ extern NSString *const kAMComponentClassPrefixKey;
 
 @class AMComponentBehavior;
 @class AMCompositeTextDescriptor;
+@class AMLayout;
 
 @interface AMComponent : NSObject <NSCoding, NSCopying>
 
@@ -104,5 +105,7 @@ extern NSString *const kAMComponentClassPrefixKey;
 
 - (CGRect)convertComponentFrameToAncestorComponent:(AMComponent *)targetComponent;
 - (CGRect)convertAncestorFrame:(CGRect)frame toComponent:(AMComponent *)targetComponent;
+
+- (AMLayout *)layoutObjectWithIdentifier:(NSString *)identifier;
 
 @end
