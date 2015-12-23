@@ -654,9 +654,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         return;
     }
     
-    AMLayoutPresetHelper *helper = [AMLayoutPresetHelper new];
-    NSArray *layoutObjects = [helper layoutObjectsForComponent:self layoutPreset:_layoutPreset];
-    [self setLayoutObjects:layoutObjects clearLayouts:YES customPreset:NO];
+    if (layoutPreset != AMLayoutPresetCustom) {
+        AMLayoutPresetHelper *helper = [AMLayoutPresetHelper new];
+        NSArray *layoutObjects = [helper layoutObjectsForComponent:self layoutPreset:_layoutPreset];
+        [self setLayoutObjects:layoutObjects clearLayouts:YES customPreset:NO];
+    }
 }
 
 - (void)setLayoutObjects:(NSArray *)layoutObjects {

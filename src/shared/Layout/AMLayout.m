@@ -271,6 +271,8 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     }
     
     [self setOffset:offset proportionalOffset:proportionalOffset inAnimation:NO];
+    
+    self.component.layoutPreset = AMLayoutPresetCustom;
 }
 
 #pragma mark - Public
