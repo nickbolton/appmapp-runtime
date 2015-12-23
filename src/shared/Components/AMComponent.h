@@ -60,6 +60,7 @@ extern NSString *const kAMComponentClassPrefixKey;
 @property (nonatomic) CGRect frame;
 @property (nonatomic, readonly) BOOL hasProportionalLayout;
 @property (nonatomic, strong) NSArray *layoutObjects;
+@property (nonatomic, strong) NSArray *savedLayoutObjects;
 @property (nonatomic) AMLayoutPreset layoutPreset;
 @property (nonatomic, readonly) NSArray *dependentRelatedComponents;
 

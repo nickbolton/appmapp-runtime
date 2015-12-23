@@ -40,6 +40,7 @@ NSString *const kAMComponentBorderColorWidthKey = @"borderColor";
 NSString *const kAMComponentAlphaKey = @"alpha";
 NSString *const kAMComponentCornerRadiusKey = @"cornerRadius";
 NSString *const kAMComponentLayoutObjectsKey = @"layoutObjects";
+NSString *const kAMComponentSavedLayoutObjectsKey = @"savedLayoutObjects";
 NSString *const kAMComponentLayoutPresetKey = @"layoutPreset";
 
 static NSString *const kAMComponentDefaultNamePrefix = @"Container-";
@@ -83,6 +84,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [coder encodeFloat:self.borderWidth forKey:kAMComponentBorderWidthKey];
     [coder encodeInteger:self.layoutPreset forKey:kAMComponentLayoutPresetKey];
     [coder encodeObject:self.layoutObjects forKey:kAMComponentLayoutObjectsKey];
+    [coder encodeObject:self.savedLayoutObjects forKey:kAMComponentSavedLayoutObjectsKey];
     
 #if TARGET_OS_IPHONE
     [coder encodeObject:NSStringFromCGRect(self.frame) forKey:kAMComponentFrameKey];
@@ -115,6 +117,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         _borderColor = [decoder decodeObjectForKey:kAMComponentBorderColorWidthKey];
         _layoutPreset = [decoder decodeIntegerForKey:kAMComponentLayoutPresetKey];
         _layoutObjects = [decoder decodeObjectForKey:kAMComponentLayoutObjectsKey];
+        _savedLayoutObjects = [decoder decodeObjectForKey:kAMComponentSavedLayoutObjectsKey];
 #if TARGET_OS_IPHONE
         _frame = CGRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
 #else
@@ -188,6 +191,19 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         }
         
         _layoutObjects = layoutObjects;
+        
+        // saved layout objects
+        
+        NSMutableArray *savedLayoutObjects = [NSMutableArray array];
+        NSArray *savedLayoutObjectDicts = dict[kAMComponentSavedLayoutObjectsKey];
+        
+        for (NSDictionary *dict in layoutObjectDicts) {
+            
+            AMLayout *layout = [AMLayout layoutWithDictionary:dict];
+            [savedLayoutObjects addObject:layout];
+        }
+        
+        _savedLayoutObjects = savedLayoutObjects;
         
         // behaviors
         
@@ -307,6 +323,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.layoutPreset = self.layoutPreset;
     component.frame = self.frame;
     component.ignoreUpdates = NO;
+    component.savedLayoutObjects = [[NSArray alloc] initWithArray:self.savedLayoutObjects copyItems:YES];
     
     NSArray *layoutObjects = [[NSArray alloc] initWithArray:self.layoutObjects copyItems:YES];
     [component setLayoutObjects:layoutObjects clearLayouts:YES customPreset:NO];
@@ -461,6 +478,15 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     dict[kAMComponentLayoutObjectsKey] = layoutObjectDicts;
 
+    NSMutableArray *savedLayoutObjectDicts = [NSMutableArray array];
+    
+    for (AMLayout *layout in self.savedLayoutObjects) {
+        NSDictionary *dict = [layout exportLayout];
+        [savedLayoutObjectDicts addObject:dict];
+    }
+    
+    dict[kAMComponentSavedLayoutObjectsKey] = savedLayoutObjectDicts;
+
     return dict;
 }
 
@@ -554,11 +580,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
-- (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation {
-
-    CGFloat deltaWidth = CGRectGetWidth(frame) - CGRectGetWidth(self.frame);
-    CGFloat deltaHeight = CGRectGetHeight(frame) - CGRectGetHeight(self.frame);
-    
+- (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation {    
     _frame = frame;
     
     if (self.ignoreUpdates) {
