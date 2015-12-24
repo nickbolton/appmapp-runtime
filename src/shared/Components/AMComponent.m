@@ -341,7 +341,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 - (void)resetIdentifiers:(AMComponent *)component {
     component.identifier = [[NSUUID UUID] UUIDString];
     
-    for (AMLayout *layoutObject in component.layoutObjects) {
+    for (AMLayout *layoutObject in component.allLayoutObjects) {
         layoutObject.componentIdentifier = nil;
         layoutObject.relatedComponentIdentifier = nil;
         layoutObject.commonAncestorComponentIdentifier = nil;
@@ -514,9 +514,9 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 - (void)findDependentRelatedComponentsOfComponent:(AMComponent *)component
                                     fromComponent:(AMComponent *)fromComponent
-                                             result:(NSMutableArray *)result {
+                                           result:(NSMutableArray *)result {
     
-    for (AMLayout *layoutObject in fromComponent.layoutObjects) {
+    for (AMLayout *layoutObject in fromComponent.allLayoutObjects) {
         if ([layoutObject.relatedComponentIdentifier isEqualToString:component.identifier]) {
             [result addObject:fromComponent];
             break;
@@ -563,7 +563,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 - (void)updateFrame:(CGRect)frame {
     _frame = frame;
     
-    for (AMLayout *layoutObject in self.layoutObjects) {
+    for (AMLayout *layoutObject in self.allLayoutObjects) {
         layoutObject.referenceFrame = frame;
     }
 }
@@ -577,7 +577,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     [self clearLayouts];
     
-    for (AMLayout *layoutObject in self.layoutObjects) {
+    for (AMLayout *layoutObject in self.allLayoutObjects) {
         layoutObject.referenceFrame = frame;
         [layoutObject updateLayoutInAnimation:inAnimation];
     }
@@ -621,7 +621,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         updatedFrame.size.width  = (updatedFrameBoundaries.right - updatedFrameBoundaries.left);
         updatedFrame.size.height = (updatedFrameBoundaries.bottom - updatedFrameBoundaries.top);
         
-        for (AMLayout *layoutObject in dependentComponent.layoutObjects) {
+        for (AMLayout *layoutObject in dependentComponent.allLayoutObjects) {
             if (layoutObject.isProportional == NO) {
                 if (layoutObject.attribute == NSLayoutAttributeWidth) {
                     updatedFrame.size.width = layoutObject.offset;
@@ -648,12 +648,23 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
-- (void)clearLayoutComponentWiring {
-    NSMutableArray *layoutObjects = [NSMutableArray new];
-    [layoutObjects addObjectsFromArray:self.defaultLayoutObjects];
-    [layoutObjects addObjectsFromArray:self.layoutObjects];
+- (NSArray *)allLayoutObjects {
+    NSMutableArray *result = [NSMutableArray new];
+    [result addObjectsFromArray:_defaultLayoutObjects];
+    [result addObjectsFromArray:_layoutObjects];
     
-    for (AMLayout *layoutObject in layoutObjects) {
+    return result.copy;
+}
+
+- (void)setDefaultLayoutObjects:(NSArray *)defaultLayoutObjects {
+    _defaultLayoutObjects = defaultLayoutObjects.copy;
+    for (AMLayout *layoutObject in _defaultLayoutObjects) {
+        layoutObject.defaultLayout = YES;
+    }
+}
+
+- (void)clearLayoutComponentWiring {
+    for (AMLayout *layoutObject in self.allLayoutObjects) {
         layoutObject.componentIdentifier = nil;
         layoutObject.relatedComponentIdentifier = nil;
         layoutObject.commonAncestorComponentIdentifier = nil;
@@ -661,8 +672,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (void)clearLayouts {
-    
-    for (AMLayout *layoutObject in _layoutObjects) {
+    for (AMLayout *layoutObject in self.allLayoutObjects) {
         [layoutObject clearLayout];
     }
 }
@@ -826,8 +836,14 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 #pragma mark - Public
 
+- (void)setLayoutObjectsEnabled:(BOOL)enabled {
+    for (AMLayout *layoutObject in self.layoutObjects) {
+        layoutObject.enabled = enabled;
+    }
+}
+
 - (AMLayout *)layoutObjectWithIdentifier:(NSString *)identifier {
-    for (AMLayout *layout in self.layoutObjects) {
+    for (AMLayout *layout in self.allLayoutObjects) {
         if ([layout.identifier isEqualToString:identifier]) {
             return layout;
         }

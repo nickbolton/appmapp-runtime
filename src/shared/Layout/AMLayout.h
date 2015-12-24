@@ -35,6 +35,8 @@
 @property (nonatomic) CGRect referenceFrame;
 @property (nonatomic, getter=isProportional) BOOL proportional;
 @property (nonatomic) CGFloat proportionalValue;
+@property (nonatomic, getter=isEnabled) BOOL enabled;
+@property (nonatomic, getter=isDefaultLayout) BOOL defaultLayout;
 
 @property (nonatomic, strong) NSLayoutConstraint *constraint;
 @property (nonatomic, readonly) BOOL isHorizontal;

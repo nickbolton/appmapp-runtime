@@ -104,7 +104,7 @@ NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeVi
     
     [self clearLayout];
     
-    for (AMLayout *layout in self.component.layoutObjects) {
+    for (AMLayout *layout in self.component.allLayoutObjects) {
         layout.layoutProvider = self.layoutProvider;
         [layout addLayout];
     }
@@ -112,7 +112,7 @@ NSString * const kAMRuntimeViewConstraintsDidChangeNotification = @"kAMRuntimeVi
 
 - (void)clearLayout {
     
-    for (AMLayout *layoutObject in self.component.layoutObjects) {
+    for (AMLayout *layoutObject in self.component.allLayoutObjects) {
         [layoutObject clearLayout];
     }
 }

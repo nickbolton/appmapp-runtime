@@ -11,10 +11,12 @@
 #import "AMLayoutComponentHelpers.h"
 
 static NSString * kAMLayoutClassNameKey = @"className";
+static NSString * kAMLayoutIdentifierKey = @"identifier";
+static NSString * kAMLayoutEnabledKey = @"enabled";
+static NSString * kAMLayoutDefaultLayoutKey = @"defaultLayout";
 static NSString * kAMLayoutAttributeKey = @"attribute";
 static NSString * kAMLayoutRelationKey = @"relation";
 static NSString * kAMLayoutMultiplierKey = @"multiplier";
-static NSString * kAMLayoutIdentifierKey = @"identifier";
 static NSString * kAMLayoutComponentIdentifierKey = @"componentIdentifier";
 static NSString * kAMLayoutRelatedComponentIdentifierKey = @"relatedComponentIdentifier";
 static NSString * kAMLayoutCommonAncestorComponentIdentifier = @"commonAncestorComponentIdentifier";
@@ -47,12 +49,15 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     if (self) {
         self.multiplier = 1.0f;
         self.priority = AMLayoutPriorityRequired;
+        self.enabled = YES;
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeObject:self.identifier forKey:kAMLayoutIdentifierKey];
+    [coder encodeBool:self.isEnabled forKey:kAMLayoutEnabledKey];
+    [coder encodeBool:self.isDefaultLayout forKey:kAMLayoutDefaultLayoutKey];
     [coder encodeInteger:self.attribute forKey:kAMLayoutAttributeKey];
     [coder encodeInteger:self.relation forKey:kAMLayoutRelationKey];
     [coder encodeFloat:self.multiplier forKey:kAMLayoutMultiplierKey];
@@ -78,6 +83,8 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
     if (self != nil) {
         _identifier = [decoder decodeObjectForKey:kAMLayoutIdentifierKey];
+        _enabled = [decoder decodeBoolForKey:kAMLayoutEnabledKey];
+        _defaultLayout = [decoder decodeBoolForKey:kAMLayoutDefaultLayoutKey];
         _attribute = [decoder decodeIntegerForKey:kAMLayoutAttributeKey];
         _relation = [decoder decodeIntegerForKey:kAMLayoutRelationKey];
         _multiplier = [decoder decodeFloatForKey:kAMLayoutMultiplierKey];
@@ -106,6 +113,8 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
     if (self != nil) {
         _identifier = dict[kAMLayoutIdentifierKey];
+        _enabled = [dict[kAMLayoutEnabledKey] boolValue];
+        _defaultLayout = [dict[kAMLayoutDefaultLayoutKey] boolValue];
         _attribute = [dict[kAMLayoutAttributeKey] integerValue];
         _relation = [dict[kAMLayoutRelationKey] integerValue];
         _multiplier = [dict[kAMLayoutMultiplierKey] floatValue];
@@ -141,8 +150,10 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     
-    dict[kAMLayoutIdentifierKey] = self.identifier;
     dict[kAMLayoutClassNameKey] = NSStringFromClass(self.class);
+    dict[kAMLayoutIdentifierKey] = self.identifier;
+    dict[kAMLayoutEnabledKey] = @(self.isEnabled);
+    dict[kAMLayoutDefaultLayoutKey] = @(self.isDefaultLayout);
     dict[kAMLayoutAttributeKey] = @(self.attribute);
     dict[kAMLayoutRelationKey] = @(self.relation);
     dict[kAMLayoutMultiplierKey] = @(self.multiplier);
@@ -182,6 +193,8 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
     AMLayout *result = [[self.class alloc] init];
     result.identifier = self.identifier;
+    result.enabled = self.isEnabled;
+    result.defaultLayout = self.isDefaultLayout;
     result.attribute = self.attribute;
     result.relation = self.relation;
     result.multiplier = self.multiplier;
@@ -236,14 +249,29 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     _commonAncestorView = nil;
 }
 
-- (void)setPriority:(AMLayoutPriority)priority {
-    _priority = priority;
-    self.constraint.priority = priority;
+- (void)layoutViewIfNeeded {
 #if TARGET_OS_IPHONE
     [self.view layoutIfNeeded];
 #else
     [self.view layoutSubtreeIfNeeded];
 #endif
+}
+
+- (void)setPriority:(AMLayoutPriority)priority {
+    _priority = priority;
+    if (self.constraint != nil) {
+        [self clearLayout];
+        [self addLayout];
+        [self layoutViewIfNeeded];
+    }
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    _enabled = enabled;
+    if (self.constraint != nil) {
+        self.constraint.active = enabled;
+        [self layoutViewIfNeeded];
+    }
 }
 
 - (void)setOffset:(CGFloat)offset {
@@ -252,16 +280,14 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 - (void)setOffset:(CGFloat)offset proportionalOffset:(CGFloat)proportionalOffset inAnimation:(BOOL)inAnimation {
     _offset = offset;
-    if (inAnimation) {
-        self.constraint.animator.constant = [self proportionalLayoutOffset];
-    } else {
-        self.constraint.constant = [self proportionalLayoutOffset];
+    if (self.constraint != nil) {
+        if (inAnimation) {
+            self.constraint.animator.constant = [self proportionalLayoutOffset];
+        } else {
+            self.constraint.constant = [self proportionalLayoutOffset];
+        }
+        [self layoutViewIfNeeded];
     }
-#if TARGET_OS_IPHONE
-    [self.view layoutIfNeeded];
-#else
-    [self.view layoutSubtreeIfNeeded];
-#endif
 }
 
 - (void)changeProportional:(BOOL)proportional {
@@ -459,7 +485,6 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 - (void)addLayout {
     [self createConstraintIfNecessary];
-    self.constraint.priority = self.priority;
 }
 
 - (void)updateLayoutInAnimation:(BOOL)inAnimation {
@@ -492,11 +517,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     }
     
     [self setOffset:offset proportionalOffset:proportionalOffset inAnimation:inAnimation];
-#if TARGET_OS_IPHONE
-    [self.view layoutIfNeeded];
-#else
-    [self.view layoutSubtreeIfNeeded];
-#endif
+    [self layoutViewIfNeeded];
 }
 
 - (CGFloat)fixedLayoutOffsetForComponent:(AMComponent *)component
@@ -720,19 +741,26 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
     if (self.view != nil &&
         (self.constraint == nil ||
-         self.constraint.multiplier != self.multiplier)) {
+         self.constraint.multiplier != self.multiplier ||
+         self.constraint.priority != self.priority)) {
             
-        if (self.relatedComponentIdentifier == nil || self.relatedView != nil) {
+        BOOL defaultLayoutOk =
+        self.isDefaultLayout &&
+        (self.relatedComponentIdentifier == nil || self.relatedView != nil);
+            
+        BOOL regularLayoutOk =
+        (self.isDefaultLayout == NO) &&
+        self.relatedComponentIdentifier != nil;
+            
+        if (defaultLayoutOk || regularLayoutOk) {
             self.constraint = [self buildConstraint];
+            self.constraint.priority = self.priority;
+            self.constraint.active = self.isEnabled;
 
             [self deactivatePreviousConstraints];
             
             [self.commonAncestorView addConstraint:self.constraint];
-#if TARGET_OS_IPHONE
-            [self.view layoutIfNeeded];
-#else
-            [self.view layoutSubtreeIfNeeded];
-#endif
+            [self layoutViewIfNeeded];
             
 #if DEBUG
             self.constraint.identifier =

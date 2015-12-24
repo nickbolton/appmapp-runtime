@@ -59,6 +59,7 @@ extern NSString *const kAMComponentClassPrefixKey;
 @property (nonatomic, strong) AMColor *backgroundColor;
 @property (nonatomic) CGRect frame;
 @property (nonatomic, readonly) BOOL hasProportionalLayout;
+@property (nonatomic, readonly) NSArray *allLayoutObjects;
 @property (nonatomic, strong) NSArray *layoutObjects;
 @property (nonatomic, strong) NSArray *defaultLayoutObjects;
 @property (nonatomic) AMLayoutPreset layoutPreset;
@@ -73,6 +74,7 @@ extern NSString *const kAMComponentClassPrefixKey;
 - (instancetype)duplicate;
 
 - (void)clearLayoutComponentWiring;
+- (void)setLayoutObjectsEnabled:(BOOL)enabled;
 
 - (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation;
 - (void)updateFrame:(CGRect)frame;

@@ -36,11 +36,7 @@
 #pragma mark - Getters and Setters
 
 - (void)setComponent:(AMComponent *)component forView:(AMView<AMRuntimeView> *)view {
-    
-    for (AMLayout *layout in component.layoutObjects) {
-#warning TODO setup view provider
-    }
-    
+
     if (component.layoutObjects.count <= 0) {
         
         AMLayoutPresetHelper *presetHelper = [AMLayoutPresetHelper new];
@@ -67,7 +63,7 @@
 
 - (void)clearConstraints:(AMView<AMRuntimeView> *)view {
     
-    for (AMLayout *layoutObject in view.component.layoutObjects) {
+    for (AMLayout *layoutObject in view.component.allLayoutObjects) {
         [layoutObject clearLayout];
     }
     
@@ -90,7 +86,7 @@
 
 - (void)updateConstraintsFromComponent:(AMView<AMRuntimeView> *)view {
     
-    for (AMLayout *layoutObject in view.component.layoutObjects) {
+    for (AMLayout *layoutObject in view.component.allLayoutObjects) {
         [layoutObject updateLayoutInAnimation:NO];
 #if DEBUG
         layoutObject.viewIdentifier = view.component.name;
