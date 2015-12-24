@@ -40,7 +40,7 @@ NSString *const kAMComponentBorderColorWidthKey = @"borderColor";
 NSString *const kAMComponentAlphaKey = @"alpha";
 NSString *const kAMComponentCornerRadiusKey = @"cornerRadius";
 NSString *const kAMComponentLayoutObjectsKey = @"layoutObjects";
-NSString *const kAMComponentSavedLayoutObjectsKey = @"savedLayoutObjects";
+NSString *const kAMComponentDefaultLayoutObjectsKey = @"defaultLayoutObjects";
 NSString *const kAMComponentLayoutPresetKey = @"layoutPreset";
 
 static NSString *const kAMComponentDefaultNamePrefix = @"Container-";
@@ -84,7 +84,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [coder encodeFloat:self.borderWidth forKey:kAMComponentBorderWidthKey];
     [coder encodeInteger:self.layoutPreset forKey:kAMComponentLayoutPresetKey];
     [coder encodeObject:self.layoutObjects forKey:kAMComponentLayoutObjectsKey];
-    [coder encodeObject:self.savedLayoutObjects forKey:kAMComponentSavedLayoutObjectsKey];
+    [coder encodeObject:self.defaultLayoutObjects forKey:kAMComponentDefaultLayoutObjectsKey];
     
 #if TARGET_OS_IPHONE
     [coder encodeObject:NSStringFromCGRect(self.frame) forKey:kAMComponentFrameKey];
@@ -117,7 +117,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         _borderColor = [decoder decodeObjectForKey:kAMComponentBorderColorWidthKey];
         _layoutPreset = [decoder decodeIntegerForKey:kAMComponentLayoutPresetKey];
         _layoutObjects = [decoder decodeObjectForKey:kAMComponentLayoutObjectsKey];
-        _savedLayoutObjects = [decoder decodeObjectForKey:kAMComponentSavedLayoutObjectsKey];
+        _defaultLayoutObjects = [decoder decodeObjectForKey:kAMComponentDefaultLayoutObjectsKey];
 #if TARGET_OS_IPHONE
         _frame = CGRectFromString([decoder decodeObjectForKey:kAMComponentFrameKey]);
 #else
@@ -138,6 +138,19 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
     
     return self;
+}
+
+- (NSArray *)parseLayoutObjects:(NSDictionary *)dict withKey:(NSString *)key {
+    NSMutableArray *layoutObjects = [NSMutableArray array];
+    NSArray *layoutObjectDicts = dict[key];
+    
+    for (NSDictionary *dict in layoutObjectDicts) {
+        
+        AMLayout *layout = [AMLayout layoutWithDictionary:dict];
+        [layoutObjects addObject:layout];
+    }
+
+    return layoutObjects.copy;
 }
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict {
@@ -181,29 +194,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         
         // layout objects
         
-        NSMutableArray *layoutObjects = [NSMutableArray array];
-        NSArray *layoutObjectDicts = dict[kAMComponentLayoutObjectsKey];
-        
-        for (NSDictionary *dict in layoutObjectDicts) {
-            
-            AMLayout *layout = [AMLayout layoutWithDictionary:dict];
-            [layoutObjects addObject:layout];
-        }
-        
-        _layoutObjects = layoutObjects;
-        
-        // saved layout objects
-        
-        NSMutableArray *savedLayoutObjects = [NSMutableArray array];
-        NSArray *savedLayoutObjectDicts = dict[kAMComponentSavedLayoutObjectsKey];
-        
-        for (NSDictionary *dict in layoutObjectDicts) {
-            
-            AMLayout *layout = [AMLayout layoutWithDictionary:dict];
-            [savedLayoutObjects addObject:layout];
-        }
-        
-        _savedLayoutObjects = savedLayoutObjects;
+        _layoutObjects = [self parseLayoutObjects:dict withKey:kAMComponentLayoutObjectsKey];
+        _defaultLayoutObjects = [self parseLayoutObjects:dict withKey:kAMComponentDefaultLayoutObjectsKey];
         
         // behaviors
         
@@ -323,7 +315,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.layoutPreset = self.layoutPreset;
     component.frame = self.frame;
     component.ignoreUpdates = NO;
-    component.savedLayoutObjects = [[NSArray alloc] initWithArray:self.savedLayoutObjects copyItems:YES];
+    component.defaultLayoutObjects = [[NSArray alloc] initWithArray:self.defaultLayoutObjects copyItems:YES];
     
     NSArray *layoutObjects = [[NSArray alloc] initWithArray:self.layoutObjects copyItems:YES];
     [component setLayoutObjects:layoutObjects clearLayouts:YES customPreset:NO];
@@ -413,6 +405,17 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     return dict;
 }
 
+- (NSArray *)layoutObjectsDictionaries:(NSArray *)layoutObjects {
+    NSMutableArray *layoutObjectDicts = [NSMutableArray array];
+    
+    for (AMLayout *layout in layoutObjects) {
+        NSDictionary *dict = [layout exportLayout];
+        [layoutObjectDicts addObject:dict];
+    }
+    
+    return layoutObjectDicts.copy;
+}
+
 - (NSDictionary *)dictionaryRepresentation {
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
@@ -469,23 +472,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     dict[kAMComponentFrameKey] = NSStringFromRect(self.frame);
 #endif
     
-    NSMutableArray *layoutObjectDicts = [NSMutableArray array];
-    
-    for (AMLayout *layout in self.layoutObjects) {
-        NSDictionary *dict = [layout exportLayout];
-        [layoutObjectDicts addObject:dict];
-    }
-    
-    dict[kAMComponentLayoutObjectsKey] = layoutObjectDicts;
-
-    NSMutableArray *savedLayoutObjectDicts = [NSMutableArray array];
-    
-    for (AMLayout *layout in self.savedLayoutObjects) {
-        NSDictionary *dict = [layout exportLayout];
-        [savedLayoutObjectDicts addObject:dict];
-    }
-    
-    dict[kAMComponentSavedLayoutObjectsKey] = savedLayoutObjectDicts;
+    dict[kAMComponentLayoutObjectsKey] = [self layoutObjectsDictionaries:self.layoutObjects];
+    dict[kAMComponentDefaultLayoutObjectsKey] = [self layoutObjectsDictionaries:self.defaultLayoutObjects];
 
     return dict;
 }
