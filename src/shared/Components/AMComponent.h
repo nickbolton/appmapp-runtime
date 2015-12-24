@@ -72,6 +72,8 @@ extern NSString *const kAMComponentClassPrefixKey;
 - (instancetype)copyForPasting;
 - (instancetype)duplicate;
 
+- (void)clearLayoutComponentWiring;
+
 - (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation;
 - (void)updateFrame:(CGRect)frame;
 

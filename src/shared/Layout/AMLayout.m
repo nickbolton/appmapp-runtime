@@ -218,6 +218,24 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     return _identifier;
 }
 
+- (void)setComponentIdentifier:(NSString *)componentIdentifier {
+    _componentIdentifier = componentIdentifier;
+    _component = nil;
+    _view = nil;
+}
+
+- (void)setRelatedComponentIdentifier:(NSString *)relatedComponentIdentifier {
+    _relatedComponentIdentifier = relatedComponentIdentifier;
+    _relatedComponent = nil;
+    _relatedView = nil;
+}
+
+- (void)setCommonAncestorComponentIdentifier:(NSString *)commonAncestorComponentIdentifier {
+    _commonAncestorComponentIdentifier = commonAncestorComponentIdentifier;
+    _commonAncestorComponent = nil;
+    _commonAncestorView = nil;
+}
+
 - (void)setPriority:(AMLayoutPriority)priority {
     _priority = priority;
     self.constraint.priority = priority;
@@ -303,7 +321,9 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 - (AMView<AMComponentAware> *)view {
     if (_view == nil) {
-        _view = [self.layoutProvider viewWithComponentIdentifier:self.componentIdentifier];
+        if (self.componentIdentifier != nil) {
+            _view = [self.layoutProvider viewWithComponentIdentifier:self.componentIdentifier];
+        }
     }
     
     return _view;

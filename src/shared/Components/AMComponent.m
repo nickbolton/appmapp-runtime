@@ -648,6 +648,18 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
+- (void)clearLayoutComponentWiring {
+    NSMutableArray *layoutObjects = [NSMutableArray new];
+    [layoutObjects addObjectsFromArray:self.defaultLayoutObjects];
+    [layoutObjects addObjectsFromArray:self.layoutObjects];
+    
+    for (AMLayout *layoutObject in layoutObjects) {
+        layoutObject.componentIdentifier = nil;
+        layoutObject.relatedComponentIdentifier = nil;
+        layoutObject.commonAncestorComponentIdentifier = nil;
+    }
+}
+
 - (void)clearLayouts {
     
     for (AMLayout *layoutObject in _layoutObjects) {
