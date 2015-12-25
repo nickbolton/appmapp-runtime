@@ -811,104 +811,169 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
      constant:offset];
 }
 
-- (UIEdgeInsets)updateProportionalFrameBoundaries:(UIEdgeInsets)frameBoundaries
-           basedOnRelatedAttributeWithRelatedSize:(CGSize)relatedSize
-                                    originalFrame:(CGRect)originalFrame {
+- (CGRect)updateFrame:(CGRect)frame
+basedOnRelatedAttributeWithRelatedSize:(CGSize)relatedSize
+        originalFrame:(CGRect)originalFrame
+     allLayoutObjects:(NSArray *)allLayoutObjects {
 
-    if (self.isProportional) {
-        switch (self.relatedAttribute) {
-            case NSLayoutAttributeTop:
-                return [self updateProportionalFrameBoundaries:frameBoundaries basedOnRelatedTopAttributeWithRelatedSize:relatedSize originalFrame:originalFrame];
-                break;
-                
-            case NSLayoutAttributeLeft:
-                return [self updateProportionalFrameBoundaries:frameBoundaries basedOnRelatedLeftAttributeWithRelatedSize:relatedSize originalFrame:originalFrame];
-                break;
-                
-            case NSLayoutAttributeBottom:
-                return [self updateProportionalFrameBoundaries:frameBoundaries basedOnRelatedBottomAttributeWithRelatedSize:relatedSize originalFrame:originalFrame];
-                break;
-                
-            case NSLayoutAttributeRight:
-                return [self updateProportionalFrameBoundaries:frameBoundaries basedOnRelatedRightAttributeWithRelatedSize:relatedSize originalFrame:originalFrame];
-                break;
-                
-            case NSLayoutAttributeCenterY:
-                return [self updateProportionalFrameBoundaries:frameBoundaries basedOnRelatedCenterYAttributeWithRelatedSize:relatedSize originalFrame:originalFrame];
-                break;
-                
-            case NSLayoutAttributeCenterX:
-                return [self updateProportionalFrameBoundaries:frameBoundaries basedOnRelatedCenterXAttributeWithRelatedSize:relatedSize originalFrame:originalFrame];
-                break;
-    
-            default:
-                break;
+    switch (self.relatedAttribute) {
+        case NSLayoutAttributeTop:
+            return [self updateFrame:frame basedOnRelatedTopAttributeWithRelatedSize:relatedSize originalFrame:originalFrame allLayoutObjects:allLayoutObjects];
+            break;
+            
+        case NSLayoutAttributeLeft:
+            return [self updateFrame:frame basedOnRelatedLeftAttributeWithRelatedSize:relatedSize originalFrame:originalFrame allLayoutObjects:allLayoutObjects];
+            break;
+            
+        case NSLayoutAttributeBottom:
+            return [self updateFrame:frame basedOnRelatedBottomAttributeWithRelatedSize:relatedSize originalFrame:originalFrame allLayoutObjects:allLayoutObjects];
+            break;
+            
+        case NSLayoutAttributeRight:
+            return [self updateFrame:frame basedOnRelatedRightAttributeWithRelatedSize:relatedSize originalFrame:originalFrame allLayoutObjects:allLayoutObjects];
+            break;
+            
+        case NSLayoutAttributeCenterY:
+            return [self updateFrame:frame basedOnRelatedCenterYAttributeWithRelatedSize:relatedSize originalFrame:originalFrame allLayoutObjects:allLayoutObjects];
+            break;
+            
+        case NSLayoutAttributeCenterX:
+            return [self updateFrame:frame basedOnRelatedCenterXAttributeWithRelatedSize:relatedSize originalFrame:originalFrame allLayoutObjects:allLayoutObjects];
+            break;
+            
+        default:
+            break;
+    }
+
+    return frame;
+}
+
+- (BOOL)hasLeftLayoutObject:(NSArray *)layoutObjects {
+    for (AMLayout *layoutObject in layoutObjects) {
+        if (layoutObject.attribute == NSLayoutAttributeLeft) {
+            return YES;
         }
     }
-    return frameBoundaries;
+    
+    return NO;
 }
 
-- (UIEdgeInsets)updateProportionalFrameBoundaries:(UIEdgeInsets)frameBoundaries
-        basedOnRelatedTopAttributeWithRelatedSize:(CGSize)relatedSize
-                                    originalFrame:(CGRect)originalFrame {
-
-    UIEdgeInsets result = frameBoundaries;
-    result.top = self.proportionalValue * relatedSize.height;
-
-    return result;
+- (BOOL)hasTopLayoutObject:(NSArray *)layoutObjects {
+    for (AMLayout *layoutObject in layoutObjects) {
+        if (layoutObject.attribute == NSLayoutAttributeTop) {
+            return YES;
+        }
+    }
+    
+    return NO;
 }
 
-- (UIEdgeInsets)updateProportionalFrameBoundaries:(UIEdgeInsets)frameBoundaries
-     basedOnRelatedBottomAttributeWithRelatedSize:(CGSize)relatedSize
-                                    originalFrame:(CGRect)originalFrame {
-
-    UIEdgeInsets result = frameBoundaries;
-    CGFloat height = CGRectGetHeight(originalFrame);
-    result.bottom = self.proportionalValue * relatedSize.height;
-    result.top = result.bottom - height;
-    return result;
-}
-
-- (UIEdgeInsets)updateProportionalFrameBoundaries:(UIEdgeInsets)frameBoundaries
-       basedOnRelatedLeftAttributeWithRelatedSize:(CGSize)relatedSize
-                                    originalFrame:(CGRect)originalFrame {
-
-    UIEdgeInsets result = frameBoundaries;
-    result.left = self.proportionalValue * relatedSize.width;
+- (CGRect)updateFrame:(CGRect)frame
+basedOnRelatedTopAttributeWithRelatedSize:(CGSize)relatedSize
+        originalFrame:(CGRect)originalFrame
+     allLayoutObjects:(NSArray *)allLayoutObjects {
+    
+    CGRect result = frame;
+    result.origin.y = self.offset;
+    
+    if (self.isProportional) {
+        result.origin.y += self.proportionalValue * relatedSize.height;
+    }
     
     return result;
 }
 
-- (UIEdgeInsets)updateProportionalFrameBoundaries:(UIEdgeInsets)frameBoundaries
-      basedOnRelatedRightAttributeWithRelatedSize:(CGSize)relatedSize
-                                    originalFrame:(CGRect)originalFrame {
-
-    UIEdgeInsets result = frameBoundaries;
-    CGFloat width = CGRectGetWidth(originalFrame);
-    result.right = self.proportionalValue * relatedSize.width;
-    result.left = result.right - width;
-
-    return result;
-}
-
-- (UIEdgeInsets)updateProportionalFrameBoundaries:(UIEdgeInsets)frameBoundaries
-    basedOnRelatedCenterYAttributeWithRelatedSize:(CGSize)relatedSize
-                                    originalFrame:(CGRect)originalFrame {
-
-    UIEdgeInsets result = frameBoundaries;
-    result.top =
-    (self.proportionalValue * relatedSize.height) - (CGRectGetHeight(originalFrame) / 2.0f);
+- (CGRect)updateFrame:(CGRect)frame
+basedOnRelatedBottomAttributeWithRelatedSize:(CGSize)relatedSize
+        originalFrame:(CGRect)originalFrame
+     allLayoutObjects:(NSArray *)allLayoutObjects {
+    
+    CGRect result = frame;
+    CGFloat bottomMargin = self.offset;
+    
+    if (self.isProportional) {
+        bottomMargin -= self.proportionalValue * relatedSize.height;
+    }
+    
+    CGFloat maxY = relatedSize.height + bottomMargin;
+    
+    if ([self hasTopLayoutObject:allLayoutObjects]) {
+        result.size.height = MAX(0.0f, maxY - CGRectGetMinY(result));
+    } else {
+        result.origin.y = maxY - CGRectGetHeight(result);
+    }
     
     return result;
 }
 
-- (UIEdgeInsets)updateProportionalFrameBoundaries:(UIEdgeInsets)frameBoundaries
-    basedOnRelatedCenterXAttributeWithRelatedSize:(CGSize)relatedSize
-                                    originalFrame:(CGRect)originalFrame {
+- (CGRect)updateFrame:(CGRect)frame
+basedOnRelatedLeftAttributeWithRelatedSize:(CGSize)relatedSize
+        originalFrame:(CGRect)originalFrame
+     allLayoutObjects:(NSArray *)allLayoutObjects {
+    
+    CGRect result = frame;
+    result.origin.x = self.offset;
+    
+    if (self.isProportional) {
+        result.origin.x += self.proportionalValue * relatedSize.width;
+    }
+    
+    return result;
+}
 
-    UIEdgeInsets result = frameBoundaries;
-    result.left =
-    (self.proportionalValue * relatedSize.width) - (CGRectGetWidth(originalFrame) / 2.0f);
+- (CGRect)updateFrame:(CGRect)frame
+basedOnRelatedRightAttributeWithRelatedSize:(CGSize)relatedSize
+        originalFrame:(CGRect)originalFrame
+     allLayoutObjects:(NSArray *)allLayoutObjects {
+    
+    CGRect result = frame;
+    CGFloat rightMargin = self.offset;
+    
+    if (self.isProportional) {
+        rightMargin -= self.proportionalValue * relatedSize.width;
+    }
+    
+    CGFloat maxX = relatedSize.width + rightMargin;
+    
+    if ([self hasLeftLayoutObject:allLayoutObjects]) {
+        result.size.width = MAX(0.0f, maxX - CGRectGetMinX(result));
+    } else {
+        result.origin.x = maxX - CGRectGetWidth(result);
+    }
+    
+    return result;
+}
+
+- (CGRect)updateFrame:(CGRect)frame
+basedOnRelatedCenterYAttributeWithRelatedSize:(CGSize)relatedSize
+        originalFrame:(CGRect)originalFrame
+     allLayoutObjects:(NSArray *)allLayoutObjects {
+    
+    CGRect result = frame;
+    result.origin.y = self.offset;
+    
+    if (self.isProportional) {
+        result.origin.y += (relatedSize.height / 2.0f) - self.proportionalValue * relatedSize.height - (CGRectGetHeight(originalFrame) / 2.0f);
+    } else {
+        result.origin.y += (relatedSize.height - CGRectGetHeight(originalFrame)) / 2.0f;
+    }
+    
+    return result;
+}
+
+- (CGRect)updateFrame:(CGRect)frame
+basedOnRelatedCenterXAttributeWithRelatedSize:(CGSize)relatedSize
+        originalFrame:(CGRect)originalFrame
+     allLayoutObjects:(NSArray *)allLayoutObjects {
+    
+    CGRect result = frame;
+    result.origin.x = self.offset;
+    
+    if (self.isProportional) {
+        result.origin.x += (relatedSize.width / 2.0f) - self.proportionalValue * relatedSize.width - (CGRectGetWidth(originalFrame) / 2.0f);
+    } else {
+        result.origin.x += (relatedSize.width - CGRectGetWidth(originalFrame)) / 2.0f;
+    }
     
     return result;
 }

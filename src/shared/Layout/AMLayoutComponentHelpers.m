@@ -110,19 +110,19 @@
             break;
             
         case NSLayoutAttributeBottom:
-            result = CGRectGetMaxY(frame) / relatedValue;
+            result = (relatedValue - CGRectGetMaxY(frame)) / relatedValue;
             break;
             
         case NSLayoutAttributeRight:
-            result = CGRectGetMaxX(frame) / relatedValue;
+            result = (relatedValue - CGRectGetMaxX(frame)) / relatedValue;
             break;
             
         case NSLayoutAttributeCenterY:
-            result = CGRectGetMidY(frame) / relatedValue;
+            result = (relatedValue/2.0f - CGRectGetMidY(frame)) / relatedValue;
             break;
             
         case NSLayoutAttributeCenterX:
-            result = CGRectGetMidX(frame) / relatedValue;
+            result = (relatedValue/2.0f - CGRectGetMidX(frame)) / relatedValue;
             break;
             
         case NSLayoutAttributeHeight:
@@ -211,9 +211,9 @@
         result = proportionalValue * relatedValue;
         
         if (attribute == NSLayoutAttributeRight || attribute == NSLayoutAttributeBottom) {
-            result = result - relatedValue;
+            result = relatedValue - result;
         } else if (attribute == NSLayoutAttributeCenterX || attribute == NSLayoutAttributeCenterY) {
-            result = result - relatedValue/2.0f;
+            result = relatedValue/2.0f - result;
         }
     }
     

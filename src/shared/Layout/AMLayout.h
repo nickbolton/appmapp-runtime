@@ -72,8 +72,9 @@
 
 - (void)changeProportional:(BOOL)proportional;
 
-- (UIEdgeInsets)updateProportionalFrameBoundaries:(UIEdgeInsets)frameBoundaries
-           basedOnRelatedAttributeWithRelatedSize:(CGSize)relatedSize
-                                    originalFrame:(CGRect)originalFrame;
+- (CGRect)updateFrame:(CGRect)frame
+basedOnRelatedAttributeWithRelatedSize:(CGSize)relatedSize
+        originalFrame:(CGRect)originalFrame
+     allLayoutObjects:(NSArray *)allLayoutObjects;
 
 @end

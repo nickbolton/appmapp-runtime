@@ -568,7 +568,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
-- (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation {    
+- (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation {
+    [self setFrame:frame updatePreset:YES inAnimation:inAnimation];
+}
+
+- (void)setFrame:(CGRect)frame updatePreset:(BOOL)updatePreset inAnimation:(BOOL)inAnimation {
     _frame = frame;
     
     if (self.ignoreUpdates) {
@@ -576,6 +580,10 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
     
     [self clearLayouts];
+    
+    if (updatePreset && self.isTopLevelComponent == NO && self.layoutPreset != AMLayoutPresetCustom) {
+        [self updateLayoutObjectsForPreset];
+    }
     
     for (AMLayout *layoutObject in self.allLayoutObjects) {
         layoutObject.referenceFrame = frame;
@@ -587,15 +595,10 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [dependents addObjectsFromArray:self.dependentRelatedComponents];
     
     for (AMComponent *dependentComponent in dependents) {
-                
-        UIEdgeInsets updatedFrameBoundaries;
-        updatedFrameBoundaries.top = CGRectGetMinY(dependentComponent.frame);
-        updatedFrameBoundaries.bottom = CGRectGetMaxY(dependentComponent.frame);
-        updatedFrameBoundaries.left = CGRectGetMinX(dependentComponent.frame);
-        updatedFrameBoundaries.right = CGRectGetMaxX(dependentComponent.frame);
-
-        CGRect originalFrame = dependentComponent.frame;
         
+        CGRect updatedFrame = dependentComponent.frame;
+        CGRect originalFrame = dependentComponent.frame;
+
         // need to process the bottom and right constraints first
         NSArray *sortedLayoutObjects =
         [dependentComponent.layoutObjects sortedArrayUsingComparator:^NSComparisonResult(AMLayout *obj1, AMLayout *obj2) {
@@ -606,22 +609,17 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
             }
             return NSOrderedSame;
         }];
-        
+
         for (AMLayout *layoutObject in sortedLayoutObjects) {
-            updatedFrameBoundaries =
+            updatedFrame =
             [layoutObject
-             updateProportionalFrameBoundaries:updatedFrameBoundaries
+             updateFrame:updatedFrame
              basedOnRelatedAttributeWithRelatedSize:frame.size
-             originalFrame:originalFrame];
+             originalFrame:originalFrame
+             allLayoutObjects:sortedLayoutObjects];
         }
-        
-        CGRect updatedFrame;
-        updatedFrame.origin.x += updatedFrameBoundaries.left;
-        updatedFrame.origin.y += updatedFrameBoundaries.top;
-        updatedFrame.size.width  = (updatedFrameBoundaries.right - updatedFrameBoundaries.left);
-        updatedFrame.size.height = (updatedFrameBoundaries.bottom - updatedFrameBoundaries.top);
-        
-        for (AMLayout *layoutObject in dependentComponent.allLayoutObjects) {
+                
+        for (AMLayout *layoutObject in sortedLayoutObjects) {
             if (layoutObject.isProportional == NO) {
                 if (layoutObject.attribute == NSLayoutAttributeWidth) {
                     updatedFrame.size.width = layoutObject.offset;
@@ -632,10 +630,14 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         }
         
 //        updatedFrame = AMPixelAlignedCGRect(updatedFrame);
+//        NSLog(@"originalFrame: %@", NSStringFromCGRect(originalFrame));
 //        NSLog(@"updatedFrame: %@", NSStringFromCGRect(updatedFrame));
         
         if (CGRectEqualToRect(updatedFrame, dependentComponent.frame) == NO) {
-            [dependentComponent setFrame:updatedFrame inAnimation:inAnimation];
+            [dependentComponent
+             setFrame:updatedFrame
+             updatePreset:NO
+             inAnimation:inAnimation];
         }
     }
 }
@@ -685,10 +687,14 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     if (self.ignoreUpdates) {
         return;
     }
-    
-    if (layoutPreset != AMLayoutPresetCustom) {
+
+    [self updateLayoutObjectsForPreset];
+}
+
+- (void)updateLayoutObjectsForPreset {    
+    if (self.layoutPreset != AMLayoutPresetCustom) {
         AMLayoutPresetHelper *helper = [AMLayoutPresetHelper new];
-        NSArray *layoutObjects = [helper layoutObjectsForComponent:self layoutPreset:_layoutPreset];
+        NSArray *layoutObjects = [helper layoutObjectsForComponent:self layoutPreset:self.layoutPreset];
         [self setLayoutObjects:layoutObjects clearLayouts:YES customPreset:NO];
     }
 }

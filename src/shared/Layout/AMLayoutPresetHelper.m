@@ -69,7 +69,7 @@
     
     // horizontal
     
-    AMLayout* leftOrRightLayout = [self horizontalLayoutBasedOnPosition:component center:NO];
+    AMLayout *leftOrRightLayout = [self horizontalLayoutBasedOnPosition:component center:NO];
     AMLayout *widthLayout = [self widthLayoutForComponent:component];
     
     [layoutTypes addObject:leftOrRightLayout];
@@ -97,7 +97,7 @@
     
     // horizontal
     
-    AMLayout* leftOrRightLayout = [self horizontalProportionalLayoutBasedOnPosition:component];
+    AMLayout *leftOrRightLayout = [self horizontalProportionalLayoutBasedOnPosition:component];
     AMLayout *widthLayout = [self widthLayoutForComponent:component];
     
     [layoutTypes addObject:leftOrRightLayout];
@@ -157,7 +157,7 @@
     
     // horizontal
     
-    AMLayout* leftLayout = [self fixedLayoutForComponent:component attribute:NSLayoutAttributeLeft];
+    AMLayout *leftLayout = [self fixedLayoutForComponent:component attribute:NSLayoutAttributeLeft];
     AMLayout *widthLayout = [self widthLayoutForComponent:component];
 
     [layoutTypes addObject:leftLayout];
@@ -205,7 +205,7 @@
     
     NSMutableArray *layoutTypes = [NSMutableArray array];
     
-    AMLayout* leftOrRightLayout = [self horizontalLayoutBasedOnPosition:component center:NO];
+    AMLayout *leftOrRightLayout = [self horizontalLayoutBasedOnPosition:component center:NO];
     AMLayout *topLayout = [self fixedLayoutForComponent:component attribute:NSLayoutAttributeTop];
     AMLayout *bottomLayout = [self fixedLayoutForComponent:component attribute:NSLayoutAttributeBottom];
     AMLayout *widthLayout = [self widthLayoutForComponent:component];
@@ -425,7 +425,7 @@
 - (AMLayout *)heightLayoutForComponent:(AMComponent *)component {
     AMLayout *layout = [AMLayout new];
     layout.attribute = NSLayoutAttributeHeight;
-    layout.offset = CGRectGetWidth(component.frame);
+    layout.offset = CGRectGetHeight(component.frame);
     
     return layout;
 }
