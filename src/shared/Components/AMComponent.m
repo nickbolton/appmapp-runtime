@@ -581,7 +581,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     [self clearLayouts];
     
-    if (updatePreset && self.isTopLevelComponent == NO && self.layoutPreset != AMLayoutPresetCustom) {
+    if (updatePreset && self.isTopLevelComponent == NO) {
         [self updateLayoutObjectsForPreset];
     }
     
@@ -695,23 +695,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     if (self.layoutPreset != AMLayoutPresetCustom) {
         AMLayoutPresetHelper *helper = [AMLayoutPresetHelper new];
         NSArray *layoutObjects = [helper layoutObjectsForComponent:self layoutPreset:self.layoutPreset];
-
-        BOOL equivalentLayouts = (layoutObjects.count == self.layoutObjects.count);
-        for (NSInteger idx = 0; equivalentLayouts && idx < self.layoutObjects.count; idx++) {
-            AMLayout *layout1 = self.layoutObjects[idx];
-            AMLayout *layout2 = layoutObjects[idx];
-            equivalentLayouts = layout1.attribute == layout2.attribute;
-        }
-        
-        if (equivalentLayouts) {
-            for (AMLayout *updatedLayoutObject in layoutObjects) {
-                AMLayout *layoutObject = [self layoutObjectWithAttribute:updatedLayoutObject.attribute];
-                layoutObject.offset = updatedLayoutObject.offset;
-                layoutObject.proportionalValue = updatedLayoutObject.proportionalValue;
-            }
-        } else {
-            [self setLayoutObjects:layoutObjects clearLayouts:YES customPreset:NO];
-        }
+        [self setLayoutObjects:layoutObjects clearLayouts:YES customPreset:NO];
     }
 }
 
