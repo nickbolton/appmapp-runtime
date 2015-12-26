@@ -212,6 +212,13 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     return result;
 }
 
+- (NSString *)description {
+    NSString *proportional = self.isProportional ? @"P " : @"";
+    return
+    [NSString stringWithFormat:@"%@%ld->%ld %f %f",
+     proportional, self.attribute, self.relatedAttribute, self.offset, self.proportionalValue];
+}
+
 #pragma mark - Getters and Setters
 
 - (NSString *)viewIdentifier {

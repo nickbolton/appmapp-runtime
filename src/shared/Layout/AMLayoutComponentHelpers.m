@@ -210,10 +210,9 @@
         
         result = proportionalValue * relatedValue;
         
-        if (attribute == NSLayoutAttributeRight || attribute == NSLayoutAttributeBottom) {
-            result = relatedValue - result;
-        } else if (attribute == NSLayoutAttributeCenterX || attribute == NSLayoutAttributeCenterY) {
-            result = relatedValue/2.0f - result;
+        if (attribute == NSLayoutAttributeRight || attribute == NSLayoutAttributeBottom ||
+            attribute == NSLayoutAttributeCenterX || attribute == NSLayoutAttributeCenterY) {
+            result = -result;
         }
     }
     

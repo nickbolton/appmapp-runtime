@@ -722,6 +722,10 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
     
     _layoutObjects = layoutObjects;
+    
+    for (AMLayout *layoutObject in layoutObjects) {
+        layoutObject.referenceFrame = self.frame;
+    }
 
     if (customPreset) {
         _layoutPreset = AMLayoutPresetCustom;
