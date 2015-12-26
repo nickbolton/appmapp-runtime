@@ -695,8 +695,34 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     if (self.layoutPreset != AMLayoutPresetCustom) {
         AMLayoutPresetHelper *helper = [AMLayoutPresetHelper new];
         NSArray *layoutObjects = [helper layoutObjectsForComponent:self layoutPreset:self.layoutPreset];
-        [self setLayoutObjects:layoutObjects clearLayouts:YES customPreset:NO];
+
+        BOOL equivalentLayouts = (layoutObjects.count == self.layoutObjects.count);
+        for (NSInteger idx = 0; equivalentLayouts && idx < self.layoutObjects.count; idx++) {
+            AMLayout *layout1 = self.layoutObjects[idx];
+            AMLayout *layout2 = layoutObjects[idx];
+            equivalentLayouts = layout1.attribute == layout2.attribute;
+        }
+        
+        if (equivalentLayouts) {
+            for (AMLayout *updatedLayoutObject in layoutObjects) {
+                AMLayout *layoutObject = [self layoutObjectWithAttribute:updatedLayoutObject.attribute];
+                layoutObject.offset = updatedLayoutObject.offset;
+                layoutObject.proportionalValue = updatedLayoutObject.proportionalValue;
+            }
+        } else {
+            [self setLayoutObjects:layoutObjects clearLayouts:YES customPreset:NO];
+        }
     }
+}
+
+- (AMLayout *)layoutObjectWithAttribute:(NSLayoutAttribute)attribute {
+    for (AMLayout *layoutObject in self.layoutObjects) {
+        if (layoutObject.attribute == attribute) {
+            return layoutObject;
+        }
+    }
+    
+    return nil;
 }
 
 - (void)setLayoutObjects:(NSArray *)layoutObjects {
