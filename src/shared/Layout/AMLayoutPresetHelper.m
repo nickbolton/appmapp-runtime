@@ -382,6 +382,10 @@
      toComponent:component.parentComponent
      relatedAttribute:attribute];
     
+    layout.componentIdentifier = component.identifier;
+    layout.relatedComponentIdentifier = component.parentComponent.identifier;
+    layout.commonAncestorComponentIdentifier = layout.relatedComponentIdentifier;
+    
     return layout;
 }
 
@@ -410,7 +414,10 @@
     layoutObject.proportional = YES;
     layoutObject.proportionalValue = proportionalValue;
     layoutObject.proportionalComponentIdentifier = commonAncestorComponent.identifier;
-    
+    layoutObject.componentIdentifier = component.identifier;
+    layoutObject.relatedComponentIdentifier = component.parentComponent.identifier;
+    layoutObject.commonAncestorComponentIdentifier = layoutObject.relatedComponentIdentifier;
+
     return layoutObject;
 }
 
@@ -418,6 +425,7 @@
     AMLayout *layout = [AMLayout new];
     layout.attribute = NSLayoutAttributeWidth;
     layout.offset = CGRectGetWidth(component.frame);
+    layout.componentIdentifier = component.identifier;
 
     return layout;
 }
@@ -426,6 +434,7 @@
     AMLayout *layout = [AMLayout new];
     layout.attribute = NSLayoutAttributeHeight;
     layout.offset = CGRectGetHeight(component.frame);
+    layout.componentIdentifier = component.identifier;
     
     return layout;
 }
