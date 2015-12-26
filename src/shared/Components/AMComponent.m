@@ -728,8 +728,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
-- (void)restoreLayoutObjects:(NSArray *)layoutObjects preset:(AMLayoutPreset)preset {
-    _layoutPreset = preset;
+- (void)restoreLayoutObjects:(NSArray *)layoutObjects {
     _layoutObjects = layoutObjects.copy;
 }
 
@@ -878,6 +877,22 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     
     if (behavior != nil) {
         [self.behavors removeObjectForKey:@(behavior.componentType)];
+    }
+}
+
+- (void)addLayoutObject:(AMLayout *)layoutObject {
+}
+
+- (void)removeLayoutObject:(AMLayout *)layoutObject {
+    if ([layoutObject.componentIdentifier isEqualToString:self.identifier]) {
+        layoutObject.componentIdentifier = nil;
+        layoutObject.relatedComponentIdentifier = nil;
+        layoutObject.commonAncestorComponentIdentifier = nil;
+        
+        NSMutableArray *layoutObjects = self.layoutObjects.mutableCopy;
+        [layoutObjects removeObject:layoutObject];
+        
+        [self setLayoutObjects:layoutObjects clearLayouts:YES customPreset:YES];
     }
 }
 

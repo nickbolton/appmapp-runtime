@@ -67,8 +67,8 @@
 + (BOOL)isVerticalLayoutType:(NSLayoutAttribute)layoutType;
 
 - (void)updateLayoutInAnimation:(BOOL)inAnimation;
-- (void)clearLayout;
 - (void)addLayout;
+- (void)clearLayout;
 
 - (void)changeProportional:(BOOL)proportional;
 
