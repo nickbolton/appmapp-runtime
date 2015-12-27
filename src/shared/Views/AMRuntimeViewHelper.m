@@ -12,7 +12,7 @@
 #import "AMLayout.h"
 #import "AMExpandingLayout.h"
 #import "AMView+Geometry.h"
-#import "AMLayoutPresetHelper.h"
+#import "AMLayoutFactory.h"
 
 @implementation AMRuntimeViewHelper
 
@@ -39,7 +39,7 @@
 
     if (component.layoutObjects.count <= 0) {
         
-        AMLayoutPresetHelper *presetHelper = [AMLayoutPresetHelper new];
+        AMLayoutFactory *presetHelper = [AMLayoutFactory new];
         NSArray *layoutObjects = [presetHelper layoutObjectsForComponent:component layoutPreset:AMLayoutPresetFixedSizeFixedPosition];
 
         component.layoutObjects = layoutObjects;
@@ -86,11 +86,20 @@
 
 - (void)updateConstraintsFromComponent:(AMView<AMRuntimeView> *)view {
     
-    for (AMLayout *layoutObject in view.component.allLayoutObjects) {
+    for (AMLayout *layoutObject in view.component.defaultLayoutObjects) {
         [layoutObject updateLayoutInAnimation:NO];
 #if DEBUG
         layoutObject.viewIdentifier = view.component.name;
 #endif
+    }
+
+    for (AMLayout *layoutObject in view.component.layoutObjects) {
+        if (view.component.isTopLevelComponent == NO) {
+            [layoutObject updateLayoutInAnimation:NO];
+#if DEBUG
+            layoutObject.viewIdentifier = view.component.name;
+#endif
+        }
     }
 
     [self constraintsDidChange:view];

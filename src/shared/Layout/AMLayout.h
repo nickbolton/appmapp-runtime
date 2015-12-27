@@ -30,19 +30,21 @@
 @property (nonatomic, copy) NSString *commonAncestorComponentIdentifier;
 @property (nonatomic, copy) NSString *proportionalComponentIdentifier;
 @property (nonatomic) NSLayoutAttribute relatedAttribute;
-@property (nonatomic) CGFloat offset;
+@property (nonatomic) CGFloat constant;
 @property (nonatomic) AMLayoutPriority priority;
 @property (nonatomic) CGRect referenceFrame;
 @property (nonatomic, getter=isProportional) BOOL proportional;
 @property (nonatomic) CGFloat proportionalValue;
 @property (nonatomic, getter=isEnabled) BOOL enabled;
 @property (nonatomic, getter=isDefaultLayout) BOOL defaultLayout;
+@property (nonatomic, readonly) BOOL isDangling;
 
 @property (nonatomic, strong) NSLayoutConstraint *constraint;
 @property (nonatomic, readonly) BOOL isHorizontal;
 @property (nonatomic, readonly) BOOL isVertical;
 @property (nonatomic, readonly) BOOL isSizing;
 @property (nonatomic, copy) NSString *viewIdentifier;
+@property (nonatomic, readonly) CGFloat resolvedConstant;
 
 @property (nonatomic, weak) id <AMLayoutProvider> layoutProvider;
 

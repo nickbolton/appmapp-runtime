@@ -21,7 +21,7 @@ static NSString * kAMLayoutComponentIdentifierKey = @"componentIdentifier";
 static NSString * kAMLayoutRelatedComponentIdentifierKey = @"relatedComponentIdentifier";
 static NSString * kAMLayoutCommonAncestorComponentIdentifier = @"commonAncestorComponentIdentifier";
 static NSString * kAMLayoutRelatedAttributeKey = @"relatedAttribute";
-static NSString * kAMLayoutOffsetKey = @"offset";
+static NSString * kAMLayoutConstantKey = @"constant";
 static NSString * kAMLayoutPriorityKey = @"priority";
 static NSString * kAMLayoutReferenceFrameKey = @"referenceFrame";
 static NSString * kAMLayoutProportionalComponentIdentifierKey = @"proportionalComponentIdentifier";
@@ -65,7 +65,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     [coder encodeObject:self.relatedComponentIdentifier forKey:kAMLayoutRelatedComponentIdentifierKey];
     [coder encodeObject:self.commonAncestorComponentIdentifier forKey:kAMLayoutCommonAncestorComponentIdentifier];
     [coder encodeInteger:self.relatedAttribute forKey:kAMLayoutRelatedAttributeKey];
-    [coder encodeFloat:self.offset forKey:kAMLayoutOffsetKey];
+    [coder encodeFloat:self.constant forKey:kAMLayoutConstantKey];
     [coder encodeFloat:self.priority forKey:kAMLayoutPriorityKey];
     [coder encodeObject:self.proportionalComponentIdentifier forKey:kAMLayoutProportionalComponentIdentifierKey];
     [coder encodeBool:self.isProportional forKey:kAMLayoutProportionalKey];
@@ -92,7 +92,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
         _relatedComponentIdentifier = [decoder decodeObjectForKey:kAMLayoutRelatedComponentIdentifierKey];
         _commonAncestorComponentIdentifier = [decoder decodeObjectForKey:kAMLayoutCommonAncestorComponentIdentifier];
         _relatedAttribute = [decoder decodeIntegerForKey:kAMLayoutRelatedAttributeKey];
-        _offset = [decoder decodeFloatForKey:kAMLayoutOffsetKey];
+        _constant = [decoder decodeFloatForKey:kAMLayoutConstantKey];
         _priority = [decoder decodeFloatForKey:kAMLayoutPriorityKey];
         _proportionalComponentIdentifier = [decoder decodeObjectForKey:kAMLayoutProportionalComponentIdentifierKey];
         _proportional = [decoder decodeBoolForKey:kAMLayoutProportionalKey];
@@ -122,7 +122,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
         _relatedComponentIdentifier = dict[kAMLayoutRelatedComponentIdentifierKey];
         _commonAncestorComponentIdentifier = dict[kAMLayoutCommonAncestorComponentIdentifier];
         _relatedAttribute = [dict[kAMLayoutRelatedAttributeKey] integerValue];
-        _offset = [dict[kAMLayoutOffsetKey] floatValue];
+        _constant = [dict[kAMLayoutConstantKey] floatValue];
         _priority = [dict[kAMLayoutPriorityKey] floatValue];
         _proportionalComponentIdentifier = dict[kAMLayoutProportionalComponentIdentifierKey];
         _proportional = [dict[kAMLayoutProportionalKey] boolValue];
@@ -161,7 +161,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     dict[kAMLayoutRelatedComponentIdentifierKey] = self.relatedComponentIdentifier;
     dict[kAMLayoutCommonAncestorComponentIdentifier] = self.commonAncestorComponentIdentifier;
     dict[kAMLayoutRelatedAttributeKey] = @(self.relatedAttribute);
-    dict[kAMLayoutOffsetKey] = @(self.offset);
+    dict[kAMLayoutConstantKey] = @(self.constant);
     dict[kAMLayoutPriorityKey] = @(self.priority);
     dict[kAMLayoutProportionalComponentIdentifierKey] = self.proportionalComponentIdentifier;
     dict[kAMLayoutProportionalKey] = @(self.isProportional);
@@ -202,12 +202,13 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     result.relatedComponentIdentifier = self.relatedComponentIdentifier;
     result.commonAncestorComponentIdentifier = self.commonAncestorComponentIdentifier;
     result.relatedAttribute = self.relatedAttribute;
-    result.offset = self.offset;
+    result.constant = self.constant;
     result.priority = self.priority;
     result.referenceFrame = self.referenceFrame;
     result.proportionalComponentIdentifier = self.proportionalComponentIdentifier;
     result.proportional = self.isProportional;
     result.proportionalValue = self.proportionalValue;
+    result.layoutProvider = self.layoutProvider;
 
     return result;
 }
@@ -216,7 +217,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     NSString *proportional = self.isProportional ? @"P " : @"";
     return
     [NSString stringWithFormat:@"%@%ld->%ld %f %f",
-     proportional, self.attribute, self.relatedAttribute, self.offset, self.proportionalValue];
+     proportional, self.attribute, self.relatedAttribute, self.constant, self.proportionalValue];
 }
 
 #pragma mark - Getters and Setters
@@ -281,17 +282,17 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     }
 }
 
-- (void)setOffset:(CGFloat)offset {
-    [self setOffset:offset proportionalOffset:0.0f inAnimation:NO];
+- (void)setConstant:(CGFloat)constant {
+    [self setConstant:constant inAnimation:NO];
 }
 
-- (void)setOffset:(CGFloat)offset proportionalOffset:(CGFloat)proportionalOffset inAnimation:(BOOL)inAnimation {
-    _offset = offset;
+- (void)setConstant:(CGFloat)constant inAnimation:(BOOL)inAnimation {
+    _constant = constant;
     if (self.constraint != nil) {
         if (inAnimation) {
-            self.constraint.animator.constant = [self proportionalLayoutOffset];
+            self.constraint.animator.constant = [self resolvedConstant];
         } else {
-            self.constraint.constant = [self proportionalLayoutOffset];
+            self.constraint.constant = [self resolvedConstant];
         }
         [self layoutViewIfNeeded];
     }
@@ -299,10 +300,10 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 - (void)changeProportional:(BOOL)proportional {
 
-    CGFloat proportionalOffset = [self proportionalOffset];
+    CGFloat proportionalConstant = [self proportionalConstant];
     self.proportional = proportional;
     
-    CGFloat offset = 0.0f;
+    CGFloat constant = 0.0f;
     
     if (proportional) {
         if (self.proportionalComponentIdentifier.length <= 0) {
@@ -315,15 +316,32 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
          attribute:self.attribute
          proportionalComponent:self.commonAncestorComponent];
         
-        proportionalOffset = [self proportionalOffset];
+        proportionalConstant = [self proportionalConstant];
         
     } else {
-        offset = proportionalOffset;
+        constant = proportionalConstant;
     }
     
-    [self setOffset:offset proportionalOffset:proportionalOffset inAnimation:NO];
+    [self setConstant:constant inAnimation:NO];
     
     self.component.layoutPreset = AMLayoutPresetCustom;
+}
+
+- (BOOL)isDangling {
+    switch (self.attribute) {
+        case NSLayoutAttributeLeft:
+        case NSLayoutAttributeRight:
+        case NSLayoutAttributeCenterX:
+        case NSLayoutAttributeTop:
+        case NSLayoutAttributeBottom:
+        case NSLayoutAttributeCenterY:
+            return self.relatedComponentIdentifier == nil;
+            break;
+        default:
+            break;
+    }
+    
+    return NO;
 }
 
 #pragma mark - Public
@@ -507,8 +525,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
         return;
     }
     
-    CGFloat offset = 0.0f;
-    CGFloat proportionalOffset = 0.0f;
+    CGFloat constant = 0.0f;
 
     if (self.isProportional) {
         
@@ -518,12 +535,11 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
          attribute:self.attribute
          proportionalComponent:self.proportionalComponent];
 
-        proportionalOffset = [self proportionalOffset];
     } else {
-        offset = [self fixedLayoutOffsetForComponent:component relatedComponent:relatedComponent];
+        constant = [self fixedLayoutOffsetForComponent:component relatedComponent:relatedComponent];
     }
     
-    [self setOffset:offset proportionalOffset:proportionalOffset inAnimation:inAnimation];
+    [self setConstant:constant inAnimation:inAnimation];
     [self layoutViewIfNeeded];
 }
 
@@ -658,7 +674,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 //    return result;
 //}
 
-- (CGFloat)proportionalOffset {
+- (CGFloat)proportionalConstant {
     
     CGFloat result = 0.0f;
     
@@ -666,7 +682,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
         result =
         [AMLayoutComponentHelpers
-         proportionalOffsetForComponent:self.component
+         proportionalConstantForComponent:self.component
          attribute:self.attribute
          proportionalComponent:self.proportionalComponent
          proportionalValue:self.proportionalValue];
@@ -674,73 +690,6 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
     return result;
 }
-
-//- (CGRect)adjustedFrameForProportionalTop:(CGRect)frame
-//                        proportionalValue:(CGFloat)proportionalValue
-//                             forComponent:(AMComponent *)component
-//                             maintainSize:(BOOL)maintainSize {
-//    
-//    CGRect result = frame;
-//    result.origin.y = proportionalValue;
-//    
-//    return result;
-//}
-//
-//- (CGRect)adjustedFrameForProportionalLeft:(CGRect)frame
-//                         proportionalValue:(CGFloat)proportionalValue
-//                              forComponent:(AMComponent *)component
-//                              maintainSize:(BOOL)maintainSize {
-//    
-//    CGRect result = frame;
-//    result.origin.x = proportionalValue;
-//    
-//    return result;
-//}
-//
-//- (CGRect)adjustedFrameForProportionalBottom:(CGRect)frame
-//                           proportionalValue:(CGFloat)proportionalValue
-//                                forComponent:(AMComponent *)component
-//                                maintainSize:(BOOL)maintainSize {
-//
-//    CGRect result = frame;
-//    result.origin.y = CGRectGetHeight(parentFrame) - CGRectGetHeight(frame) - (self.proportionalValue * CGRectGetHeight(parentFrame));
-//
-//}
-//
-//- (CGRect)adjustedFrameForProportionalRight:(CGRect)frame
-//                          proportionalValue:(CGFloat)proportionalValue
-//                               forComponent:(AMComponent *)component
-//                               maintainSize:(BOOL)maintainSize {
-//    
-//}
-//
-//- (CGRect)adjustedFrameForProportionalCenterY:(CGRect)frame
-//                            proportionalValue:(CGFloat)proportionalValue
-//                                 forComponent:(AMComponent *)component
-//                                 maintainSize:(BOOL)maintainSize {
-//    
-//}
-//
-//- (CGRect)adjustedFrameForProportionalCenterX:(CGRect)frame
-//                            proportionalValue:(CGFloat)proportionalValue
-//                                 forComponent:(AMComponent *)component
-//                                 maintainSize:(BOOL)maintainSize {
-//    
-//}
-//
-//- (CGRect)adjustedFrameForProportionalHeight:(CGRect)frame
-//                           proportionalValue:(CGFloat)proportionalValue
-//                                forComponent:(AMComponent *)component
-//                                maintainSize:(BOOL)maintainSize {
-//    
-//}
-//
-//- (CGRect)adjustedFrameForProportionalWidth:(CGRect)frame
-//                          proportionalValue:(CGFloat)proportionalValue
-//                               forComponent:(AMComponent *)component
-//                               maintainSize:(BOOL)maintainSize {
-//    
-//}
 
 #pragma mark - Constraint Creation
 
@@ -797,15 +746,15 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     }
 }
 
-- (CGFloat)proportionalLayoutOffset {
-    CGFloat offset = self.offset + [self proportionalOffset];
+- (CGFloat)resolvedConstant {
+    CGFloat constant = self.constant + [self proportionalConstant];
 
-    return offset;
+    return constant;
 }
 
 - (NSLayoutConstraint *)buildConstraint {
     
-    CGFloat offset = [self proportionalLayoutOffset];
+    CGFloat constant = [self resolvedConstant];
     
     return
     [NSLayoutConstraint
@@ -815,7 +764,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
      toItem:self.relatedView
      attribute:self.relatedAttribute
      multiplier:self.multiplier
-     constant:offset];
+     constant:constant];
 }
 
 - (CGRect)updateFrame:(CGRect)frame
@@ -881,7 +830,7 @@ basedOnRelatedTopAttributeWithRelatedSize:(CGSize)relatedSize
      allLayoutObjects:(NSArray *)allLayoutObjects {
     
     CGRect result = frame;
-    result.origin.y = self.offset;
+    result.origin.y = self.constant;
     
     if (self.isProportional) {
         result.origin.y += self.proportionalValue * relatedSize.height;
@@ -896,7 +845,7 @@ basedOnRelatedBottomAttributeWithRelatedSize:(CGSize)relatedSize
      allLayoutObjects:(NSArray *)allLayoutObjects {
     
     CGRect result = frame;
-    CGFloat bottomMargin = self.offset;
+    CGFloat bottomMargin = self.constant;
     
     if (self.isProportional) {
         bottomMargin -= self.proportionalValue * relatedSize.height;
@@ -919,7 +868,7 @@ basedOnRelatedLeftAttributeWithRelatedSize:(CGSize)relatedSize
      allLayoutObjects:(NSArray *)allLayoutObjects {
     
     CGRect result = frame;
-    result.origin.x = self.offset;
+    result.origin.x = self.constant;
     
     if (self.isProportional) {
         result.origin.x += self.proportionalValue * relatedSize.width;
@@ -934,7 +883,7 @@ basedOnRelatedRightAttributeWithRelatedSize:(CGSize)relatedSize
      allLayoutObjects:(NSArray *)allLayoutObjects {
     
     CGRect result = frame;
-    CGFloat rightMargin = self.offset;
+    CGFloat rightMargin = self.constant;
     
     if (self.isProportional) {
         rightMargin -= self.proportionalValue * relatedSize.width;
@@ -957,7 +906,7 @@ basedOnRelatedCenterYAttributeWithRelatedSize:(CGSize)relatedSize
      allLayoutObjects:(NSArray *)allLayoutObjects {
     
     CGRect result = frame;
-    result.origin.y = self.offset;
+    result.origin.y = self.constant;
     
     if (self.isProportional) {
         result.origin.y += (relatedSize.height / 2.0f) - self.proportionalValue * relatedSize.height - (CGRectGetHeight(originalFrame) / 2.0f);
@@ -974,7 +923,7 @@ basedOnRelatedCenterXAttributeWithRelatedSize:(CGSize)relatedSize
      allLayoutObjects:(NSArray *)allLayoutObjects {
     
     CGRect result = frame;
-    result.origin.x = self.offset;
+    result.origin.x = self.constant;
     
     if (self.isProportional) {
         result.origin.x += (relatedSize.width / 2.0f) - self.proportionalValue * relatedSize.width - (CGRectGetWidth(originalFrame) / 2.0f);

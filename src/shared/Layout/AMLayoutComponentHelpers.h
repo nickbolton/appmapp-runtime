@@ -18,9 +18,9 @@
 
 + (CGFloat)relatedValueForFrame:(CGRect)frame attribute:(NSLayoutAttribute)attribute;
 
-+ (CGFloat)proportionalOffsetForComponent:(AMComponent *)component
-                                attribute:(NSLayoutAttribute)attribute
-                    proportionalComponent:(AMComponent *)proportionalComponent
-                        proportionalValue:(CGFloat)proportionalValue;
++ (CGFloat)proportionalConstantForComponent:(AMComponent *)component
+                                  attribute:(NSLayoutAttribute)attribute
+                      proportionalComponent:(AMComponent *)proportionalComponent
+                          proportionalValue:(CGFloat)proportionalValue;
 
 @end

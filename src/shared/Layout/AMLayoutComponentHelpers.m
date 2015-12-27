@@ -194,10 +194,10 @@
 //    return result;
 //}
 
-+ (CGFloat)proportionalOffsetForComponent:(AMComponent *)component
-                                attribute:(NSLayoutAttribute)attribute
-                    proportionalComponent:(AMComponent *)proportionalComponent
-                        proportionalValue:(CGFloat)proportionalValue {
++ (CGFloat)proportionalConstantForComponent:(AMComponent *)component
+                                  attribute:(NSLayoutAttribute)attribute
+                      proportionalComponent:(AMComponent *)proportionalComponent
+                          proportionalValue:(CGFloat)proportionalValue {
     
     CGFloat result = 0.0f;
     

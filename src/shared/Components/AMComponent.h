@@ -101,6 +101,8 @@ extern NSString *const kAMComponentClassPrefixKey;
 
 - (BOOL)isDescendent:(AMComponent *)component;
 - (AMComponent *)ancestorBefore:(AMComponent *)component;
+- (BOOL)isAncestorOfComponent:(AMComponent *)component;
+- (AMComponent *)commonAncestorWithComponent:(AMComponent *)otherComponent;
 
 + (BOOL)doesHaveCommonTopLevelComponent:(NSArray *)components;
 + (BOOL)doesHaveCommonTopLevelComponent:(NSArray *)components

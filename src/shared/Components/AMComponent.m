@@ -9,7 +9,7 @@
 #import "AMComponent.h"
 #import "AppMap.h"
 #import "AMView+Geometry.h"
-#import "AMLayoutPresetHelper.h"
+#import "AMLayoutFactory.h"
 #import "AMColor+AMColor.h"
 #import "AMCompositeTextDescriptor.h"
 #import "AMComponentBehavior.h"
@@ -584,10 +584,17 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     if (updatePreset && self.isTopLevelComponent == NO) {
         [self updateLayoutObjectsForPreset];
     }
-    
-    for (AMLayout *layoutObject in self.allLayoutObjects) {
+
+    for (AMLayout *layoutObject in self.defaultLayoutObjects) {
         layoutObject.referenceFrame = frame;
         [layoutObject updateLayoutInAnimation:inAnimation];
+    }
+    
+    for (AMLayout *layoutObject in self.layoutObjects) {
+        if (self.isTopLevelComponent == NO) {
+            layoutObject.referenceFrame = frame;
+            [layoutObject updateLayoutInAnimation:inAnimation];
+        }
     }
     
     NSMutableSet *dependents = [NSMutableSet new];
@@ -622,9 +629,9 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         for (AMLayout *layoutObject in sortedLayoutObjects) {
             if (layoutObject.isProportional == NO) {
                 if (layoutObject.attribute == NSLayoutAttributeWidth) {
-                    updatedFrame.size.width = layoutObject.offset;
+                    updatedFrame.size.width = layoutObject.constant;
                 } else if (layoutObject.attribute == NSLayoutAttributeHeight) {
-                    updatedFrame.size.height = layoutObject.offset;
+                    updatedFrame.size.height = layoutObject.constant;
                 }
             }
         }
@@ -692,8 +699,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (void)updateLayoutObjectsForPreset {    
-    if (self.layoutPreset != AMLayoutPresetCustom) {
-        AMLayoutPresetHelper *helper = [AMLayoutPresetHelper new];
+    if (self.layoutPreset != AMLayoutPresetCustom && self.isTopLevelComponent == NO) {
+        AMLayoutFactory *helper = [AMLayoutFactory new];
         NSArray *layoutObjects = [helper layoutObjectsForComponent:self layoutPreset:self.layoutPreset];
         [self setLayoutObjects:layoutObjects clearLayouts:YES customPreset:NO];
     }
@@ -885,6 +892,16 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (void)addLayoutObject:(AMLayout *)layoutObject {
+    layoutObject.componentIdentifier = self.identifier;
+    
+    NSMutableArray *layoutObjects = self.layoutObjects.mutableCopy;
+    if (layoutObjects == nil) {
+        layoutObjects = [NSMutableArray new];
+    }
+    [layoutObjects addObject:layoutObject];
+    
+    [self setLayoutObjects:layoutObjects clearLayouts:NO customPreset:YES];
+
 }
 
 - (void)removeLayoutObject:(AMLayout *)layoutObject {
@@ -897,7 +914,52 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         [layoutObjects removeObject:layoutObject];
         
         [self setLayoutObjects:layoutObjects clearLayouts:YES customPreset:YES];
+        
+        self.frame = self.frame;
     }
+}
+
+- (BOOL)isAncestorOfComponent:(AMComponent *)component {
+    
+    AMComponent *parentComponent = component.parentComponent;
+    while (parentComponent != nil) {
+        if (parentComponent == self) {
+            return YES;
+        }
+        parentComponent = parentComponent.parentComponent;
+    }
+    
+    return NO;
+}
+
+- (AMComponent *)commonAncestorWithComponent:(AMComponent *)otherComponent {
+
+    if ([otherComponent isAncestorOfComponent:self]) {
+        return otherComponent;
+    } else if ([self isAncestorOfComponent:otherComponent]) {
+        return self;
+    }
+    
+    AMComponent *commonAncestor = nil;
+    AMComponent *parentComponent = self.parentComponent;
+    while (parentComponent != nil) {
+        commonAncestor = [parentComponent commonAncestorWithComponent:otherComponent];
+        if (commonAncestor != nil) {
+            return commonAncestor;
+        }
+        parentComponent = parentComponent.parentComponent;
+    }
+    
+    parentComponent = otherComponent.parentComponent;
+    while (parentComponent != nil) {
+        commonAncestor = [parentComponent commonAncestorWithComponent:self];
+        if (commonAncestor != nil) {
+            return commonAncestor;
+        }
+        parentComponent = parentComponent.parentComponent;
+    }
+    
+    return nil;
 }
 
 #pragma mark - Parent/Child
@@ -1153,7 +1215,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
                 relatedAttribute:(NSLayoutAttribute)relatedAttribute {
     
     CGFloat sourcePosition = 0.0f;
-    CGFloat targetPosition = 0.0f;;
+    CGFloat targetPosition = 0.0f;
     
     CGRect frameInContainer;
     CGRect relatedFrameInContainer;

@@ -1,23 +1,23 @@
 //
-//  AMLayoutPresetHelper.m
+//  AMLayoutFactory.m
 //  AppMap
 //
 //  Created by Nick Bolton on 3/28/15.
 //  Copyright (c) 2015 Pixelbleed LLC. All rights reserved.
 //
 
-#import "AMLayoutPresetHelper.h"
+#import "AMLayoutFactory.h"
 #import "AMComponent.h"
 #import "AMLayout.h"
 #import "AMLayoutComponentHelpers.h"
 
-@interface AMLayoutPresetHelper()
+@interface AMLayoutFactory()
 
 @property (nonatomic, strong) NSArray *selectors;
 
 @end
 
-@implementation AMLayoutPresetHelper
+@implementation AMLayoutFactory
 
 - (instancetype)init {
     self = [super init];
@@ -370,61 +370,93 @@
 
 #pragma mark - Factories
 
-- (AMLayout *)fixedLayoutForComponent:(AMComponent *)component
-                            attribute:(NSLayoutAttribute)attribute {
+- (AMLayout *)danglingLayoutForComponent:(AMComponent *)component
+                               attribute:(NSLayoutAttribute)attribute
+                                constant:(CGFloat)constant {
     
     AMLayout *layout = [AMLayout new];
     layout.attribute = attribute;
-    layout.relatedAttribute = attribute;
-    layout.offset =
-    [component
-     distanceFromAttribute:attribute
-     toComponent:component.parentComponent
-     relatedAttribute:attribute];
+    layout.constant = constant;
     
     layout.componentIdentifier = component.identifier;
-    layout.relatedComponentIdentifier = component.parentComponent.identifier;
-    layout.commonAncestorComponentIdentifier = layout.relatedComponentIdentifier;
+
+    return layout;
+}
+
+- (AMLayout *)layoutForComponent:(AMComponent *)component
+                       attribute:(NSLayoutAttribute)attribute
+                relatedComponent:(AMComponent *)relatedComponent
+                relatedAttribute:(NSLayoutAttribute)relatedAttribute
+                    proportional:(BOOL)proportional {
+
+    if (relatedComponent == nil) {
+        if (attribute == NSLayoutAttributeWidth) {
+            return [self widthLayoutForComponent:component];
+        } else if (attribute == NSLayoutAttributeHeight) {
+            return [self heightLayoutForComponent:component];
+        }
+    }
+    
+    AMLayout *layout = [AMLayout new];
+    layout.attribute = attribute;
+    layout.relatedAttribute = relatedAttribute;
+    
+    AMComponent *ancestorComponent = [component commonAncestorWithComponent:relatedComponent];
+    
+    layout.componentIdentifier = component.identifier;
+    layout.relatedComponentIdentifier = relatedComponent.identifier;
+    layout.commonAncestorComponentIdentifier = ancestorComponent.identifier;
+    
+    layout.constant =
+    [component
+     distanceFromAttribute:attribute
+     toComponent:relatedComponent
+     relatedAttribute:relatedAttribute];
+
+    if (proportional) {
+        
+        CGFloat proportionalValue =
+        [AMLayoutComponentHelpers
+         proportionalValueForComponent:component
+         attribute:attribute
+         proportionalComponent:ancestorComponent];
+
+        layout.proportional = YES;
+        layout.proportionalValue = proportionalValue;
+        layout.proportionalComponentIdentifier = ancestorComponent.identifier;
+    }
     
     return layout;
+}
+
+- (AMLayout *)fixedLayoutForComponent:(AMComponent *)component
+                            attribute:(NSLayoutAttribute)attribute {
+    
+    return
+    [self
+     layoutForComponent:component
+     attribute:attribute
+     relatedComponent:component.parentComponent
+     relatedAttribute:attribute
+     proportional:NO];
 }
 
 - (AMLayout *)proportionalLayoutForComponent:(AMComponent *)component
                                    attribute:(NSLayoutAttribute)attribute {
     
-    AMComponent *commonAncestorComponent = component.parentComponent;
-    
-    CGFloat proportionalValue =
-    [AMLayoutComponentHelpers
-     proportionalValueForComponent:component
+    return
+    [self
+     layoutForComponent:component
      attribute:attribute
-     proportionalComponent:commonAncestorComponent];
-    
-//    CGFloat offset =
-//    [AMLayoutComponentHelpers
-//     proportionalOffsetForComponent:component
-//     attribute:attribute
-//     relatedComponent:relatedComponent
-//     relatedAttribute:attribute
-//     proportionalValue:proportionalValue];
-    
-    AMLayout *layoutObject = [AMLayout new];
-    layoutObject.attribute = attribute;
-    layoutObject.relatedAttribute = attribute;
-    layoutObject.proportional = YES;
-    layoutObject.proportionalValue = proportionalValue;
-    layoutObject.proportionalComponentIdentifier = commonAncestorComponent.identifier;
-    layoutObject.componentIdentifier = component.identifier;
-    layoutObject.relatedComponentIdentifier = component.parentComponent.identifier;
-    layoutObject.commonAncestorComponentIdentifier = layoutObject.relatedComponentIdentifier;
-
-    return layoutObject;
+     relatedComponent:component.parentComponent
+     relatedAttribute:attribute
+     proportional:YES];
 }
 
 - (AMLayout *)widthLayoutForComponent:(AMComponent *)component {
     AMLayout *layout = [AMLayout new];
     layout.attribute = NSLayoutAttributeWidth;
-    layout.offset = CGRectGetWidth(component.frame);
+    layout.constant = CGRectGetWidth(component.frame);
     layout.componentIdentifier = component.identifier;
 
     return layout;
@@ -433,7 +465,7 @@
 - (AMLayout *)heightLayoutForComponent:(AMComponent *)component {
     AMLayout *layout = [AMLayout new];
     layout.attribute = NSLayoutAttributeHeight;
-    layout.offset = CGRectGetHeight(component.frame);
+    layout.constant = CGRectGetHeight(component.frame);
     layout.componentIdentifier = component.identifier;
     
     return layout;
