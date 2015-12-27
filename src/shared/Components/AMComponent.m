@@ -318,7 +318,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     component.defaultLayoutObjects = [[NSArray alloc] initWithArray:self.defaultLayoutObjects copyItems:YES];
     
     NSArray *layoutObjects = [[NSArray alloc] initWithArray:self.layoutObjects copyItems:YES];
-    [component setLayoutObjects:layoutObjects clearLayouts:YES customPreset:NO];
+    [component setLayoutObjects:layoutObjects clearLayouts:NO customPreset:NO];
 
     // only used to refer back to original parent
     // children will have this reset with the next loop
