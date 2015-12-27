@@ -891,8 +891,10 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
-- (void)addLayoutObject:(AMLayout *)layoutObject {
+- (void)addLayoutObject:(AMLayout *)layoutObject layoutProvider:(id<AMLayoutProvider>)layoutProvider {
     layoutObject.componentIdentifier = self.identifier;
+    layoutObject.layoutProvider = layoutProvider;
+    [layoutObject addLayout];
     
     NSMutableArray *layoutObjects = self.layoutObjects.mutableCopy;
     if (layoutObjects == nil) {

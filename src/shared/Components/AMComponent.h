@@ -7,6 +7,7 @@
 //
 #import "AppMap.h"
 #import "AppMapTypes.h"
+#import "AMLayout.h"
 
 extern NSString *const kAMComponentsKey;
 extern NSString *const kAMComponentChildComponentsKey;
@@ -15,7 +16,6 @@ extern NSString *const kAMComponentClassPrefixKey;
 
 @class AMComponentBehavior;
 @class AMCompositeTextDescriptor;
-@class AMLayout;
 
 @interface AMComponent : NSObject <NSCoding, NSCopying>
 
@@ -75,7 +75,7 @@ extern NSString *const kAMComponentClassPrefixKey;
 
 - (void)clearLayoutComponentWiring;
 - (void)setLayoutObjectsEnabled:(BOOL)enabled;
-- (void)addLayoutObject:(AMLayout *)layoutObject;
+- (void)addLayoutObject:(AMLayout *)layoutObject layoutProvider:(id<AMLayoutProvider>)layoutProvider;
 - (void)removeLayoutObject:(AMLayout *)layoutObject;
 
 - (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation;
