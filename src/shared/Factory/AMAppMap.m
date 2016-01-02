@@ -76,7 +76,7 @@
     static AMAppMap *sharedInstance = nil;
     
     dispatch_once(&predicate, ^{
-        sharedInstance = [[AMAppMap alloc] init];
+        sharedInstance = [AMAppMap new];
     });
     
     return sharedInstance;

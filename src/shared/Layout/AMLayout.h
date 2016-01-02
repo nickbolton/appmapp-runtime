@@ -37,7 +37,6 @@
 @property (nonatomic) CGFloat proportionalValue;
 @property (nonatomic, getter=isEnabled) BOOL enabled;
 @property (nonatomic, getter=isDefaultLayout) BOOL defaultLayout;
-@property (nonatomic, readonly) BOOL isDangling;
 
 @property (nonatomic, strong) NSLayoutConstraint *constraint;
 @property (nonatomic, readonly) BOOL isHorizontal;
@@ -71,6 +70,7 @@
 - (void)updateLayoutInAnimation:(BOOL)inAnimation;
 - (void)addLayout;
 - (void)clearLayout;
+- (void)layoutViewIfNeeded;
 
 - (void)changeProportional:(BOOL)proportional;
 

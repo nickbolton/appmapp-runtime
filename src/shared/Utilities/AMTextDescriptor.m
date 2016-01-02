@@ -242,8 +242,7 @@ static NSString * const kAMTextDescriptorTextColorKey = @"textColor";
     
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     
-    NSMutableParagraphStyle *paragraphStyle =
-    [[NSMutableParagraphStyle alloc] init];
+    NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
     
     paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
     paragraphStyle.alignment = self.textAlignment;

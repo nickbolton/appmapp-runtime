@@ -37,7 +37,7 @@
 
 - (instancetype)copy {
     
-    AMComponentAttributes *attributes = [[self.class alloc] init];
+    AMComponentAttributes *attributes = [self.class new];
     
     return attributes;
 }

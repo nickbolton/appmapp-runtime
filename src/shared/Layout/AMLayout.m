@@ -44,6 +44,8 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 @implementation AMLayout
 
+@synthesize identifier = _identifier;
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -191,7 +193,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 - (instancetype)copy {
     
-    AMLayout *result = [[self.class alloc] init];
+    AMLayout *result = [self.class new];
     result.identifier = self.identifier;
     result.enabled = self.isEnabled;
     result.defaultLayout = self.isDefaultLayout;
@@ -215,9 +217,10 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 - (NSString *)description {
     NSString *proportional = self.isProportional ? @"P " : @"";
+    NSString *disabled = self.isEnabled == NO ? @"D " : @"";
     return
-    [NSString stringWithFormat:@"%@%ld->%ld %f %f",
-     proportional, self.attribute, self.relatedAttribute, self.constant, self.proportionalValue];
+    [NSString stringWithFormat:@"%@ %@%@%ld->%ld %f %f",
+     self.identifier, disabled, proportional, self.attribute, self.relatedAttribute, self.constant, self.proportionalValue];
 }
 
 #pragma mark - Getters and Setters
@@ -237,6 +240,13 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     }
     
     return _identifier;
+}
+
+- (void)setIdentifier:(NSString *)identifier {
+    if (identifier == nil) {
+        NSLog(@"ZZZ");
+    }
+    _identifier = identifier;
 }
 
 - (void)setComponentIdentifier:(NSString *)componentIdentifier {
@@ -288,7 +298,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 - (void)setConstant:(CGFloat)constant inAnimation:(BOOL)inAnimation {
     _constant = constant;
-    if (self.constraint != nil) {
+    if (self.constraint != nil && self.isEnabled) {
         if (inAnimation) {
             self.constraint.animator.constant = [self resolvedConstant];
         } else {
@@ -325,23 +335,6 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     [self setConstant:constant inAnimation:NO];
     
     self.component.layoutPreset = AMLayoutPresetCustom;
-}
-
-- (BOOL)isDangling {
-    switch (self.attribute) {
-        case NSLayoutAttributeLeft:
-        case NSLayoutAttributeRight:
-        case NSLayoutAttributeCenterX:
-        case NSLayoutAttributeTop:
-        case NSLayoutAttributeBottom:
-        case NSLayoutAttributeCenterY:
-            return self.relatedComponentIdentifier == nil;
-            break;
-        default:
-            break;
-    }
-    
-    return NO;
 }
 
 #pragma mark - Public

@@ -67,20 +67,19 @@ extern NSString *const kAMComponentClassPrefixKey;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)componentWithDictionary:(NSDictionary *)dict;
-+ (NSDictionary *)exportComponents:(NSArray *)components;
-- (void)copyToComponent:(AMComponent *)component;
-- (instancetype)shallowCopy;
-- (instancetype)copyForPasting;
-- (instancetype)duplicate;
 
 - (void)clearLayoutComponentWiring;
 - (void)setLayoutObjectsEnabled:(BOOL)enabled;
 - (void)addLayoutObject:(AMLayout *)layoutObject layoutProvider:(id<AMLayoutProvider>)layoutProvider;
 - (void)removeLayoutObject:(AMLayout *)layoutObject;
 
+- (void)applyLayoutInAnimation:(BOOL)inAnimation;
 - (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation;
 - (void)updateFrame:(CGRect)frame;
 
+- (void)setLayoutObjects:(NSArray *)layoutObjects
+            clearLayouts:(BOOL)clearLayouts
+            customPreset:(BOOL)customPreset;
 - (void)restoreLayoutObjects:(NSArray *)layoutObjects;
 
 - (void)addBehavor:(AMComponentBehavior *)behavior;

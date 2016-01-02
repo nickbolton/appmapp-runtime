@@ -43,7 +43,7 @@ NSString *const kAMComponentLayoutObjectsKey = @"layoutObjects";
 NSString *const kAMComponentDefaultLayoutObjectsKey = @"defaultLayoutObjects";
 NSString *const kAMComponentLayoutPresetKey = @"layoutPreset";
 
-static NSString *const kAMComponentDefaultNamePrefix = @"Container-";
+NSString *const kAMComponentDefaultNamePrefix = @"Container-";
 static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 @interface AMComponent()
@@ -273,138 +273,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     return [self copy];
 }
 
-- (instancetype)copy {
-    
-    AMComponent *component = [[self.class alloc] init];
-    [self copyToComponent:component deep:YES];
-    return component;
-}
-
-- (instancetype)shallowCopy {
-    
-    AMComponent *component = [[self.class alloc] init];
-    [self copyToComponent:component deep:NO];
-    return component;
-}
-
-- (void)copyToComponent:(AMComponent *)component {
-    [self copyToComponent:component deep:YES];
-}
-
-- (void)copyToComponent:(AMComponent *)component deep:(BOOL)deep {
-    component.identifier = self.identifier.copy;
-    component.componentType = self.componentType;
-    component.name = self.name.copy;
-    component.defaultName = self.defaultName.copy;
-    component.textDescriptor = self.textDescriptor.copy;
-    component.duplicateType = self.duplicateType;
-    component.duplicateSourceIdentifier = self.duplicateSourceIdentifier;
-    component.behavors = self.behavors.mutableCopy;
-    component.classPrefix = self.classPrefix.copy;
-    component.useCustomViewClass = self.useCustomViewClass;
-    component.linkedComponent = self.linkedComponent;
-    
-    // attributes
-    component.clipped = self.isClipped;
-    component.backgroundColor = self.backgroundColor;
-    component.alpha = self.alpha;
-    component.borderWidth = self.borderWidth;
-    component.borderColor = self.borderColor;
-    
-    component.ignoreUpdates = YES;
-    component.layoutPreset = self.layoutPreset;
-    component.frame = self.frame;
-    component.ignoreUpdates = NO;
-    component.defaultLayoutObjects = [[NSArray alloc] initWithArray:self.defaultLayoutObjects copyItems:YES];
-    
-    NSArray *layoutObjects = [[NSArray alloc] initWithArray:self.layoutObjects copyItems:YES];
-    [component setLayoutObjects:layoutObjects clearLayouts:NO customPreset:NO];
-
-    // only used to refer back to original parent
-    // children will have this reset with the next loop
-    component.parentComponent = self.parentComponent;
-    
-    if (deep) {
-        for (AMComponent *childComponent in component.childComponents) {
-            childComponent.parentComponent = component;
-        }
-        
-        NSMutableArray *children = [NSMutableArray array];
-        
-        for (AMComponent *component in self.childComponents) {
-            [children addObject:component.copy];
-        }
-        component.childComponents = children;
-    }
-}
-
-- (void)resetIdentifiers:(AMComponent *)component {
-    component.identifier = [[NSUUID UUID] UUIDString];
-    
-    for (AMLayout *layoutObject in component.allLayoutObjects) {
-        layoutObject.componentIdentifier = nil;
-        layoutObject.relatedComponentIdentifier = nil;
-        layoutObject.commonAncestorComponentIdentifier = nil;
-    }
-    
-    for (AMComponent *childComponent in component.childComponents) {
-        [self resetIdentifiers:childComponent];
-    }
-}
-
-- (instancetype)duplicate {
-    AMComponent *result = self.copy;
-    [self resetIdentifiers:result];
-    
-    return result;
-}
-
-- (void)augmentComponentForPasting:(AMComponent *)component sourceComponent:(AMComponent *)sourceComponent {
-    
-    component.duplicateSourceIdentifier = sourceComponent.identifier;
-    component.defaultName = nil;
-    
-    if ([component.name hasPrefix:kAMComponentDefaultNamePrefix]) {
-        component.name = nil;
-    }
-    
-    NSMutableArray *children = [NSMutableArray array];
-    
-    for (AMComponent *childComponent in sourceComponent.childComponents) {
-        
-        AMComponent *childCopy = [childComponent copyForPasting];
-        [children addObject:childCopy];
-    }
-    
-    component.childComponents = children;
-}
-
-- (instancetype)copyForPasting {
-    
-    AMComponent *result = [self shallowCopy];
-    [self augmentComponentForPasting:result sourceComponent:self];
-    
-    return result;
-}
-
-+ (NSDictionary *)exportComponents:(NSArray *)components {
-    
-    NSMutableDictionary *componentDictionaries = [NSMutableDictionary dictionary];
-    
-    [components enumerateObjectsUsingBlock:^(AMComponent *component, NSUInteger idx, BOOL *stop) {
-        
-        NSDictionary *componentDict = [component dictionaryRepresentation];
-        componentDictionaries[component.identifier] = componentDict;
-    }];
-    
-    NSDictionary *dict =
-    @{
-      kAMComponentsKey : componentDictionaries,
-      };
-    
-    return dict;
-}
-
 - (NSArray *)layoutObjectsDictionaries:(NSArray *)layoutObjects {
     NSMutableArray *layoutObjectDicts = [NSMutableArray array];
     
@@ -556,6 +424,25 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     return self.componentType == AMComponentContainer;
 }
 
+- (void)applyLayoutInAnimation:(BOOL)inAnimation {
+    [self clearLayouts];
+    for (AMLayout *layoutObject in self.defaultLayoutObjects) {
+        layoutObject.referenceFrame = self.frame;
+        [layoutObject updateLayoutInAnimation:inAnimation];
+    }
+    
+    for (AMLayout *layoutObject in self.layoutObjects) {
+        if (self.isTopLevelComponent == NO) {
+            layoutObject.referenceFrame = self.frame;
+            [layoutObject updateLayoutInAnimation:inAnimation];
+        }
+    }
+    
+    for (AMComponent *component in self.childComponents) {
+        [component applyLayoutInAnimation:inAnimation];
+    }
+}
+
 - (void)setFrame:(CGRect)frame {
     [self setFrame:frame inAnimation:NO];
 }
@@ -569,32 +456,32 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (void)setFrame:(CGRect)frame inAnimation:(BOOL)inAnimation {
-    [self setFrame:frame updatePreset:YES inAnimation:inAnimation];
+    [self setFrame:frame updatePreset:YES applyLayout:YES inAnimation:inAnimation];
 }
 
-- (void)setFrame:(CGRect)frame updatePreset:(BOOL)updatePreset inAnimation:(BOOL)inAnimation {
+- (void)setFrame:(CGRect)frame updatePreset:(BOOL)updatePreset applyLayout:(BOOL)applyLayout inAnimation:(BOOL)inAnimation {
+    BOOL changed = CGRectEqualToRect(_frame, frame) == NO;
     _frame = frame;
     
     if (self.ignoreUpdates) {
         return;
     }
-    
-    [self clearLayouts];
-    
-    if (updatePreset && self.isTopLevelComponent == NO) {
+        
+    if (changed && updatePreset && self.isTopLevelComponent == NO) {
+        NSArray *previousLayoutObjects = self.layoutObjects.copy;
         [self updateLayoutObjectsForPreset];
-    }
-
-    for (AMLayout *layoutObject in self.defaultLayoutObjects) {
-        layoutObject.referenceFrame = frame;
-        [layoutObject updateLayoutInAnimation:inAnimation];
+        if (previousLayoutObjects.count > 0) {
+            NSAssert(previousLayoutObjects.count == self.layoutObjects.count, @"previousLayoutObjects.count != self.layoutObjects.count");
+            for (NSInteger idx = 0; idx < previousLayoutObjects.count; idx++) {
+                AMLayout *oldLayoutObject = previousLayoutObjects[idx];
+                AMLayout *layoutObject = self.layoutObjects[idx];
+                layoutObject.identifier = oldLayoutObject.identifier;
+            }
+        }
     }
     
-    for (AMLayout *layoutObject in self.layoutObjects) {
-        if (self.isTopLevelComponent == NO) {
-            layoutObject.referenceFrame = frame;
-            [layoutObject updateLayoutInAnimation:inAnimation];
-        }
+    if (applyLayout) {
+        [self applyLayoutInAnimation:inAnimation];
     }
     
     NSMutableSet *dependents = [NSMutableSet new];
@@ -644,6 +531,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
             [dependentComponent
              setFrame:updatedFrame
              updatePreset:NO
+             applyLayout:NO
              inAnimation:inAnimation];
         }
     }
@@ -915,8 +803,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         NSMutableArray *layoutObjects = self.layoutObjects.mutableCopy;
         [layoutObjects removeObject:layoutObject];
         
-        [self setLayoutObjects:layoutObjects clearLayouts:YES customPreset:YES];
-        
+        [self setLayoutObjects:layoutObjects clearLayouts:NO customPreset:YES];
+//        [self applyLayoutInAnimation:NO];
         self.frame = self.frame;
     }
 }
