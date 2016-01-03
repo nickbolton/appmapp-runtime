@@ -12,7 +12,6 @@
 
 static NSString * kAMLayoutClassNameKey = @"className";
 static NSString * kAMLayoutIdentifierKey = @"identifier";
-static NSString * kAMLayoutEnabledKey = @"enabled";
 static NSString * kAMLayoutDefaultLayoutKey = @"defaultLayout";
 static NSString * kAMLayoutAttributeKey = @"attribute";
 static NSString * kAMLayoutRelationKey = @"relation";
@@ -58,7 +57,6 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 - (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeObject:self.identifier forKey:kAMLayoutIdentifierKey];
-    [coder encodeBool:self.isEnabled forKey:kAMLayoutEnabledKey];
     [coder encodeBool:self.isDefaultLayout forKey:kAMLayoutDefaultLayoutKey];
     [coder encodeInteger:self.attribute forKey:kAMLayoutAttributeKey];
     [coder encodeInteger:self.relation forKey:kAMLayoutRelationKey];
@@ -85,7 +83,6 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
     if (self != nil) {
         _identifier = [decoder decodeObjectForKey:kAMLayoutIdentifierKey];
-        _enabled = [decoder decodeBoolForKey:kAMLayoutEnabledKey];
         _defaultLayout = [decoder decodeBoolForKey:kAMLayoutDefaultLayoutKey];
         _attribute = [decoder decodeIntegerForKey:kAMLayoutAttributeKey];
         _relation = [decoder decodeIntegerForKey:kAMLayoutRelationKey];
@@ -115,7 +112,6 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
     if (self != nil) {
         _identifier = dict[kAMLayoutIdentifierKey];
-        _enabled = [dict[kAMLayoutEnabledKey] boolValue];
         _defaultLayout = [dict[kAMLayoutDefaultLayoutKey] boolValue];
         _attribute = [dict[kAMLayoutAttributeKey] integerValue];
         _relation = [dict[kAMLayoutRelationKey] integerValue];
@@ -154,7 +150,6 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     
     dict[kAMLayoutClassNameKey] = NSStringFromClass(self.class);
     dict[kAMLayoutIdentifierKey] = self.identifier;
-    dict[kAMLayoutEnabledKey] = @(self.isEnabled);
     dict[kAMLayoutDefaultLayoutKey] = @(self.isDefaultLayout);
     dict[kAMLayoutAttributeKey] = @(self.attribute);
     dict[kAMLayoutRelationKey] = @(self.relation);
@@ -242,13 +237,6 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     return _identifier;
 }
 
-- (void)setIdentifier:(NSString *)identifier {
-    if (identifier == nil) {
-        NSLog(@"ZZZ");
-    }
-    _identifier = identifier;
-}
-
 - (void)setComponentIdentifier:(NSString *)componentIdentifier {
     _componentIdentifier = componentIdentifier;
     _component = nil;
@@ -287,9 +275,13 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 - (void)setEnabled:(BOOL)enabled {
     _enabled = enabled;
     if (self.constraint != nil) {
-        self.constraint.active = enabled;
-        [self layoutViewIfNeeded];
+        if (self.constraint.isActive != enabled) {
+            self.constraint.active = enabled;
+        }
+    } else {
+        [self addLayout];
     }
+    [self layoutViewIfNeeded];
 }
 
 - (void)setConstant:(CGFloat)constant {
@@ -507,7 +499,6 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 - (void)updateLayoutInAnimation:(BOOL)inAnimation {
     [self createConstraintIfNecessary];
-    self.constraint.priority = self.priority;
     
 //    NSLog(@"update with frame: %@", NSStringFromCGRect(frame));
     
@@ -598,75 +589,6 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     return offset;
 }
 
-#pragma mark - Proportional Frame Adjustments
-
-//- (CGRect)adjustComponentFrame {
-//    return [self adjustComponentFrameMaintainingSize:NO];
-//}
-//
-//- (CGRect)adjustComponentFrameMaintainingSize:(BOOL)maintainSize {
-//
-//    AMComponent *component = self.view.component;
-//    CGRect result = component.frame;
-//
-//    if (self.isProportional) {
-//        
-//        AMComponent *relatedComponent = self.relatedView.component;
-//        AMComponent *ancestorComponent = self.commonAncestorView.component;
-//        
-//        if (component != nil && relatedComponent != nil && ancestorComponent != nil) {
-//            CGRect frameInCommonSpace = [self frameInCommonAncestorFromComponent:component];
-//            CGRect relatedFrameInCommonSpace = [self frameInCommonAncestorFromComponent:relatedComponent];
-//            CGFloat relatedValue = [self relatedValueForFrame:relatedFrameInCommonSpace];
-//            CGFloat proportionalValue = [self proportionalOffset];
-//            CGRect result = frameInCommonSpace;
-//            
-//            switch (self.attribute) {
-//                    
-//                case NSLayoutAttributeTop:
-//                    return [self adjustedFrameForProportionalTop:frameInCommonSpace proportionalValue:proportionalValue forComponent:component maintainSize:maintainSize];
-//                    break;
-//                    
-//                case NSLayoutAttributeLeft:
-//                    return [self adjustedFrameForProportionalLeft:frameInCommonSpace proportionalValue:proportionalValue forComponent:component maintainSize:maintainSize];
-//                    break;
-//                    
-//                case NSLayoutAttributeBottom:
-//                    return [self adjustedFrameForProportionalBottom:frameInCommonSpace proportionalValue:proportionalValue forComponent:component maintainSize:maintainSize];
-//                    break;
-//                    
-//                case NSLayoutAttributeRight:
-//                    return [self adjustedFrameForProportionalRight:frameInCommonSpace proportionalValue:proportionalValue forComponent:component maintainSize:maintainSize];
-//                    break;
-//                    
-//                case NSLayoutAttributeCenterY:
-//                    return [self adjustedFrameForProportionalCenterY:frameInCommonSpace proportionalValue:proportionalValue forComponent:component maintainSize:maintainSize];
-//                    break;
-//                    
-//                case NSLayoutAttributeCenterX:
-//                    return [self adjustedFrameForProportionalCenterX:frameInCommonSpace proportionalValue:proportionalValue forComponent:component maintainSize:maintainSize];
-//                    break;
-//                    
-//                case NSLayoutAttributeHeight:
-//                    return [self adjustedFrameForProportionalHeight:frameInCommonSpace proportionalValue:proportionalValue forComponent:component maintainSize:maintainSize];
-//                    break;
-//                    
-//                case NSLayoutAttributeWidth:
-//                    return [self adjustedFrameForProportionalWidth:frameInCommonSpace proportionalValue:proportionalValue forComponent:component maintainSize:maintainSize];
-//                    break;
-//                    
-//
-//                default:
-//                    break;
-//            }
-//            
-//            result = [self.commonAncestorView.component convertAncestorFrame:result toComponent:component];
-//        }
-//    }
-//    
-//    return result;
-//}
-
 - (CGFloat)proportionalConstant {
     
     CGFloat result = 0.0f;
@@ -704,7 +626,6 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
         if (defaultLayoutOk || regularLayoutOk) {
             self.constraint = [self buildConstraint];
             self.constraint.priority = self.priority;
-            self.constraint.active = self.isEnabled;
 
             [self deactivatePreviousConstraints];
             
