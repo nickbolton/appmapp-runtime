@@ -460,6 +460,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (void)setFrame:(CGRect)frame updatePreset:(BOOL)updatePreset applyLayout:(BOOL)applyLayout inAnimation:(BOOL)inAnimation {
+    NSLog(@"%@ -> %@", NSStringFromCGRect(_frame), NSStringFromCGRect(frame));
     BOOL changed = CGRectEqualToRect(_frame, frame) == NO;
     _frame = frame;
     
@@ -504,15 +505,18 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
             return NSOrderedSame;
         }];
 
-        for (AMLayout *layoutObject in sortedLayoutObjects) {            
+        for (AMLayout *layoutObject in sortedLayoutObjects) {
+            
             updatedFrame =
             [layoutObject
              updateFrame:updatedFrame
              basedOnRelatedAttributeWithRelatedSize:frame.size
              originalFrame:originalFrame
              allLayoutObjects:sortedLayoutObjects];
+            
+            NSLog(@"%ld %@ -> %@", layoutObject.attribute, NSStringFromCGRect(originalFrame), NSStringFromCGRect(updatedFrame));
         }
-                
+        
         for (AMLayout *layoutObject in sortedLayoutObjects) {
             if (layoutObject.isProportional == NO) {
                 if (layoutObject.attribute == NSLayoutAttributeWidth) {
