@@ -438,9 +438,9 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         }
     }
     
-    for (AMComponent *component in self.childComponents) {
-        [component applyLayoutInAnimation:inAnimation];
-    }
+//    for (AMComponent *component in self.childComponents) {
+//        [component applyLayoutInAnimation:inAnimation];
+//    }
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -460,7 +460,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (void)setFrame:(CGRect)frame updatePreset:(BOOL)updatePreset applyLayout:(BOOL)applyLayout inAnimation:(BOOL)inAnimation {
-    NSLog(@"%@ -> %@", NSStringFromCGRect(_frame), NSStringFromCGRect(frame));
     BOOL changed = CGRectEqualToRect(_frame, frame) == NO;
     _frame = frame;
     
@@ -513,8 +512,6 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
              basedOnRelatedAttributeWithRelatedSize:frame.size
              originalFrame:originalFrame
              allLayoutObjects:sortedLayoutObjects];
-            
-            NSLog(@"%ld %@ -> %@", layoutObject.attribute, NSStringFromCGRect(originalFrame), NSStringFromCGRect(updatedFrame));
         }
         
         for (AMLayout *layoutObject in sortedLayoutObjects) {
@@ -535,7 +532,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
             [dependentComponent
              setFrame:updatedFrame
              updatePreset:NO
-             applyLayout:NO
+             applyLayout:YES
              inAnimation:inAnimation];
         }
     }
