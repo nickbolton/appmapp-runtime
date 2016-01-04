@@ -278,7 +278,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
         if (self.constraint.isActive != enabled) {
             self.constraint.active = enabled;
         }
-    } else {
+    } else if (enabled) {
         [self addLayout];
     }
     [self layoutViewIfNeeded];

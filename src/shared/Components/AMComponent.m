@@ -504,7 +504,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
             return NSOrderedSame;
         }];
 
-        for (AMLayout *layoutObject in sortedLayoutObjects) {
+        for (AMLayout *layoutObject in sortedLayoutObjects) {            
             updatedFrame =
             [layoutObject
              updateFrame:updatedFrame
