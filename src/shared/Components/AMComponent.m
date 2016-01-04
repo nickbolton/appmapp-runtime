@@ -575,6 +575,12 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     }
 }
 
+- (void)addLayouts {
+    for (AMLayout *layoutObject in self.allLayoutObjects) {
+        [layoutObject addLayout];
+    }
+}
+
 - (void)setLayoutPreset:(AMLayoutPreset)layoutPreset {
     _layoutPreset = layoutPreset;
     _layoutPreset = MAX(0, _layoutPreset);
@@ -781,9 +787,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (void)addLayoutObject:(AMLayout *)layoutObject layoutProvider:(id<AMLayoutProvider>)layoutProvider {
+    
+    [self clearLayouts];
+    
     layoutObject.componentIdentifier = self.identifier;
     layoutObject.layoutProvider = layoutProvider;
-    [layoutObject addLayout];
     
     NSMutableArray *layoutObjects = self.layoutObjects.mutableCopy;
     if (layoutObjects == nil) {
@@ -792,7 +800,8 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
     [layoutObjects addObject:layoutObject];
     
     [self setLayoutObjects:layoutObjects clearLayouts:NO customPreset:YES];
-
+    self.frame = self.frame;
+    [self addLayouts];
 }
 
 - (void)removeLayoutObject:(AMLayout *)layoutObject {
@@ -1115,22 +1124,15 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
         frameInContainer = [self convertComponentFrameToAncestorComponent:relatedComponent.parentComponent];
         relatedFrameInContainer = [relatedComponent convertComponentFrameToAncestorComponent:relatedComponent.parentComponent];
         
-        CGRect containerFrame = relatedComponent.parentComponent.frame;
-        if (relatedComponent.parentComponent == nil) {
-            containerFrame = relatedFrameInContainer;
-        }
-
         sourcePosition =
         [self
          positionForFrame:frameInContainer
-         atAttribute:attribute
-         inContainerFrame:containerFrame];
+         atAttribute:attribute];
         
         targetPosition =
         [self
          positionForFrame:relatedFrameInContainer
-         atAttribute:relatedAttribute
-         inContainerFrame:containerFrame];
+         atAttribute:relatedAttribute];
     } else {
         frameInContainer = self.frame;
     }
@@ -1148,8 +1150,7 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 }
 
 - (CGFloat)positionForFrame:(CGRect)frame
-                atAttribute:(NSLayoutAttribute)attribute
-           inContainerFrame:(CGRect)containerFrame {
+                atAttribute:(NSLayoutAttribute)attribute {
     
     CGFloat result = 0.0f;
     
@@ -1159,11 +1160,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
             break;
             
         case NSLayoutAttributeRight:
-            result = CGRectGetMaxX(frame) - CGRectGetWidth(containerFrame);
+            result = CGRectGetMaxX(frame);
             break;
             
         case NSLayoutAttributeCenterX:
-            result = CGRectGetMidX(frame) - (CGRectGetWidth(containerFrame) / 2.0f);
+            result = CGRectGetMidX(frame);
             break;
             
         case NSLayoutAttributeTop:
@@ -1171,11 +1172,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
             break;
             
         case NSLayoutAttributeBottom:
-            result = CGRectGetMaxY(frame) - CGRectGetHeight(containerFrame);
+            result = CGRectGetMaxY(frame);
             break;
             
         case NSLayoutAttributeCenterY:
-            result = CGRectGetMidY(frame) - (CGRectGetHeight(containerFrame) / 2.0f);
+            result = CGRectGetMidY(frame);
             break;
             
         default:
