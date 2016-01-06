@@ -44,6 +44,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 @implementation AMLayout
 
 @synthesize identifier = _identifier;
+@synthesize scale = _scale;
 
 - (instancetype)init {
     self = [super init];
@@ -51,6 +52,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
         self.multiplier = 1.0f;
         self.priority = AMLayoutPriorityRequired;
         self.enabled = YES;
+        self.scale = 1.0f;
     }
     return self;
 }
@@ -284,6 +286,23 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     [self layoutViewIfNeeded];
 }
 
+- (CGFloat)scale {
+    if (_scale > 0.0f) {
+        return _scale;
+    }
+    
+    return 1.0f;
+}
+
+- (void)setScale:(CGFloat)scale {
+    [self setScale:scale inAnimation:NO];
+}
+
+- (void)setScale:(CGFloat)scale inAnimation:(BOOL)inAnimation {
+    _scale = scale;
+    [self setConstant:self.constant inAnimation:inAnimation];
+}
+
 - (void)setConstant:(CGFloat)constant {
     [self setConstant:constant inAnimation:NO];
 }
@@ -292,9 +311,9 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     _constant = constant;
     if (self.constraint != nil && self.isEnabled) {
         if (inAnimation) {
-            self.constraint.animator.constant = [self resolvedConstant];
+            self.constraint.animator.constant = self.scale * [self resolvedConstant];
         } else {
-            self.constraint.constant = [self resolvedConstant];
+            self.constraint.constant = self.scale * [self resolvedConstant];
         }
         [self layoutViewIfNeeded];
     }
@@ -678,7 +697,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
      toItem:self.relatedView
      attribute:self.relatedAttribute
      multiplier:self.multiplier
-     constant:constant];
+     constant:self.scale * constant];
 }
 
 - (CGRect)updateFrame:(CGRect)frame

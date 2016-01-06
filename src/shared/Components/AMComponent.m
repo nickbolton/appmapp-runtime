@@ -540,6 +540,11 @@ static NSInteger AMComponentMaxDefaultComponentNumber = 0;
 
 - (void)setScale:(CGFloat)scale {
     _scale = scale;
+    for (AMLayout *layoutObject in self.allLayoutObjects) {
+        layoutObject.scale = scale;
+    }
+    [self applyLayoutInAnimation:NO];
+//    [self setFrame:self.frame updatePreset:NO applyLayout:YES inAnimation:NO];
     
     for (AMComponent *component in self.childComponents) {
         component.scale = scale;
