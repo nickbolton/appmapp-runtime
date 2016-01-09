@@ -12,6 +12,7 @@
 
 static NSString * kAMLayoutClassNameKey = @"className";
 static NSString * kAMLayoutIdentifierKey = @"identifier";
+static NSString * kAMLayoutEnabledKey = @"enabled";
 static NSString * kAMLayoutDefaultLayoutKey = @"defaultLayout";
 static NSString * kAMLayoutAttributeKey = @"attribute";
 static NSString * kAMLayoutRelationKey = @"relation";
@@ -60,6 +61,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 - (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeObject:self.identifier forKey:kAMLayoutIdentifierKey];
     [coder encodeBool:self.isDefaultLayout forKey:kAMLayoutDefaultLayoutKey];
+    [coder encodeBool:self.isEnabled forKey:kAMLayoutEnabledKey];
     [coder encodeInteger:self.attribute forKey:kAMLayoutAttributeKey];
     [coder encodeInteger:self.relation forKey:kAMLayoutRelationKey];
     [coder encodeFloat:self.multiplier forKey:kAMLayoutMultiplierKey];
@@ -86,6 +88,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     if (self != nil) {
         _identifier = [decoder decodeObjectForKey:kAMLayoutIdentifierKey];
         _defaultLayout = [decoder decodeBoolForKey:kAMLayoutDefaultLayoutKey];
+        _enabled = [decoder decodeBoolForKey:kAMLayoutEnabledKey];
         _attribute = [decoder decodeIntegerForKey:kAMLayoutAttributeKey];
         _relation = [decoder decodeIntegerForKey:kAMLayoutRelationKey];
         _multiplier = [decoder decodeFloatForKey:kAMLayoutMultiplierKey];
@@ -115,6 +118,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     if (self != nil) {
         _identifier = dict[kAMLayoutIdentifierKey];
         _defaultLayout = [dict[kAMLayoutDefaultLayoutKey] boolValue];
+        _enabled = [dict[kAMLayoutEnabledKey] boolValue];
         _attribute = [dict[kAMLayoutAttributeKey] integerValue];
         _relation = [dict[kAMLayoutRelationKey] integerValue];
         _multiplier = [dict[kAMLayoutMultiplierKey] floatValue];
@@ -153,6 +157,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
     dict[kAMLayoutClassNameKey] = NSStringFromClass(self.class);
     dict[kAMLayoutIdentifierKey] = self.identifier;
     dict[kAMLayoutDefaultLayoutKey] = @(self.isDefaultLayout);
+    dict[kAMLayoutEnabledKey] = @(self.isEnabled);
     dict[kAMLayoutAttributeKey] = @(self.attribute);
     dict[kAMLayoutRelationKey] = @(self.relation);
     dict[kAMLayoutMultiplierKey] = @(self.multiplier);
