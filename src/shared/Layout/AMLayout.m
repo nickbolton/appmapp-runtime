@@ -634,14 +634,14 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
 
 - (void)createConstraintIfNecessary {
 
-    if (self.view != nil &&
+    if (self.view.superview != nil &&
         (self.constraint == nil ||
          self.constraint.multiplier != self.multiplier ||
          self.constraint.priority != self.priority)) {
             
         BOOL defaultLayoutOk =
         self.isDefaultLayout &&
-        (self.relatedComponentIdentifier == nil || self.relatedView != nil);
+        (self.relatedComponentIdentifier == nil || self.relatedView.superview != nil);
             
         BOOL regularLayoutOk =
         (self.isDefaultLayout == NO) &&
@@ -652,7 +652,6 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
             self.constraint.priority = self.priority;
 
             [self deactivatePreviousConstraints];
-            
             [self.commonAncestorView addConstraint:self.constraint];
             [self layoutViewIfNeeded];
             
