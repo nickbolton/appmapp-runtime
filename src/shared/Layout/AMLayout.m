@@ -652,7 +652,7 @@ static NSString * kAMLayoutProportionalValueKey = @"proportionalValue";
             self.constraint.priority = self.priority;
 
             [self deactivatePreviousConstraints];
-            [self.commonAncestorView addConstraint:self.constraint];
+            self.constraint.active = YES;
             [self layoutViewIfNeeded];
             
 #if DEBUG

@@ -36,7 +36,7 @@
          options:NSLayoutFormatAlignAllCenterX
          metrics:nil
          views:@{@"v" : self.view}];
-        [self.view.superview addConstraints:hConstraints];
+        [NSLayoutConstraint activateConstraints:hConstraints];
 
         NSArray *vConstraints =
         [NSLayoutConstraint
@@ -44,7 +44,7 @@
          options:NSLayoutFormatAlignAllCenterY
          metrics:nil
          views:@{@"v" : self.view}];
-        [self.view.superview addConstraints:vConstraints];
+        [NSLayoutConstraint activateConstraints:hConstraints];
 
         NSMutableArray *constraints = [NSMutableArray arrayWithArray:hConstraints];
         [constraints addObjectsFromArray:vConstraints];
